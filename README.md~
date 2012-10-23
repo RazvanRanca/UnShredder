@@ -1,0 +1,22 @@
+UnShredder - Work in progress
+==========
+
+Done:
+==
+Reading:
+--
+* Initial Lit. Review identifying state of research in area
+* Local search methods
+* Exploration of cost functions
+
+Writing:
+--
+* Summary of papers regarding local search and cost functions
+* Presentation 1
+
+Coding/Experiments:
+--
+* Bit to Bit and Gaussian Cost functions
+* Above cost functions restricted to black bits
+* Greedy1D search baseline
+* Prim search baseline

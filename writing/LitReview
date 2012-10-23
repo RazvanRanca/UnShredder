@@ -1,0 +1,57 @@
+Shredded document reconstruction using MPEG-7 standard descriptors (strips)
+- grouping shreds into similar clusters based on mpeg-7 desccriptors. 
+- specially usefull when establishing which shreds belong on the same page, out of a clump of shreds from many different documents.
+- color descriptors worked very well, text ones not so well, perhaps because of the large difference between height and width of strips . Shape features had some effect if the shredder has a tendency to create a curvy cut.
+
+Combining Forces to Reconstruct Strip Shredded Text Documents
+- shows problem is NP hard
+- reduce to travelling salesman problem
+- uses approx TSP solution + simple cost function (gaussian over a couple edge pixels)
+- alternative solution: Variable Neighbourhood search + human intervention
+
+Meta-Heuristics for Reconstructing Cross Cut Shredded Text Documents
+- introduces several seed solution heuristics (general greedy, row greedy, linear programming and Prim)
+- does fully automated Variable Neighbourhood search algorithm (randomness + Variable Neighbourhood Descent which explores increasingly large and complex neighbourhoods looking greedily for a better solution)
+- also does ant colony optimization, which gives better results than VNS but works slower
+- cost function is similar to above, gaussian based edge pixel comparation
+- performance is evaluated by difference between obtained and optimum cost
+
+A Memetic Algorithm for Reconstructing Cross-Cut Shredded Text Documents
+- uses combination of genetic programming and VNS
+- cost function as above, gaussian based only on edge pixels match
+- apparently best results so far
+
+Hybrid Optimization Methods for Warehouse Logistics and the Reconstruction of Destroyed Paper Documents
+- phd thesis, seems like a good review of some of the existing work
+- appendix has a couple documents that have been used by several papers as a benchmark
+
+The Deshredder: A Visual Analytic Approach to Reconstructing Shredded Documents
+- based on the DARPA challenge
+- human interaction fully integrated in workflow
+- contains info on initial selection and straightening of pieces as well as using shape information
+
+An Investigation into Automated Shredded Document Reconstruction using Heuristic Search Algorithms
+- phd thesis, good overview of whole process. Edge detection, feature extraction, searching, matching etc
+
+Strip Shredded Document Reconstruction using Optical Character Recognition
+- uses machine learning techniques to identify matching edges based on cut off characters
+- learns what the characters are from the text, then tries to identify to what character class a cut off char belongs, and then tries to match edges
+- no real performance experiment is made, it is left at the level of "potential extra feature" for a cost function.
+- only looks at cut edge characters for matching.
+
+Document Analysis Applied to Fragments: Feature Set for
+the Reconstruction of Torn Documents
+-only talks about manually torn paper, but uses document content analysis, so might be transferable
+- tested on up to 690 snippets
+
+Two Approaches for Computing Lower Bounds on the Reconstruction of Strip Shredded Text Documents
+- looks into ILP methods
+- Lagrangian relaxation and heuristics
+- 99+% accuracy, however even 150 takes more than 20 minutes. Does not scale well.
+
+An alternative clustering approach for reconstructing cross cut shredded text documents
+- clustering approach for CCST, can be automatic or involve human
+- new cost function, similar to gaussian diff except it only considers black pixels and it introduces several fail criteria that give a cost of infinity (not enough black pixels, mismatch between number of lines or between line alignment )
+- uses simple greedy to construct and merge clusters
+- uses nr of correct pairs as performance measure, better than "Meta-heuristics for reconstructing cross cut shredded text documents"
+- How does it compare with "A Memetic Algorithm for Reconstructing Cross-Cut Shredded Text Documents" ? Could this be the best one ??

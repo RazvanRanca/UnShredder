@@ -1,0 +1,346 @@
+import random as r
+import heapq as hq
+from PIL import Image as im
+
+class GaussianPage(): # add proper handling for surrounding whitespace
+  def __init__(self,sx,sy,ratio, noise=True):
+    self.sizeX = sx
+    self.sizeY = sy
+    self.height = 10.0
+    self.width = self.height * ratio
+    self.costX = {}
+    self.costY = {}
+    self.heapX = {}
+    self.heapY = {}
+    self.totalCost = []
+    if noise:
+      self.noise = 1
+      self.stdProp = 5.0
+    else:
+      self.noise = 0
+      self.stdProp = 1000.0
+    for i in range(-1,sy+1):
+      for j in range(-1,sx+1):
+        for a in range(-1,sy+1):
+          for b in range(-1,sx+1):
+            if (i,j) != (a,b):
+                self.costX[((i,j),(a,b))] = self.gaussianCostX((i,j),(a,b))
+                self.costY[((i,j),(a,b))] = self.gaussianCostY((i,j),(a,b))
+
+    self.heapify()
+    self.getBlanks()
+
+  def getAllStates(self):
+    states = []
+    for i in range(-1, self.sizeY+1):
+      for j in range(-1, self.sizeX+1):
+        states.append((i,j))
+
+    return states
+
+  def gaussianCostX(self, a, b):
+    if a == b:
+      return float("inf")
+    meanCor = self.height
+    sdevCor = meanCor / self.stdProp
+    meanWrong = self.noise * self.height / 2
+    sdevWrong = meanWrong / self.stdProp
+    errorRate = self.noise * meanCor / 5
+    maxScore = meanCor + 3*sdevCor
+    if a[1] == b[1] - 1 and a[0] == b[0]:
+      if a[1] == -1 or b[1] == self.sizeX or (a[0] == -1 and b[0] == -1) or (a[0] == self.sizeY and b[0] == self.sizeY):
+        rez = 0
+        #print "x", a, b
+      else:
+        rez = maxScore - (r.gauss(meanCor, sdevCor) - self.sampleError(errorRate))
+      self.totalCost += [rez]
+      return rez
+    else:
+      if (a[0] == -1 and b[0] == -1) or (a[0] == self.sizeY and b[0] == self.sizeY):
+        rez = 0
+      else:
+        rez = maxScore - (r.gauss(meanWrong, sdevWrong) + self.sampleError(errorRate))
+      return rez
+
+  def gaussianCostY(self, a, b):
+    if a == b:
+      return float("inf")
+    meanCor = self.height # initially self.height, but causes problems without normalization as all Y costs will be smaller, so they will be favoured
+    sdevCor = meanCor/ self.stdProp
+    meanWrong = self.noise * self.height / 2
+    sdevWrong = meanWrong / self.stdProp
+    errorRate = self.noise * meanCor / 5
+    maxScore = meanCor + 3*sdevCor
+    if a[0] == b[0] - 1 and a[1] == b[1]:
+      if a[0] == -1 or b[0] == self.sizeY or (a[1] == -1 and b[1] == -1) or (a[1] == self.sizeX and b[1] == self.sizeX):
+        rez = 0
+        #print "y", a, b
+      else:
+        rez = maxScore - (r.gauss(meanCor, sdevCor) - self.sampleError(errorRate))
+      self.totalCost += [rez] 
+      return rez
+    else:
+      if (a[1] == -1 and b[1] == -1) or (a[1] == self.sizeX and b[1] == self.sizeX):
+        rez = 0
+      else:
+        rez = maxScore - (r.gauss(meanWrong, sdevWrong) + self.sampleError(errorRate))
+      return rez
+
+  def sampleError(self, x):
+    return r.random()*x
+
+  def calculateCostMat(self, mat):
+    cost = []
+    for row in range(len(mat)):
+      for col in range(len(mat[row])):
+        cost += [self.costX[(mat[row][col])]]
+        if row + 1 < len(mat) and col < len(mat[row+1]):
+          cost += [self.costY[(mat[row][col][0],mat[row+1][col][0])] ]
+      if row + 1 < len(mat) and col < len(mat[row+1]):
+        cost += [self.costY[(mat[row][col][1],mat[row+1][col][1])] ]
+
+    #assert len(cost) == 2*self.sizeX*self.sizeY - self.sizeX - self.sizeY
+    return cost
+
+  def heapify(self):
+    self.heapX = map(lambda (p,score): (score,p), self.costX.items())
+    self.heapY = map(lambda (p,score): (score,p), self.costY.items())
+    hq.heapify(self.heapX)
+    hq.heapify(self.heapY)
+
+  def extractHeap(self, edgesX, edgesY = None):
+    if edgesY == None:
+      edgesY = edgesX
+    hX = map(lambda (e,score): (score,e), filter(lambda (e,score): e in edgesX, self.costX.items()))
+    hY = map(lambda (e,score): (score,e), filter(lambda (e,score): e in edgesY, self.costY.items()))
+    hq.heapify(hX)
+    hq.heapify(hY)
+    return (hX,hY)
+
+  def getBlanks(self):
+    self.getBlankRight()
+    self.getBlankLeft()
+    self.getBlankDown()
+    self.getBlankUp()
+
+  def getBlankRight(self):
+    self.blankRight = []
+    for i in range(self.sizeY):
+      self.blankRight.append((i,self.sizeX-1))
+
+  def getBlankLeft(self):
+    self.blankLeft = []
+    for i in range(self.sizeY):
+      self.blankLeft.append((i,0))
+
+  def getBlankUp(self):
+    self.blankUp = []
+    for i in range(self.sizeX):
+      self.blankUp.append((0,i))
+
+  def getBlankDown(self):
+    self.blankDown = []
+    for i in range(self.sizeX):
+      self.blankDown.append((self.sizeY-1,i))
+
+  def __str__(self):
+    return "totalCost = " + str(self.totalCost) + "\ncostX =\n" +str([(str(x)[:5],y) for (x,y) in sorted(self.heapX, key=lambda x: x[1])]) + "\n\ncostY =\n" + str([(str(x)[:5],y) for (x,y) in sorted(self.heapY, key=lambda x: x[1])])
+
+def greedy1D(page):
+  heap = page.heapX
+  blankRight = page.blankRight
+  blankTopLeft = list(set(page.blankLeft) & set(page.blankUp))
+  rez = [] 
+  row = 0
+  seen = set()
+  groups = {}
+  gInd = 0
+  cur = next(p for p in heap if p[1][0] in blankTopLeft)[1]
+  rez.append(cur)
+  heap = filter(lambda (score,(x,y)): x != cur[0] and y != cur[1] and x != cur[1] and y != cur[0], heap)
+  groups[cur[0]] = gInd
+  groups[cur[1]] = gInd
+  gInd += 1
+  while len(heap) > 0:
+    cur = hq.heappop(heap)[1]
+    rez.append(cur)
+    heap = filter(lambda (score,(x,y)): x != cur[0] and y != cur[1] and x != cur[1] and y != cur[0], heap)
+    groups[cur[0]] = gInd
+    groups[cur[1]] = gInd
+    gInd += 1
+
+  edges = []
+  for e1 in rez:
+    for e2 in rez:
+      if e1 != e2 and e2 != rez[0]:
+        edges.append((e1[1],e2[0]))
+
+  heap, _ = page.extractHeap(edges)
+
+  while len(heap) > 0:
+    cur = hq.heappop(heap)[1]
+    if groups[cur[0]] != groups[cur[1]]:
+      rez.append(cur)
+      heap = filter(lambda (score,(x,y)): x != cur[0] and y != cur[1] and x != cur[1] and y != cur[0], heap)
+      gInd = groups[cur[1]]
+      for g in groups:
+        if groups[g] == gInd:
+          groups[g] = groups[cur[0]]
+
+  srez = [rez[0]]
+  for i in range(0, len(rez)-1):
+    srez.append(next(edge for edge in rez if (edge[0] == srez[i][1] and edge not in srez)))
+
+  rez = [[]]
+  row = 0
+  count = 0
+  for edge in srez:
+    count += 1
+    if edge[0] in blankRight and rez[row] != []:
+      row += 1
+      if count < len(srez):
+        rez.append([])
+    else:
+      rez[row].append(edge)
+
+  return rez
+
+def prim(page): # change order of axes, should be Y,X
+  hX = page.heapX
+  hY = page.heapY
+  states = page.getAllStates()
+  found = set()
+  posX = 0
+  posY = 0
+  cur = 0
+  positions = {}
+  grid = set()
+  accumEdges = []
+  while len(states) > len(found):
+    cX = 0
+    cY = 0
+    bestX = hq.heappop(hX)[1] if hX != [] else None
+    bestY = hq.heappop(hY)[1] if hY != [] else None
+
+    if bestY == None or (bestX != None and bestX <= bestY):
+      cur = bestX
+      accumEdges.append(("x",cur))
+      if cur[1] in found:
+        cX = -1
+      else:
+        cX = 1
+    else:
+      cur = bestY
+      accumEdges.append(("y",cur))
+      if cur[1] in found:
+        cY = -1
+      else:
+        cY = 1
+    
+    if len(positions) > 0:
+      if cur[0] in found:
+        posX, posY = positions[cur[0]]
+      else:
+        posX, posY = positions[cur[1]]
+      posX += cX
+      posY += cY
+
+    found.add(cur[0])
+    found.add(cur[1])
+
+    if cur[0] not in positions:
+      positions[cur[0]] = (posX, posY)
+      grid.add((posX, posY))
+      #print cur[0], posX, posY
+
+    if len(positions) == 1:
+      posX += cX
+      posY += cY
+
+    if cur[1] not in positions:
+      positions[cur[1]] = (posX, posY)
+      grid.add((posX, posY))
+      #print cur[1], posX, posY
+
+    edgesX = []
+    edgesY = []
+    for f in found:
+      for n in states:
+        if n not in found:
+          px,py = positions[f]
+          if (px+1, py) not in grid:
+            edgesX.append((f,n))
+          elif (px-1, py) not in grid:
+            edgesX.append((n,f))
+          elif (px, py+1) not in grid:
+            edgesY.append((f,n))
+          elif (px, py-1) not in grid:
+            edgesY.append((n,f))
+
+
+    hX,hY = page.extractHeap(edgesX, edgesY)
+
+  assert len(set(positions.values())) == len(positions.values())
+
+  #print positions
+  #print accumEdges
+  return positions, accumEdges
+
+def primCost(page, positions, accumEdges):
+  cost  = []
+  for dr,edge in accumEdges:
+    if dr == "x":
+      cost.append(page.costX[edge])
+    elif dr == "y":
+      cost.append(page.costX[edge])
+    else:
+      assert False
+
+  return cost
+
+def processImage(filename, sx, sy):
+  img = im.open(filename).convert("L")
+  #img.show()
+  pieces = {}
+  w,h = img.size
+  h = h / sy
+  w = w / sx
+  for i in range(sy):
+    for j in range(sx):
+      g = img.crop((j*w,i*h,(j+1)*w,(i+1)*h))
+      g.load()
+      g.load()
+      print g, img, img.load()
+      a = g.load()
+      pieces[(i,j)] = a
+  print pieces
+
+def imgCostX(self, a, b):
+  if a == b:
+    return float("inf")
+  if a[1] == -1 or b[1] == self.sizeX or (a[0] == -1 and b[0] == -1) or (a[0] == self.sizeY and b[0] == self.sizeY):
+    rez = 0
+  else:
+    rez = maxScore - (r.gauss(meanCor, sdevCor) - self.sampleError(errorRate))
+  self.totalCost += [rez]
+  return rez
+
+
+if __name__ == "__main__":
+  reps = 100
+  correct = 0
+  g1D = 0
+  prm = 0
+  for i in range(reps):
+    print reps
+    page = GaussianPage(5,2,5, True) # turning noise off causes very odd behaviour, should investigate
+    g1DMat = greedy1D(page)
+    page.heapify()
+    (pos, edges) = prim(page)
+    #print g1DMat
+    #print edges
+    correct += sum(page.totalCost)
+    g1D += sum(page.calculateCostMat(g1DMat))
+    prm += sum(primCost(page, pos, edges))
+    #processImage("text1.gif",5,2)
+  print correct/reps, prm/reps, g1D/reps
