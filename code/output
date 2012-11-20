@@ -1,0 +1,29 @@
+input: dim(16382, 6)
+[[ 255.  255.  255.  255.  255.  255.]
+ [ 255.  255.  255.  255.  255.  255.]
+ [ 255.  255.  255.  255.  255.  255.]
+ ..., 
+ [ 255.  255.  255.  255.  255.  255.]
+ [ 255.  255.  255.  255.  255.  255.]
+ [ 255.  255.  255.  255.  255.  255.]]
+
+target: dim(16382, 1)
+[[ 1.]
+ [ 1.]
+ [ 1.]
+ ..., 
+ [ 1.]
+ [ 1.]
+ [ 1.]]
+
+
+FeedForwardNetwork-8
+   Modules:
+    [<BiasUnit 'bias'>, <LinearLayer 'in'>, <SigmoidLayer 'hidden0'>, <LinearLayer 'out'>]
+   Connections:
+    [<FullConnection 'FullConnection-4': 'in' -> 'hidden0'>, <FullConnection 'FullConnection-5': 'hidden0' -> 'out'>, <FullConnection 'FullConnection-6': 'bias' -> 'out'>, <FullConnection 'FullConnection-7': 'bias' -> 'hidden0'>]
+
+(0, 0) [-1.51416336]
+(0, 1) [-2.02754314]
+(1, 0) [-2.06878274]
+(1, 1) [-2.10981924]
