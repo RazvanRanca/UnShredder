@@ -13,6 +13,7 @@ Writing:
 --
 * Summary of papers regarding local search and cost functions
 * Presentation 1
+* Poster Abstract
 
 Coding/Experiments:
 --
@@ -21,25 +22,30 @@ Coding/Experiments:
 * Greedy1D search baseline
 * Prim search baseline
 * Gaussian simulation of edges cost
-* Basic image processing tied into above baselines. **First experimental results!**
+* Basic image processing tied into above baselines.
 * REFACTOR
+* Kruskal heuristic search function. Should be better than Graph2D or Prim.
+* Solved several bottlenecks, Prim now works on 15x15 documents in ~15 seconds but kruskal still takes about a minute on 12x12.
+* Vizualizations tools, can observe what algorithm does at every step
+* Basic neural network cost function implemented, further work needed to get good results
+* Cost function based on distribution of 6 pixel window taken over the shreds
 
 Up Next:
 ==
 Reading:
 --
-* ILP methods
-* Get accustomed to CPLEX
 * OCR cost functions
+* ILP methods
+* CPLEX
 
 Writing:
 --
-* Results of first experiment
+* Results of experiments done so far, effect of cost function
 
 Coding/Experiments:
 --
-* Performance analysis of image processing code
-* Greedy2D search heuristic
+* Further testing of new cost functions
 * Bayesian cost function
-* automatic learning of a cost function
+* Neural Net cost function
+* Optimization of kruskal heuristic
 * ILP approach

@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import matplotlib.pyplot as plt
 import random as r
 import heapq as hq
@@ -8,10 +8,63 @@ class ImagePage():
   def __init__(self,sx, sy, filename, cType = None):
     img = Image.open(filename).convert("1")
     pieces = {}
-    w,h = img.size
+    width,height = img.size
     #print w, h
-    h = h / sy
-    w = w / sx
+    h = height / sy
+    w = width / sx
+
+    img = img.crop((0,0,w*sx,h*sy))
+    width,height = img.size
+
+    data = list(img.getdata())
+    dp = {}
+    row = -1
+    col = -1
+    cr = 0
+    stt = set()
+    for i in range(len(data)):
+      if (i%width) % w == 0:
+        col += 1
+      if i % width == 0:
+        col = 0
+        if cr % h == 0:
+          cr = 0
+          row += 1
+        cr += 1
+      #stt.add((row, col))
+      try:
+        dp[(row,col)].append(data[i])
+      except:
+        dp[(row,col)] = [data[i]]
+    #print stt
+    self.dataPieces = dp
+
+    rotData = list(img.rotate(90).getdata())
+    rdp = {}
+    row = -1
+    col = sx
+    cr = 0
+    qqq = []
+    for i in range(len(rotData)):
+      if (i%height) % h == 0:
+        #print ((row,col))
+        row += 1
+      if i % height == 0:
+        row = 0
+        if cr % w == 0:
+          cr = 0
+          col -= 1
+        cr += 1
+      stt.add((row, col))
+      try:
+        rdp[(row,col)].append(rotData[i])
+      except:
+        rdp[(row,col)] = [rotData[i]]
+    #print stt
+    #print qqq
+    self.dataPieces = dp
+    self.rotDataPieces = rdp
+
     blank = Image.new("1", (w,h), 255)
     for i in range(sy):
       for j in range(sx):
@@ -19,7 +72,7 @@ class ImagePage():
         pieces[(i,j)] = g
     #print pieces
     #output(pieces[(0,1)])
-    blanks = []
+    #blanks = []
     #for i in range(0,sx):
     #  pieces[(-1,i)] = blank
     #  pieces[(sy,i)] = blank
@@ -29,16 +82,57 @@ class ImagePage():
     #  pieces[(i,sx)] = blank
     #  blanks += [(i,-1),(i,sx)]
 
-    self.blankPos = blanks
+    self.blankPos = (-42,-42)
+    self.blank = blank
+
     self.corners = [(-1,-1),(sy,-1),(-1,sx),(sy,sx)]
     self.sizeX = sx
     self.sizeY = sy
-    self.states = pieces
     self.orig = img
-    self.blank = blank
+    self.states = pieces
     if cType != None:
       self.setCost(cType)
     self.getBlanks()
+
+    self.pHeight = h
+    self.pWidth = w
+
+    self.getWhitePieces()
+
+  def verifyData(self):
+    for row in range(self.sizeY):
+      for col in range(self.sizeX):
+        if self.dataPieces[(row,col)] != list(self.states[(row,col)].getdata()):
+          raise Exception("Data verification failed at: " + str((row,col)))
+        if self.rotDataPieces[(row,col)] != list(self.states[(row,col)].rotate(90).getdata()):
+          raise Exception("Data verification failed at: " + str((row,col)))
+
+    print "Data OK"
+    return True
+
+  
+
+  def getWhitePieces(self, x=3): # return those pieces which have less than X black pixels on each edge
+    whites = set()    
+    whiteWidth = 255 * (self.pWidth - x)
+    whiteHeight = 255 * (self.pHeight - x)
+    for p in self.states:
+      firstRow = self.dataPieces[p][:self.pWidth]
+      lastRow = self.dataPieces[p][-self.pWidth:]
+      firstCol = self.rotDataPieces[p][:self.pHeight]
+      lastCol = self.rotDataPieces[p][-self.pHeight:]
+      #print p, sum(firstRow) - whiteWidth, sum(lastRow) - whiteWidth, sum(firstCol) - whiteHeight, sum(lastCol) - whiteHeight
+      if sum(firstRow) > whiteWidth and sum(lastRow) > whiteWidth and sum(firstCol) > whiteHeight and sum(lastCol) > whiteHeight:
+        whites.add(p)
+        self.states[p].save("whites/" + str(p),"JPEG")
+
+    self.whites = whites
+
+  def pieceDistX(self, p):
+    return dict(filter(lambda ((a,b),y): a == p, self.costX.items()))
+
+  def pieceDistY(self, p):
+    return dict(filter(lambda ((a,b),y): a == p, self.costY.items()))
 
   def getAllStates(self): # returns a list of all (i,j) positions considered, including blanks
     states = []
@@ -49,37 +143,64 @@ class ImagePage():
 
     return states
 
-  def setCost(self,costType):
+  def setCost(self,costType, process = False, perX = None, perY = None):
     self.costType = costType
-    self.costX, self.costY = cost.picker(costType, self, self.sizeX, self.sizeY)
+    self.costX, self.costY = cost.picker(costType, self, perX, perY)
+
+    self.states[self.blankPos] = self.blank # This should be set after because we don't wan't the blank in the cost vectors but we need it for the evaluation
+    self.dataPieces[self.blankPos] = list(self.blank.getdata())
+    self.rotDataPieces[self.blankPos] = list(self.blank.getdata())
+
+
+   # if process and False:
+   #   self.costX = cost.normalizeCost(self.costX)
+   #   self.costY = cost.normalizeCost(self.costY)
+
+    if process:
+      self.costX = cost.processCostX(self)
+      self.costY = cost.processCostY(self)
+
     self.heapify()
+
+    self.edgeScoreX = {}  # Used to speed up extract Heap method
+    for (e, c) in self.costX.items():
+       self.edgeScoreX[e] = c
+
+    self.edgeScoreY = {}
+    for (e, c) in self.costY.items():
+      self.edgeScoreY[e] = c
+
+    
+    #while len(self.heapX) > 0:
+    #  print hq.heappop(self.heapX)
+
     #print self.costY
-    cType = "bit"
+    cType = "bit" # for evaluation purposes
     tc = []
     for i in range(0,self.sizeY):
       for j in range(0,self.sizeX):
         if (i,j) not in self.corners:
           if j < self.sizeX-1 and (i,j+1) not in self.corners:
-            edge = (self.states[(i,j)],self.states[(i,j+1)])
-            tc.append(cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY))
+            edge = ((i,j),(i,j+1))
+            tc.append(cost.indivPicker(cType, edge[0], edge[1], "x", self, False))
           if i < self.sizeY-1 and (i+1,j) not in self.corners:
-            edge = (self.states[(i,j)],self.states[(i+1,j)])
-            tc.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+            edge = ((i,j),(i+1,j))
+            tc.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
 
     sx = self.sizeX
     sy = self.sizeY
     self.totalInternalCost = tc[:]
 
     for i in range(0,sx):
-      edge = (self.blank,self.states[(0,i)])
-      tc.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
-      edge = (self.states[(sy-1,i)],self.blank)
-      tc.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+      edge = (self.blankPos,(0,i))
+      tc.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
+      edge = ((sy-1,i),self.blankPos)
+      tc.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
     for i in range(0,sy):
-      edge = (self.states[(i,sx-1)],self.blank)
-      tc.append(cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY))
-      edge = (self.blank,self.states[(i,0)])
-      tc.append(cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY))
+      edge = ((i,sx-1),self.blankPos)
+      tc.append(cost.indivPicker(cType, edge[0], edge[1], "x", self, False))
+      edge = (self.blankPos,(i,0))
+      tc.append(cost.indivPicker(cType, edge[0], edge[1], "x", self, False))
 
     self.totalCost = tc
     #print self.costX, "\n\n"
@@ -98,42 +219,64 @@ class ImagePage():
     for row in range(len(mat)):
       #print row, mat[row]
       if not internal:
-        edge = (self.states[mat[row][len(mat[row]) - 1][1]],self.blank) 
+        edge = (mat[row][len(mat[row]) - 1][1], self.blankPos) 
         #self.output(edge[0])
         #self.output(edge[1])
-        #print cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY)
-        ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY))
-        edge = (self.blank,self.states[mat[row][0][0]])
-        ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY))
+        #print cost.indivPicker(cType, edge[0], edge[1], "x", self, False)
+        ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", self, False))
+        #print "x edge", mat[row][len(mat[row]) - 1][1]
+        edge = (self.blankPos, mat[row][0][0])
+        ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", self, False))
+        #print "x edge", mat[row][0][0]
 
       for col in range(len(mat[row])):
         if not internal:
           if row == 0:
-            edge = (self.blank,self.states[mat[0][col][1]])
-            ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+            edge = (self.blankPos, mat[0][col][1])
+            #print "y edge", mat[0][col][1]
+            ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
             if col == 0:
-              edge = (self.blank,self.states[mat[0][col][0]])
-              ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+              edge = (self.blankPos, mat[0][col][0])
+              #print "y edge", mat[0][col][0]
+              ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
           elif row == len(mat) - 1:
-            edge = (self.states[mat[len(mat)-1][col][1]],self.blank)
-            ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+            edge = (mat[len(mat)-1][col][1], self.blankPos)
+            ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
+            #print "y edge", mat[len(mat)-1][col][1]
             if col == 0:
-              edge = (self.states[mat[len(mat)-1][col][0]],self.blank)
-              ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+              edge = (mat[len(mat)-1][col][0], self.blankPos)
+              ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
+              #print "y edge", mat[len(mat)-1][col][0]
+          if row != len(mat)-1 and col >= len(mat[row+1]):
+            edge = (mat[row][col][1], self.blankPos)
+            ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
+            #print "y edge", mat[row][col][1]
+          if row != 0 and col >= len(mat[row-1]):
+            edge = (self.blankPos, mat[row][col][1])
+            ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
+            #print "y edge", mat[row][col][1]
+            
 
-        edge = (self.states[mat[row][col][0]],self.states[mat[row][col][1]])
-        ct += [cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY)]
-        if row + 1 < len(mat) and col < len(mat[row+1]):
-          edge = (self.states[mat[row][col][0]],self.states[mat[row+1][col][0]])
-          ct += [cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY)]
+        edge = (mat[row][col][0], mat[row][col][1])
+        ct += [cost.indivPicker(cType, edge[0], edge[1], "x", self, False)]
+        
+        if row + 1 < len(mat) and col <= len(mat[row+1]):
+          if col == len(mat[row+1]):
+            edge = (mat[row][col][0],mat[row+1][col-1][1])
+          else:
+            edge = (mat[row][col][0], mat[row+1][col][0])
+          ct += [cost.indivPicker(cType, edge[0], edge[1], "y", self, False)]
+          
+      col = len(mat[row]) - 1
       if row + 1 < len(mat) and col < len(mat[row+1]):
-        edge = (self.states[mat[row][col][1]],self.states[mat[row+1][col][1]])
-        ct += [cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY)]
+        edge = (mat[row][col][1], mat[row+1][col][1])
+        ct += [cost.indivPicker(cType, edge[0], edge[1], "y", self, False)]
+        
 
     #assert len(ct) == 2*self.sizeX*self.sizeY - self.sizeX - self.sizeY
     return ct
 
-  def calcCostList(self, positions, internal = False): # calculates cost given adjacency list
+  def calcCostList(self, positions, internal = False): # calculates cost given dictionary of edge positions
     ct  = []
     left = []
     right = []
@@ -147,36 +290,59 @@ class ImagePage():
       if (y-1,x) not in revPos:
         up.append(state)
       #else:
-      #  edge = (self.states[revPos[(y-1,x)]],self.states[state])
-      #  ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+      #  edge = (revPos[(y-1,x)], state)
+      #  ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
       if (y+1,x) not in revPos:
         down.append(state)
       else:
-        edge = (self.states[state],self.states[revPos[(y+1,x)]])
-        ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", False, self.blank, self.sizeX, self.sizeY))
+        edge = (state, revPos[(y+1,x)])
+        ct.append(cost.indivPicker(cType, edge[0], edge[1], "y", self, False))
       if (y,x-1) not in revPos:
         left.append(state)
       #else:
-      #  edge = (self.states[revPos[(y,x-1)]],self.states[state])
-      #  ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY))
+      #  edge = (revPos[(y,x-1)], state)
+      #  ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", self, False))
       if (y,x+1) not in revPos:
         right.append(state)
       else:
-        edge = (self.states[state],self.states[revPos[(y,x+1)]])
-        ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", False, self.blank, self.sizeX, self.sizeY))
+        edge = (state, revPos[(y,x+1)])
+        ct.append(cost.indivPicker(cType, edge[0], edge[1], "x", self, False))
     
-    #print left, right, up, down
+    #print "x edges", left, right
+    #print "y edges", up, down
     if not internal:
       for e in left:
-        ct.append(cost.indivPicker(cType, self.blank, self.states[e], "x", False, self.blank, self.sizeX, self.sizeY))
+        ct.append(cost.indivPicker(cType, self.blankPos, e, "x", self, False))
       for e in right:
-        ct.append(cost.indivPicker(cType, self.states[e], self.blank, "x", False, self.blank, self.sizeX, self.sizeY))
+        ct.append(cost.indivPicker(cType, e, self.blankPos, "x", self, False))
       for e in up:
-        ct.append(cost.indivPicker(cType, self.blank, self.states[e], "y", False, self.blank, self.sizeX, self.sizeY))
+        ct.append(cost.indivPicker(cType, self.blankPos, e, "y", self, False))
       for e in down:
-        ct.append(cost.indivPicker(cType, self.states[e], self.blank, "y", False, self.blank, self.sizeX, self.sizeY))
+        ct.append(cost.indivPicker(cType, e, self.blankPos, "y", self, False))
 
     return ct
+
+  def calcCorrectEdges(self, positions, ignoreWhites = False): # percent of edges that are correct, only internal
+    totalEdges = (self.sizeX - 1) * self.sizeY + (self.sizeY - 1) * self.sizeX    
+    
+    if ignoreWhites:
+      for (r,c) in self.whites:
+        if r == 0 and c == 0:
+          totalEdges -= 2
+        elif r == 0 or c == 0 or r == self.sizeY -1 or c == r.sizeX -1:
+          totalEdges -= 3
+        else:
+          totalEdges -= 4
+
+    revPos = dict([(v,k) for (k,v) in positions.items()])
+    correctEdges = 0.0
+    for ((sy,sx),(y,x)) in positions.items():
+      if (y+1,x) in revPos and revPos[(y+1,x)] == (sy+1,sx):
+        correctEdges += 1
+      if (y,x+1) in revPos and revPos[(y,x+1)] == (sy,sx+1):
+        correctEdges += 1
+
+    return correctEdges / totalEdges
 
   def heapify(self): # remakes the heaps
     self.heapX = map(lambda (p,score): (score,p), self.costX.items())
@@ -187,11 +353,23 @@ class ImagePage():
   def extractHeap(self, edgesX, edgesY = None): # extracts the heaps based on given sets
     if edgesY == None:
       edgesY = edgesX
+    hX = reduce(lambda l1, l2 : l1 + l2,  map(lambda x: [(self.edgeScoreX[x],x)], edgesX), [])
+    hY = reduce(lambda l1, l2 : l1 + l2,  map(lambda y: [(self.edgeScoreY[y],y)], edgesY), [])
+    hq.heapify(hX)
+    hq.heapify(hY)
+    return (hX,hY)
+
+  def oldExtractHeap(self, edgesX, edgesY = None): # extracts the heaps based on given sets
+    if edgesY == None:
+      edgesY = edgesX
     hX = map(lambda (e,score): (score,e), filter(lambda (e,score): e in edgesX, self.costX.items()))
     hY = map(lambda (e,score): (score,e), filter(lambda (e,score): e in edgesY, self.costY.items()))
     hq.heapify(hX)
     hq.heapify(hY)
     return (hX,hY)
+
+  def verifyExtractHeap(self, edgesX, edgesY = None):
+    return self.extractHeap(edgesX, edgesY) == self.oldExtractHeap(edgesX, edgesY)
 
   def getBlanks(self): # generates the lists of blank edges surrounding the image
     self.getBlankRight()
@@ -218,6 +396,61 @@ class ImagePage():
     self.blankDown = []
     for i in range(self.sizeX):
       self.blankDown.append((self.sizeY-1,i))
+
+  def vizPos(self, poses, fl=None, multiple=False):
+    if fl == None:
+      fl = "temp"
+  
+    font = ImageFont.truetype("wendy.ttf", 25)
+
+    extraPixels = 10
+
+    backs = []
+    finalH = 0
+    finalW = 0
+
+    if not multiple:
+      poses = {1:poses}
+
+    for (k, pos) in poses.items():
+      revPos = sorted(pos.items(), key=lambda x: x[1])
+      
+      minY = revPos[0][1][0]
+      maxY = revPos[-1][1][0]
+
+      minX = revPos[0][1][1]
+      maxX = revPos[0][1][1]
+      for (node, pos) in revPos:
+        if pos[1] < minX:
+          minX = pos[1]
+        if pos[1] > maxX:
+          maxX = pos[1]
+
+      back = Image.new("RGB",((maxX - minX + 1)*self.pWidth + extraPixels, (maxY - minY + 1)*self.pHeight + extraPixels) )
+
+      for (node, (curY, curX)) in revPos:
+        piece = self.states[node].convert("RGB").copy()
+        drawPiece = ImageDraw.Draw(piece)
+        drawPiece.text((2,2),str((curY,curX)), fill=(255,0,0), font=font)
+        back.paste(piece, ((curX-minX)*self.pWidth, (curY-minY)*self.pHeight)) 
+
+      bw, bh = back.size
+      finalW += bw
+      if bh > finalH:
+        finalH = bh
+
+      backs.append(back)
+
+    
+    final = Image.new("RGB", (finalW, finalH))
+    curW = 0
+    curH = 0
+    for back in backs:
+      bw,bh = back.size
+      final.paste(back, (curW, curH))
+      curW += bw
+
+    final.save(fl,"JPEG")
 
 class GaussianPage(): # add proper handling for surrounding whitespace
   def __init__(self,sx,sy,ratio, noise=True):

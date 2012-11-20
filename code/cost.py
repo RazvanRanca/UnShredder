@@ -1,9 +1,33 @@
 import random
+import pickle
+from pybrain.tools.shortcuts import buildNetwork
+from pybrain.datasets import SupervisedDataSet
+from pybrain.supervised.trainers import BackpropTrainer
+import math
 
 delta = 0.1
-inf = float("inf")
+inf = 1000 # float("inf")
+nnD = 0.87
 
-def picker(s, page, sx = None, sy = None):
+if False:
+  with open("nnPickled10",'r') as f:
+    (netX,netY) = pickle.load(f)
+
+  dnx = {}
+  dny = {}
+
+  for i1 in [0,1]:
+    for i2 in [0,1]:
+      for i3 in [0,1]:
+        for i4 in [0,1]:
+          for i5 in [0,1]:
+            for i6 in [0,1]:
+              n = (i1,i2,i3,i4,i5,i6)
+              dnx[n] = netX.activate(n)
+              dny[n] = netY.activate(n)
+
+
+def picker(s, page, px = None, py = None):
   if s == "bit":
     return calcBitCost(page)
   elif s == "gaus":
@@ -12,53 +36,79 @@ def picker(s, page, sx = None, sy = None):
     return calcBlackBitCost(page)
   elif s == "blackGaus":
     return calcBlackGausCost(page)
+  elif s == "blackBigGaus":
+    return calcBlackBigGausCost(page)
   elif s == "rand":
-    return calcRandCost(page, sx, sy)
+    return calcRandCost(page)
   elif s == "blackRow":
     return calcBlackRowCost(page)
   elif s == "blackRowGaus":
     return calcBlackRowGausCost(page)
+  elif s == "nn":
+    return calcNNCost(page)
+  elif s == "percent":
+    return calcPercentCost(page, px, py)
 
-def indivPicker(s, a,b, tp, selective = False, blank = None, sx = None, sy = None): #selective is a flag showing wether to give infinity of zero for stuff like blank on blank
+def indivPicker(s, a,b, tp, page, selective = False): #selective is a flag showing wether to give infinity of zero for stuff like blank on blank
+  blank = page.blank
+  pieces = page.states
   if s == "bit":
     if tp == "x":
-      return imgBitCostX(a, b, selective, blank)
+      return imgBitCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
     elif tp == "y":
-      return imgBitCostY(a, b, selective, blank)
-  if s == "gaus":
+      return imgBitCostY(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
+  elif s == "gaus":
     if tp == "x":
-      return imgGausCostX(a, b, selective, blank)
+      return imgGausCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
     elif tp == "y":
-      return imgGausCostY(a, b, selective, blank)
-  if s == "blackBit":
+      return imgGausCostY(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
+  elif s == "blackBit":
     if tp == "x":
-      return imgBlackBitCostX(a, b, selective, blank)
+      return imgBlackBitCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
     elif tp == "y":
-      return imgBlackBitCostY(a, b, selective, blank)
-  if s == "blackGaus":
+      return imgBlackBitCostY(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
+  elif s == "blackGaus":
     if tp == "x":
-      return imgBlackGausCostX(a, b, selective, blank)
+      return imgBlackGausCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
     elif tp == "y":
-      return imgBlackGausCostY(a, b, selective, blank)
+      return imgBlackGausCostY(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective=selective)
   elif s == "rand":
     mult = max(sx,sy) * 100
     if tp == "x":
-      return random.random() * 1.0/sy * mult
+      return random.random() * 1.0/page.sizeY * mult
     elif tp == "y":
-      return random.random() * 1.0/sx * mult
+      return random.random() * 1.0/page.sizeX * mult
+  elif s == "blackRow":
+    if tp == "x":
+      return imgBlackBitCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective)
+    elif tp == "y":
+      return imgBitCostY(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective)
+  elif s == "blackRowGaus":
+    if tp == "x":
+      return imgBlackGausCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective)
+    elif tp == "y":
+      return imgGausCostY(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective)
 
 def evaluateCost(page, sx, sy): # calculate percent of edges whose best match given by the cost function is the true neighbour and ammount of error
   costX = page.costX
   costY = page.costY  
   bestX = {}
   bestY = {}
+  countX = 0.0
+  countY = 0.0
   for (k1,k2),v in costX.items():
     if k1 not in bestX or v < bestX[k1][1]:
       bestX[k1] = (k2, v)
+      countX = 1
+    elif v == bestX[k1][1]:
+      countX += 1
 
   for (k1,k2),v in costY.items():
     if k1 not in bestY or v < bestY[k1][1]:
       bestY[k1] = (k2, v)
+      countY = 1
+    elif v == bestY[k1][1]:
+      countY += 1
 
   correct = 0
   count = 0
@@ -70,7 +120,7 @@ def evaluateCost(page, sx, sy): # calculate percent of edges whose best match gi
       if cx < sx:
         count += 1
         if costX[((y,x),(cy,cx))] == bestX[(y,x)][1]:
-          correct += 1
+          correct += 1.0/countX
         else:
           #print "XX", y,x
           error += abs(costX[((y,x),(cy,cx))] - bestX[(y,x)][1])
@@ -80,13 +130,193 @@ def evaluateCost(page, sx, sy): # calculate percent of edges whose best match gi
       if cy < sy:
         count += 1
         if costY[((y,x),(cy,cx))] == bestY[(y,x)][1]:
-          correct += 1
+          correct += 1.0/countY
         else:
           #print "YY", y,x
           error += abs(costY[((y,x),(cy,cx))] - bestY[(y,x)][1])
 
-  print float(correct) / count, float(error) / count
+  return float(correct) / count, float(error) / count
   #print sorted(bestX.items()), sorted(bestY.items())
+
+def normalizeCost(cost):
+  count = {}
+  for v in cost.values():
+    try:
+      count[v] = dist[v]+1
+    except:
+      count[v] = 1
+
+  nCost = {}
+  for (k,v) in cost.items():
+    nCost[k] = float(v) / count[v]
+
+  return nCost
+
+def processCostX(page):
+  dist = {}
+  for v in page.costX.values():
+    try:
+      dist[v] = dist[v]+1
+    except:
+      dist[v] = 1
+
+  sProb = {}
+  states = page.getAllStates()
+  noStates = len(states)
+
+  for piece in states:
+    pDist = {}  # get P(piece dist | global dist)
+
+    for v in page.pieceDistX(piece).values():
+      try:
+        pDist[v] = pDist[v]+1
+      except:
+        pDist[v] = 1
+    distProb = 1.0
+
+    for v in pDist:
+      distProb *= pDist[v]*dist[v]
+    
+    scoreProb = 1.0   # get P(score | piece dist)
+    scores = page.pieceDistX(piece)
+    for s in  scores:
+      sProb[s]= distProb * pDist[scores[s]] * (scores[s] + 1)
+
+  return sProb
+
+def processCostY(page):
+  dist = {}
+  for v in page.costY.values():
+    try:
+      dist[v] = dist[v]+1
+    except:
+      dist[v] = 1
+
+  sProb = {}
+  states = page.getAllStates()
+  noStates = len(states)
+
+  for piece in states:
+    pDist = {}  # get P(piece dist | global dist)
+
+    for v in page.pieceDistY(piece).values():
+      try:
+        pDist[v] = pDist[v]+1
+      except:
+        pDist[v] = 1
+    distProb = 1.0
+
+    for v in pDist:
+      distProb *= pDist[v]*dist[v]
+    
+    scoreProb = 1.0   # get P(score | piece dist)
+    scores = page.pieceDistY(piece)
+    for s in  scores:
+      sProb[s]= distProb * pDist[scores[s]] * (scores[s] + 1)
+
+   
+  #norm = 1000000.0/sum(sProb.values()) # just normalizing the numbers to reasonable values
+  #sProb = dict(map(lambda (k,v):(k,v*norm), sProb.items()))
+  #print sorted(sProb.items(), key=lambda x: x[1])[:1000]
+  
+  return sProb
+
+def calcPercentCost(page, px, py):
+  pieces = page.states
+  #print "halabalu", px
+  costX = {}
+  costY = {}
+  for x in pieces.keys():
+    for y in pieces.keys():
+      costX[(y, x)] = imgPerCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px)
+      costY[(y, x)] = imgPerCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, py)
+
+  return costX, costY
+
+def imgPerCostY(a, b, (wa,ha),(wb,hb), per, selective = True, blank = None):
+  if a == b:
+    if not selective and a == blank:
+      return 0
+    return inf
+  data1 = a[-wa:]
+  data2 = b[:wb]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  rez = max(len(data1), len(data2)) - size
+  c = 255.0
+  rez += sum([math.log(per[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)])
+  #self.totalCost += [rez]
+  rez = rez / float(size-2)
+  return rez
+
+def imgPerCostX(ra, rb, (wa,ha),(wb,hb), per, selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
+      return 0
+    return inf
+  data1 = ra[:ha]
+  data2 = rb[-hb:]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  rez = max(len(data1), len(data2)) - size
+  c = 255.0
+  rez += sum([math.log(per[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)])
+  #self.totalCost += [rez]
+  rez = rez / float(size-2)
+  return rez
+
+def calcNNCost(page):
+  #for n in [(1, 1,1, 1,1, 1),(0, 0,0, 0,0, 0),(1,0, 1,0, 0,1),(0, 0,0, 0,1,0)]:
+  #  print "Y", n, netY.activate(n)
+  #  print "X", n, netX.activate(n)
+  pieces = page.states
+  costX = {}
+  costY = {}
+  for x in pieces.keys():
+    for y in pieces.keys():
+      costX[(y, x)] = imgNNCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, dnx)
+      costY[(y, x)] = imgNNCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, dny)
+
+  return costX, costY
+
+def imgNNCostY(a, b, (wa,ha),(wb,hb), net, selective = True, blank = None):
+  if a == b:
+    if not selective and a == blank:
+      return 0
+    return inf
+  data1 = a[-wa:]
+  data2 = b[:wb]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  rez = max(len(data1), len(data2)) - size
+  c = 255.0
+  #print filter(lambda x: x<=0, [(net.activate((data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c))[0]) for x in range(1,size-1)])
+  rez += sum([math.log(net[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)])
+  #self.totalCost += [rez]
+  rez = rez / float(size-2)
+  return rez
+
+def imgNNCostX(ra, rb, (wa,ha),(wb,hb), net, selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
+      return 0
+    return inf
+  data1 = ra[:ha]
+  data2 = rb[-hb:]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  rez = max(len(data1), len(data2)) - size
+  c = 255.0
+  #print filter(lambda x: x<=0, [(net.activate((data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c))[0]) for x in range(1,size-1)])
+
+  rez += sum([math.log(net[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)])
+  #self.totalCost += [rez]
+  rez = rez / float(size-2)
+  return rez
 
 def calcRandCost(page, sx, sy): # random cost, used as benchmark
   pieces = page.states
@@ -101,37 +331,37 @@ def calcRandCost(page, sx, sy): # random cost, used as benchmark
 
   return costX, costY
 
-def calcBitCost(page): # bit-bit difference
+def calcBitCost(page): # bit-bit difference 
   pieces = page.states
   costX = {}
   costY = {}
   for x in pieces.keys():
     for y in pieces.keys():
-      costX[(y, x)] = imgBitCostX(pieces[y], pieces[x])
-      costY[(y, x)] = imgBitCostY(pieces[y], pieces[x])
+      costX[(y, x)] = imgBitCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size)
+      costY[(y, x)] = imgBitCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size)
 
   return costX, costY
 
-def imgBitCostY(a, b, selective = True, blank = None):
+def imgBitCostY(a, b, (wa,ha),(wb,hb), selective = True, blank = None):
   if a == b:
     if not selective and a == blank:
       return 0
     return inf
-  data1 = list(a.getdata())[-a.size[0]:]
-  data2 = list(b.getdata())[:b.size[0]]
+  data1 = a[-wa:]
+  data2 = b[:wb]
   size = min(len(data1), len(data2))
   rez = max(len(data1), len(data2)) - size
   rez += sum([0 if abs(data1[x] - data2[x])/255.0 < delta else 1 for x in range(size)])
   #self.totalCost += [rez]
   return rez
 
-def imgBitCostX(a, b, selective = True, blank = None):
-  if a == b:
-    if not selective and a == blank:
+def imgBitCostX(ra, rb, (wa,ha),(wb,hb), selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
       return 0
     return inf
-  data1 = list(a.rotate(90).getdata())[:a.size[1]]
-  data2 = list(b.rotate(90).getdata())[-b.size[1]:]
+  data1 = ra[:ha]
+  data2 = rb[-hb:]
   size = min(len(data1), len(data2))
   rez = max(len(data1), len(data2)) - size
   rez += sum([0 if abs(data1[x] - data2[x])/255.0 < delta else 1 for x in range(size)])
@@ -144,56 +374,56 @@ def calcGausCost(page): # bit-gaussian difference, equivalent to smoothing
   costY = {}
   for x in pieces.keys():
     for y in pieces.keys():
-      costX[(y, x)] = imgGausCostX(pieces[y], pieces[x])
-      costY[(y, x)] = imgGausCostY(pieces[y], pieces[x])
+      costX[(y, x)] = imgGausCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size)
+      costY[(y, x)] = imgGausCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size)
 
   return costX, costY
 
-def imgGausCostY(a, b, selective = True, blank = None):
+def imgGausCostY(a, b, (wa,ha),(wb,hb), selective = True, blank = None):
   if a == b:
     if not selective and a == blank:
       return 0
     return inf
-  data1 = list(a.getdata())[-a.size[0]:]
-  data2 = list(b.getdata())[:b.size[0]]
+  data1 = a[-wa:]
+  data2 = b[:wb]
   size = min(len(data1), len(data2))
   rez = max(len(data1), len(data2)) - size
   rez += sum([0 if abs(0.7*(data1[x] - data2[x]) + 0.1*(data1[x+1] - data2[x+1]) + 0.1*(data1[x-1] - data2[x-1]) + 0.05*(data1[x+2] - data2[x+2]) + 0.05*(data1[x-2] - data2[x-2]) )/255.0 < delta else 1 for x in range(2,size-2)])
   #self.totalCost += [rez]
   return rez
 
-def imgGausCostX(a, b, selective = True, blank = None):
-  if a == b:
-    if not selective and a == blank:
+def imgGausCostX(ra, rb, (wa,ha),(wb,hb), selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
       return 0
     return inf
-  data1 = list(a.rotate(90).getdata())[:a.size[1]]
-  data2 = list(b.rotate(90).getdata())[-b.size[1]:]
+  data1 = ra[:ha]
+  data2 = rb[-hb:]
   size = min(len(data1), len(data2))
   rez = max(len(data1), len(data2)) - size
   rez += sum([0 if abs(0.7*(data1[x] - data2[x]) + 0.1*(data1[x+1] - data2[x+1]) + 0.1*(data1[x-1] - data2[x-1]) + 0.05*(data1[x+2] - data2[x+2]) + 0.05*(data1[x-2] - data2[x-2]) )/255.0 < delta else 1 for x in range(2,size-2)])
   #self.totalCost += [rez]
   return rez
 
-def calcBlackRowCost(page): # bit-bit difference considering only black bits
+def calcBlackRowCost(page): # bit-bit difference considering only black bits on rows and all bits on columns
   pieces = page.states
   costX = {}
   costY = {}
   for x in pieces.keys():
     for y in pieces.keys():
-      costX[(y, x)] = imgBlackBitCostX(pieces[y], pieces[x])
-      costY[(y, x)] = imgBitCostY(pieces[y], pieces[x])
+      costX[(y, x)] = imgBlackBitCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size)
+      costY[(y, x)] = imgBitCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size)
 
   return costX, costY
 
-def calcBlackRowGausCost(page): # bit-bit difference considering only black bits
+def calcBlackRowGausCost(page): # bit-bit difference considering only black bits on rows and all bits on columns
   pieces = page.states
   costX = {}
   costY = {}
   for x in pieces.keys():
     for y in pieces.keys():
-      costX[(y, x)] = imgBlackGausCostX(pieces[y], pieces[x])
-      costY[(y, x)] = imgGausCostY(pieces[y], pieces[x])
+      costX[(y, x)] = imgBlackGausCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size)
+      costY[(y, x)] = imgGausCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size)
 
   return costX, costY
 
@@ -203,18 +433,18 @@ def calcBlackBitCost(page): # bit-bit difference considering only black bits
   costY = {}
   for x in pieces.keys():
     for y in pieces.keys():
-      costX[(y, x)] = imgBlackBitCostX(pieces[y], pieces[x])
-      costY[(y, x)] = imgBlackBitCostY(pieces[y], pieces[x])
+      costX[(y, x)] = imgBlackBitCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size)
+      costY[(y, x)] = imgBlackBitCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size)
 
   return costX, costY
 
-def imgBlackBitCostY(a, b, selective = True, blank = None):
+def imgBlackBitCostY(a, b, (wa,ha), (wb,hb), selective = True, blank = None):
   if a == b:
     if not selective and a == blank:
       return 0
     return inf
-  data1 = list(a.getdata())[-a.size[0]:]
-  data2 = list(b.getdata())[:b.size[0]]
+  data1 = a[-wa:]
+  data2 = b[:wb]
   if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
     return inf
   size = min(len(data1), len(data2))
@@ -223,14 +453,14 @@ def imgBlackBitCostY(a, b, selective = True, blank = None):
   #self.totalCost += [rez]
   return rez
 
-def imgBlackBitCostX(a, b, selective = True, blank = None):
-  if a == b:
-    if not selective and a == blank:
+def imgBlackBitCostX(ra, rb, (wa,ha), (wb,hb), selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
       return 0
     return inf
 
-  data1 = list(a.rotate(90).getdata())[:a.size[1]]
-  data2 = list(b.rotate(90).getdata())[-b.size[1]:]
+  data1 = ra[:ha]
+  data2 = rb[-hb:]
   if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
     return inf
   size = min(len(data1), len(data2))
@@ -245,20 +475,20 @@ def calcBlackGausCost(page): # bit-gaussian difference, equivalent to smoothing,
   costY = {}
   for x in pieces.keys():
     for y in pieces.keys():
-      costX[(y, x)] = imgBlackGausCostX(pieces[y], pieces[x])
-      costY[(y, x)] = imgBlackGausCostY(pieces[y], pieces[x])
+      costX[(y, x)] = imgBlackGausCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size)
+      costY[(y, x)] = imgBlackGausCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size)
 
   return costX, costY
 
-def imgBlackGausCostY(a, b, selective = True, blank = None):
+def imgBlackGausCostY(a, b,(wa,ha), (wb,hb),  quant = 3, selective = True, blank = None):
   if a == b:
     if not selective and a == blank:
       return 0
     return inf
 
-  data1 = list(a.getdata())[-a.size[0]:]
-  data2 = list(b.getdata())[:b.size[0]]
-  if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  data1 = a[-wa:]
+  data2 = b[:wb]
+  if len(filter(lambda x: x == 0, data1)) < quant or len(filter(lambda x: x == 0, data2)) < quant:
     return inf
   size = min(len(data1), len(data2))
   rez = max(len(data1), len(data2)) - size
@@ -292,15 +522,15 @@ def imgBlackGausCostY(a, b, selective = True, blank = None):
   #self.totalCost += [rez]
   return rez
 
-def imgBlackGausCostX(a, b, selective = True, blank = None):
-  if a == b:
-    if not selective and a == blank:
+def imgBlackGausCostX(ra, rb, (wa,ha), (wb,hb), quant = 3, selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
       return 0
     return inf
 
-  data1 = list(a.rotate(90).getdata())[:a.size[1]]
-  data2 = list(b.rotate(90).getdata())[-b.size[1]:]
-  if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  data1 = ra[:ha]
+  data2 = rb[-hb:]
+  if len(filter(lambda x: x == 0, data1)) < quant or len(filter(lambda x: x == 0, data2)) < quant:
     return inf
   size = min(len(data1), len(data2))
   rez = max(len(data1), len(data2)) - size
@@ -331,5 +561,96 @@ def imgBlackGausCostX(a, b, selective = True, blank = None):
         rez -= 4
       else:
         rez += 5
+  #self.totalCost += [rez]
+  return rez
+
+def calcBlackBigGausCost(page): # bit-gaussian difference, equivalent to smoothing, but considering only black bits
+  pieces = page.states
+  costX = {}
+  costY = {}
+  for x in pieces.keys():
+    for y in pieces.keys():
+      costX[(y, x)] = imgBlackBigGausCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size)
+      costY[(y, x)] = imgBlackBigGausCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size)
+
+  return costX, costY
+
+def calcBigGaus(rez, size, data1, data2):
+  for x in range(1,size-1):
+    if data1[x] == 0:
+      if data2[x-2] == 0:
+        rez -= 0.5
+      else:
+        rez += 0.25
+      if data2[x+2] == 0:
+        rez -= 0.5
+      else:
+        rez += 0.25
+      if data2[x-1] == 0:
+        rez -= 1.5
+      else:
+        rez += 0.75
+      if data2[x+1] == 0:
+        rez -= 1.5
+      else:
+        rez += 0.75
+      if data2[x] == 0:
+        rez -= 3
+      else:
+        rez += 4
+    if data2[x] == 0:
+      if data1[x-2] == 0:
+        rez -= 0.5
+      else:
+        rez += 0.25
+      if data1[x+2] == 0:
+        rez -= 0.5
+      else:
+        rez += 0.25
+      if data1[x-1] == 0:
+        rez -= 1.5
+      else:
+        rez += 0.75
+      if data1[x+1] == 0:
+        rez -= 1.5
+      else:
+        rez += 0.75
+      if data1[x] == 0:
+        rez -= 3
+      else:
+        rez += 4
+
+
+  return rez
+
+def imgBlackBigGausCostY(a, b,(wa,ha), (wb,hb),  selective = True, blank = None):
+  if a == b:
+    if not selective and a == blank:
+      return 0
+    return inf
+
+  data1 = a[-wa:]
+  data2 = b[:wb]
+  if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+    return inf
+  size = min(len(data1), len(data2))
+  rez = max(len(data1), len(data2)) - size
+  rez = calcBigGaus(rez, size, data1, data2)
+  #self.totalCost += [rez]
+  return rez
+
+def imgBlackBigGausCostX(ra, rb, (wa,ha), (wb,hb), selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
+      return 0
+    return inf
+
+  data1 = ra[:ha]
+  data2 = rb[-hb:]
+  if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+    return inf
+  size = min(len(data1), len(data2))
+  rez = max(len(data1), len(data2)) - size
+  rez = calcBigGaus(rez, size, data1, data2)
   #self.totalCost += [rez]
   return rez

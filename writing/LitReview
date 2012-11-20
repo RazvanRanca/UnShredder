@@ -39,8 +39,7 @@ Strip Shredded Document Reconstruction using Optical Character Recognition
 - no real performance experiment is made, it is left at the level of "potential extra feature" for a cost function.
 - only looks at cut edge characters for matching.
 
-Document Analysis Applied to Fragments: Feature Set for
-the Reconstruction of Torn Documents
+Document Analysis Applied to Fragments: Feature Set for the Reconstruction of Torn Documents
 -only talks about manually torn paper, but uses document content analysis, so might be transferable
 - tested on up to 690 snippets
 
