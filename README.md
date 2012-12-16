@@ -12,8 +12,9 @@ Reading:
 Writing:
 --
 * Summary of papers regarding local search and cost functions
-* Presentation 1
+* Presentation 1 - project description and goals
 * Poster Abstract
+* Presentation 2 - cost function and heuristics analysis. Given probabilistic cost the bottleneck is the search heuristic. 
 
 Coding/Experiments:
 --
@@ -29,6 +30,9 @@ Coding/Experiments:
 * Vizualizations tools, can observe what algorithm does at every step
 * Basic neural network cost function implemented, further work needed to get good results
 * Cost function based on distribution of 6 pixel window taken over the shreds
+* Probabilistic cost functions done by normalizing probabilities over a source piece(assumes there must be a single correct source-destination match)
+* Analysis of the cascading effect a mistake has with different search heuristics. Both heuristics suffer heavily because they cannot correct a mistake once made.
+* Preliminary analysis of cost functions. Probabilistic cost seems to perform best. 
 
 Up Next:
 ==
@@ -40,12 +44,13 @@ Reading:
 
 Writing:
 --
-* Results of experiments done so far, effect of cost function
+* Ten-page interim report
 
 Coding/Experiments:
 --
-* Further testing of new cost functions
-* Bayesian cost function
-* Neural Net cost function
+* Refactor
+* Analysis of the cascading effect on new search heuristics
+* Analysis of including higher level features in cost function (eg: row positioning information)
+* Developing an evaluation measure more closely correlated to how difficult it would be for a human to extract the relevant information from the reconstructed document
 * Optimization of kruskal heuristic
 * ILP approach

@@ -37,7 +37,6 @@ class ImagePage():
       except:
         dp[(row,col)] = [data[i]]
     #print stt
-    self.dataPieces = dp
 
     rotData = list(img.rotate(90).getdata())
     rdp = {}
@@ -98,6 +97,7 @@ class ImagePage():
     self.pWidth = w
 
     self.getWhitePieces()
+    self.cType = "blackGaus"
 
   def verifyData(self):
     for row in range(self.sizeY):
@@ -110,7 +110,17 @@ class ImagePage():
     print "Data OK"
     return True
 
-  
+  def confEdges(self, nr):
+    count = 0
+    for n in self.states:
+      (w,h) = self.states[n].size
+      row1 = self.dataPieces[n][-w:]
+      row2 = self.dataPieces[n][:w]
+      col1 = self.rotDataPieces[n][:h]
+      col2 = self.rotDataPieces[n][-h:]
+      if len(filter(lambda x: x!=255, row1)) <= nr and len(filter(lambda x: x!=255, row2)) <= nr and len(filter(lambda x: x!=255, col1)) <= nr and len(filter(lambda x: x!=255, col2)) <= nr:
+        count += 1
+    return float(count) / len(self.states)
 
   def getWhitePieces(self, x=3): # return those pieces which have less than X black pixels on each edge
     whites = set()    
@@ -143,13 +153,19 @@ class ImagePage():
 
     return states
 
-  def setCost(self,costType, process = False, perX = None, perY = None):
+  def setCost(self,costType, perX = None, perY = None, prior = None, process = False):
+    self.prx = perX
+    self.pry = perY
+    self.prior = prior
+
     self.costType = costType
-    self.costX, self.costY = cost.picker(costType, self, perX, perY)
 
     self.states[self.blankPos] = self.blank # This should be set after because we don't wan't the blank in the cost vectors but we need it for the evaluation
     self.dataPieces[self.blankPos] = list(self.blank.getdata())
     self.rotDataPieces[self.blankPos] = list(self.blank.getdata())
+
+    self.costX, self.costY = cost.picker(costType, self, perX, perY, prior)
+
 
 
    # if process and False:
@@ -175,7 +191,7 @@ class ImagePage():
     #  print hq.heappop(self.heapX)
 
     #print self.costY
-    cType = "bit" # for evaluation purposes
+    cType = self.cType # for evaluation purposes
     tc = []
     for i in range(0,self.sizeY):
       for j in range(0,self.sizeX):
@@ -215,7 +231,7 @@ class ImagePage():
 
   def calcCostMat(self, mat, internal = False): # calculated cost given matrix of edge positions
     ct = []
-    cType = "bit"
+    cType = self.cType
     for row in range(len(mat)):
       #print row, mat[row]
       if not internal:
@@ -282,7 +298,7 @@ class ImagePage():
     right = []
     up = []
     down = []
-    cType = "bit"
+    cType = self.cType
     revPos = dict([(v,k) for (k,v) in positions.items()])
     #print positions
     #print revPos
@@ -401,6 +417,9 @@ class ImagePage():
     if fl == None:
       fl = "temp"
   
+    red = Image.new("RGB", (self.pWidth,self.pHeight), (210,0,0))
+    neighR = [0,0,-1,1]
+    neighC = [1,-1,0,0]
     font = ImageFont.truetype("wendy.ttf", 25)
 
     extraPixels = 10
@@ -413,6 +432,14 @@ class ImagePage():
       poses = {1:poses}
 
     for (k, pos) in poses.items():
+      reds = set()
+      for (k, (pr,pc)) in pos.items():
+        for i in range(4):
+          cr = pr + neighR[i]
+          cc = pc + neighC[i]
+          if (cr,cc) not in pos.values():
+            reds.add((cr,cc))
+
       revPos = sorted(pos.items(), key=lambda x: x[1])
       
       minY = revPos[0][1][0]
@@ -431,8 +458,13 @@ class ImagePage():
       for (node, (curY, curX)) in revPos:
         piece = self.states[node].convert("RGB").copy()
         drawPiece = ImageDraw.Draw(piece)
-        drawPiece.text((2,2),str((curY,curX)), fill=(255,0,0), font=font)
-        back.paste(piece, ((curX-minX)*self.pWidth, (curY-minY)*self.pHeight)) 
+        drawPiece.text((2,2),str(node), fill=(255,0,0), font=font)
+        pw, ph = piece.size
+        drawPiece.line([(0,0),(pw-1,0),(pw-1,ph-1),(0,ph-1),(0,0)], fill=(255,0,0))
+        back.paste(piece, ((curX-minX + 0)*self.pWidth, (curY-minY + 0)*self.pHeight)) 
+
+      #for (curY, curX) in reds:
+      #  back.paste(red, ((curX-minX + 1)*self.pWidth, (curY-minY + 1)*self.pHeight)) 
 
       bw, bh = back.size
       finalW += bw

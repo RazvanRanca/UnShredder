@@ -4,9 +4,10 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 import math
+from itertools import groupby
 
 delta = 0.1
-inf = 1000 # float("inf")
+inf = -1000 # float("inf")
 nnD = 0.87
 
 if False:
@@ -27,7 +28,7 @@ if False:
               dny[n] = netY.activate(n)
 
 
-def picker(s, page, px = None, py = None):
+def picker(s, page, px = None, py = None, prior = None):
   if s == "bit":
     return calcBitCost(page)
   elif s == "gaus":
@@ -48,8 +49,10 @@ def picker(s, page, px = None, py = None):
     return calcNNCost(page)
   elif s == "percent":
     return calcPercentCost(page, px, py)
+  elif s == "prediction":
+    return calcPredictionCost(page, px, py, prior)
 
-def indivPicker(s, a,b, tp, page, selective = False): #selective is a flag showing wether to give infinity of zero for stuff like blank on blank
+def indivPicker(s, a,b, tp, page, px = None, py = None, prior = None, selective = False): #selective is a flag showing wether to give infinity of zero for stuff like blank on blank
   blank = page.blank
   pieces = page.states
   if s == "bit":
@@ -88,6 +91,16 @@ def indivPicker(s, a,b, tp, page, selective = False): #selective is a flag showi
       return imgBlackGausCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective)
     elif tp == "y":
       return imgGausCostY(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, selective)
+  elif s == "cached":
+    if tp == "x":
+      return page.costX[a,b]
+    elif tp == "y":
+      return page.costY[a,b]
+  elif s == "prediction":
+    if tp == "x":
+      return imgPredCostX(page.rotDataPieces[a], page.rotDataPieces[b], pieces[a].size, pieces[b].size, page.prx, page.prior)
+    elif tp == "y":
+      return imgPredCostY(page.dataPieces[a], page.dataPieces[b], pieces[a].size, pieces[b].size, page.pry, page.prior)
 
 def evaluateCost(page, sx, sy): # calculate percent of edges whose best match given by the cost function is the true neighbour and ammount of error
   costX = page.costX
@@ -97,14 +110,14 @@ def evaluateCost(page, sx, sy): # calculate percent of edges whose best match gi
   countX = 0.0
   countY = 0.0
   for (k1,k2),v in costX.items():
-    if k1 not in bestX or v < bestX[k1][1]:
+    if k1 not in bestX or v > bestX[k1][1]:
       bestX[k1] = (k2, v)
       countX = 1
     elif v == bestX[k1][1]:
       countX += 1
 
   for (k1,k2),v in costY.items():
-    if k1 not in bestY or v < bestY[k1][1]:
+    if k1 not in bestY or v >bestY[k1][1]:
       bestY[k1] = (k2, v)
       countY = 1
     elif v == bestY[k1][1]:
@@ -221,9 +234,89 @@ def processCostY(page):
   
   return sProb
 
+def calcPredictionCost(page, px, py, prior):
+  pieces = page.states
+  costX = {}
+  costY = {}
+  for x in pieces.keys():
+    for y in pieces.keys():
+      costX[(y, x)] = imgPredCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px, prior)
+      costY[(y, x)] = imgPredCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, py, prior)
+
+  #print costX[((1,0),(0,0))]
+  #print costX[((1,0),(1,1))]
+  #a = costX[((0,1),(0,2))]
+  #b = costX[((0,1),(-42,-42))]
+  #print math.fsum(a[0]), math.fsum(a[1]), math.fsum(b[0]), math.fsum(b[1])
+  #print  math.fsum(map(math.log,a)), [(key,len(list(group))) for key, group in groupby(sorted(a))]
+  #print  math.fsum(map(math.log,b)), [(key,len(list(group))) for key, group in groupby(sorted(b))]
+  #assert False
+  return costX, costY
+
+def imgPredCostY(a, b, (wa,ha),(wb,hb), (pl,pr), prior, selective = True, blank = None):
+  if a == b:
+    if not selective and a == blank:
+      return 0
+    return inf
+  data1 = a[-wa:]
+  #data0 = a[-2*wa:-wa]
+  data2 = b[:wb]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  c = 255.0
+  first = 1 - prior
+  if data2[0] == 0:
+    first = prior
+  rezl = [math.log(first)]
+  rezl += [math.log(pl[(data2[x-1]/c,data2[x]/c,data2[x+1]/c,data1[x-1]/c)][data1[x]/c]) for x in range(1,size-1)]
+  last = prior * pl[(data2[-2]/c,data2[-1]/c,0,data1[-2]/c)][data1[-1]/c] + (1 - prior) * pl[(data2[-2]/c,data2[-1]/c,1,data1[-2]/c)][data1[-1]/c]
+  rezl += [math.log(last)]
+
+  rezr = [math.log(first)]
+  rezr += [math.log(pr[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c)][data2[x]/c]) for x in range(1,size-1)]
+  last = prior * pr[(data1[-2]/c,data1[-1]/c,0,data2[-2]/c)][data2[-1]/c] + (1 - prior) * pr[(data1[-2]/c,data1[-1]/c,1,data2[-2]/c)][data2[-1]/c]
+  rezr += [math.log(last)]
+
+  rezl = math.fsum(rezl)
+  rezr = math.fsum(rezr)
+  deb = (rezl, rezr)
+
+  return min(rezl,rezr)
+
+def imgPredCostX(ra, rb, (wa,ha),(wb,hb), (pl,pr), prior, selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
+      return 0
+    return inf
+  data1 = ra[:ha]
+  #data0 = ra[ha:2*ha]
+  data2 = rb[-hb:]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  c = 255.0
+  first = 1 - prior
+  if data2[0] == 0:
+    first = prior
+  rezl = [math.log(first)]
+  rezl += [math.log(pl[(data2[x-1]/c,data2[x]/c,data2[x+1]/c,data1[x-1]/c)][data1[x]/c]) for x in range(1,size-1)]
+  last = prior * pl[(data2[-2]/c,data2[-1]/c,0,data1[-2]/c)][data1[-1]/c] + (1 - prior) * pl[(data2[-2]/c,data2[-1]/c,1,data1[-2]/c)][data1[-1]/c]
+  rezl += [math.log(last)]
+
+  rezr = [math.log(first)]
+  rezr += [math.log(pr[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c)][data2[x]/c]) for x in range(1,size-1)]
+  last = prior * pr[(data1[-2]/c,data1[-1]/c,0,data2[-2]/c)][data2[-1]/c] + (1 - prior) * pr[(data1[-2]/c,data1[-1]/c,1,data2[-2]/c)][data2[-1]/c]
+  rezr += [math.log(last)]
+
+  rezl = math.fsum(rezl)
+  rezr = math.fsum(rezr)
+  deb = (rezl, rezr)
+
+  return min(rezl,rezr)
+
 def calcPercentCost(page, px, py):
   pieces = page.states
-  #print "halabalu", px
   costX = {}
   costY = {}
   for x in pieces.keys():
@@ -231,6 +324,9 @@ def calcPercentCost(page, px, py):
       costX[(y, x)] = imgPerCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px)
       costY[(y, x)] = imgPerCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, py)
 
+  #print costX[((1,2),(0,2))]
+  #print costX[((1,2),(1,3))]
+  #assert False
   return costX, costY
 
 def imgPerCostY(a, b, (wa,ha),(wb,hb), per, selective = True, blank = None):
@@ -240,14 +336,12 @@ def imgPerCostY(a, b, (wa,ha),(wb,hb), per, selective = True, blank = None):
     return inf
   data1 = a[-wa:]
   data2 = b[:wb]
-  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
-  #  return inf
+
   size = min(len(data1), len(data2))
-  rez = max(len(data1), len(data2)) - size
   c = 255.0
-  rez += sum([math.log(per[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)])
-  #self.totalCost += [rez]
-  rez = rez / float(size-2)
+  rez = [math.log(per[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)]
+  deb = (math.fsum(rez), rez)
+  rez = math.fsum(rez)
   return rez
 
 def imgPerCostX(ra, rb, (wa,ha),(wb,hb), per, selective = True, blank = None):
@@ -257,14 +351,12 @@ def imgPerCostX(ra, rb, (wa,ha),(wb,hb), per, selective = True, blank = None):
     return inf
   data1 = ra[:ha]
   data2 = rb[-hb:]
-  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
-  #  return inf
+
   size = min(len(data1), len(data2))
-  rez = max(len(data1), len(data2)) - size
   c = 255.0
-  rez += sum([math.log(per[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)])
-  #self.totalCost += [rez]
-  rez = rez / float(size-2)
+  rez = [math.log(per[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data2[x]/c,data2[x+1]/c)]) for x in range(1,size-1)]
+  deb = (math.fsum(rez), rez)
+  rez = math.fsum(rez)
   return rez
 
 def calcNNCost(page):
