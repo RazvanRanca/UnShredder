@@ -134,20 +134,20 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
   while len(states) > len(found) + 1:
     cX = 0
     cY = 0
-    print "---X---", sorted(hX, reverse=True)
-    print "---Y---", sorted(hY, reverse=True)
+    #print "---X---", sorted(hX, reverse=True)
+    #print "---Y---", sorted(hY, reverse=True)
     
     hX = [(score,(f,s)) for (score,(f,s)) in hX if f != page.blankPos and s != page.blankPos]
     hY = [(score,(f,s)) for (score,(f,s)) in hY if f != page.blankPos and s != page.blankPos]
-    maxX = max([x[0] for x in hX]) if hX != [] else None
-    maxY = max([x[0] for x in hY]) if hY != [] else None
+    maxX = min([x[0] for x in hX]) if hX != [] else None
+    maxY = min([x[0] for x in hY]) if hY != [] else None
 
     bestX = random.choice(filter(lambda x: x[0] == maxX, hX)) if hX != [] else None
     bestY = random.choice(filter(lambda y: y[0] == maxY, hY)) if hY != [] else None
 
 
     #print "=============", bestX, bestY
-    if bestY == None or (bestX != None and bestX[0] > bestY[0]):
+    if bestY == None or (bestX != None and bestX[0] < bestY[0]):
       cur = bestX[1]
       accumEdges.append(("x",cur))
       if cur[1] in found:
@@ -229,11 +229,11 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
             ay, ax = py-1, px
             nodeY2[f][n] = calcGridScore(ay, ax, n, grid, revGrid, page)
 
-    print "X1",nodeX1,'\n'
-    print "X2",nodeX2,'\n'
-    print "Y1",nodeY1,'\n'
-    print "Y2",nodeY2,'\n'
-
+    #print "X1",nodeX1,'\n'
+    #print "X2",nodeX2,'\n'
+    #print "Y1",nodeY1,'\n'
+    #print "Y2",nodeY2,'\n'
+    """
     for n in states:
 
       #if lognormalize(nodeX1[n]) != fastLognormalize(nodeX1[n]):
@@ -251,27 +251,27 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
       nodeX2[n] = dict([(k,(cX2[k],nodeX2[n][k][1])) for k in nodeX2[n]])
       nodeY1[n] = dict([(k,(cY1[k],nodeY1[n][k][1])) for k in nodeY1[n]])
       nodeY2[n] = dict([(k,(cY2[k],nodeY2[n][k][1])) for k in nodeY2[n]])
-
+    """
 
     for v1 in nodeX1:
       for v2 in nodeX1[v1]:
-        hX.append((nodeX1[v1][v2][0], (v1,v2)))
-        #hX.append((nodeX1[v1][v2][0]/nodeX1[v1][v2][1], (v1,v2)))
+        #hX.append((nodeX1[v1][v2][0], (v1,v2)))
+        hX.append((nodeX1[v1][v2][0]/nodeX1[v1][v2][1], (v1,v2)))
 
     for v1 in nodeX2:
       for v2 in nodeX2[v1]:
-        hX.append((nodeX2[v1][v2][0], (v2,v1)))
-        #hX.append((nodeX2[v1][v2][0]/nodeX2[v1][v2][1], (v2,v1)))
+        #hX.append((nodeX2[v1][v2][0], (v2,v1)))
+        hX.append((nodeX2[v1][v2][0]/nodeX2[v1][v2][1], (v2,v1)))
 
     for v1 in nodeY1:
       for v2 in nodeY1[v1]:
-        hY.append((nodeY1[v1][v2][0], (v1,v2)))
-        #hY.append((nodeY1[v1][v2][0]/nodeY1[v1][v2][1], (v1,v2)))
+        #hY.append((nodeY1[v1][v2][0], (v1,v2)))
+        hY.append((nodeY1[v1][v2][0]/nodeY1[v1][v2][1], (v1,v2)))
 
     for v1 in nodeY2:
       for v2 in nodeY2[v1]:
-        hY.append((nodeY2[v1][v2][0], (v2,v1)))
-        #hY.append((nodeY2[v1][v2][0]/nodeY2[v1][v2][1], (v2,v1)))
+        #hY.append((nodeY2[v1][v2][0], (v2,v1)))
+        hY.append((nodeY2[v1][v2][0]/nodeY2[v1][v2][1], (v2,v1)))
 
     #print nodeX1
     """
@@ -342,14 +342,14 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
 
     #hq.heapify(hX)
     #hq.heapify(hY)
-    #page.vizPos(positions, fl="quuu")
+    #page.vizPos(positions, fl="quuu.jpg")
     #raw_input("Press any key to continue...")
   """
-    page.vizPos(positions, fl="quuu")
-    raw_input("qqqq")
+    #page.vizPos(positions, fl="quuu.jpg")
+    #raw_input("qqqq")
 
   assert len(set(positions.values())) == len(positions.values())
-  #page.vizPos(positions, fl="qqqq" + str(page.sizeX))
+  #page.vizPos(positions, fl="qqqq" + str(page.sizeX) + ".jpg")
   #print positions
   #print accumEdges
 
@@ -708,10 +708,10 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
         hY.append((nodeY[v1][v2][0], (v1,v2)))
         #hY.append((nodeY[v1][v2][0]/nodeY[v1][v2][1], (v1,v2)))
 
-    if not firstOne:
-      #page.vizPos({1:{(0,0):(0,1),(0,1):(0,1)}}, fl="quuu", multiple = True)
-      page.vizPos(positions, fl="quuu", multiple = True)
-      raw_input("Press any key to continue...")
+    #if not firstOne:
+      #page.vizPos({1:{(0,0):(0,1),(0,1):(0,1)}}, fl="quuu.jpg", multiple = True)
+      #page.vizPos(positions, fl="quuu.jpg", multiple = True)
+      #raw_input("Press any key to continue...")
 
     firstOne = False
 

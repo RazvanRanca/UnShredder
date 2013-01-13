@@ -7,7 +7,7 @@ import math
 from itertools import groupby
 
 delta = 0.1
-inf = -1000 # float("inf")
+inf = 1000 # float("inf")
 nnD = 0.87
 
 if False:
@@ -107,21 +107,19 @@ def evaluateCost(page, sx, sy): # calculate percent of edges whose best match gi
   costY = page.costY  
   bestX = {}
   bestY = {}
-  countX = 0.0
-  countY = 0.0
+  #print costX
+  #print costY
   for (k1,k2),v in costX.items():
-    if k1 not in bestX or v > bestX[k1][1]:
-      bestX[k1] = (k2, v)
-      countX = 1
+    if k1 not in bestX or v < bestX[k1][1]:
+      bestX[k1] = (k2, v, 1)
     elif v == bestX[k1][1]:
-      countX += 1
+      bestX[k1] = (bestX[k1][0],bestX[k1][1],bestX[k1][2]+1)
 
   for (k1,k2),v in costY.items():
-    if k1 not in bestY or v >bestY[k1][1]:
-      bestY[k1] = (k2, v)
-      countY = 1
+    if k1 not in bestY or v < bestY[k1][1]:
+      bestY[k1] = (k2, v, 1)
     elif v == bestY[k1][1]:
-      countY += 1
+      bestY[k1] = (bestY[k1][0], bestY[k1][1], bestY[k1][2]+1)
 
   correct = 0
   count = 0
@@ -133,7 +131,8 @@ def evaluateCost(page, sx, sy): # calculate percent of edges whose best match gi
       if cx < sx:
         count += 1
         if costX[((y,x),(cy,cx))] == bestX[(y,x)][1]:
-          correct += 1.0/countX
+          correct += 1.0/bestX[(y,x)][2]
+          #print "X", y, x, bestX[(y,x)][2]
         else:
           #print "XX", y,x
           error += abs(costX[((y,x),(cy,cx))] - bestX[(y,x)][1])
@@ -143,13 +142,15 @@ def evaluateCost(page, sx, sy): # calculate percent of edges whose best match gi
       if cy < sy:
         count += 1
         if costY[((y,x),(cy,cx))] == bestY[(y,x)][1]:
-          correct += 1.0/countY
+          correct += 1.0/bestY[(y,x)][2]
+          #print "Y", y, x, bestY[(y,x)][2]
         else:
           #print "YY", y,x
           error += abs(costY[((y,x),(cy,cx))] - bestY[(y,x)][1])
-
+  #print correct, count
+  #print sorted(bestX.items())
+  #print sorted(bestY.items())
   return float(correct) / count, float(error) / count
-  #print sorted(bestX.items()), sorted(bestY.items())
 
 def normalizeCost(cost):
   count = {}
