@@ -83,6 +83,7 @@ class ImagePage():
 
     self.blankPos = (-42,-42)
     self.blank = blank
+    self.blankCount = 1
 
     self.corners = [(-1,-1),(sy,-1),(-1,sx),(sy,sx)]
     self.sizeX = sx
@@ -134,7 +135,7 @@ class ImagePage():
       #print p, sum(firstRow) - whiteWidth, sum(lastRow) - whiteWidth, sum(firstCol) - whiteHeight, sum(lastCol) - whiteHeight
       if sum(firstRow) > whiteWidth and sum(lastRow) > whiteWidth and sum(firstCol) > whiteHeight and sum(lastCol) > whiteHeight:
         whites.add(p)
-        self.states[p].save("whites/" + str(p),"JPEG")
+        #self.states[p].save("whites/" + str(p),"JPEG")
 
     self.whites = whites
 
@@ -160,7 +161,9 @@ class ImagePage():
 
     self.costType = costType
 
-    self.states[self.blankPos] = self.blank # This should be set after because we don't wan't the blank in the cost vectors but we need it for the evaluation
+    self.states[self.blankPos] = self.blank
+    self.blankCount = self.sizeX * 2 + self.sizeY * 2
+    print self.blankCount
     self.dataPieces[self.blankPos] = list(self.blank.getdata())
     self.rotDataPieces[self.blankPos] = list(self.blank.getdata())
 

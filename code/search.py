@@ -14,6 +14,8 @@ def picker(s, page, ignoreWhites = False):
     return greedy1D(page)
   elif s == "prim":
     return prim(page)
+  elif s == "prim1":
+    return prim1(page)
   elif s == "kruskal":
     return kruskal(page, ignoreWhites)
   else:
@@ -131,6 +133,7 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
   grid = set()
   revGrid = {}
   accumEdges = []
+  countWhite = False
   while len(states) > len(found) + 1:
     cX = 0
     cY = 0
@@ -139,15 +142,15 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
     
     hX = [(score,(f,s)) for (score,(f,s)) in hX if f != page.blankPos and s != page.blankPos]
     hY = [(score,(f,s)) for (score,(f,s)) in hY if f != page.blankPos and s != page.blankPos]
-    maxX = min([x[0] for x in hX]) if hX != [] else None
-    maxY = min([x[0] for x in hY]) if hY != [] else None
+    maxX = max([x[0] for x in hX]) if hX != [] else None
+    maxY = max([x[0] for x in hY]) if hY != [] else None
 
     bestX = random.choice(filter(lambda x: x[0] == maxX, hX)) if hX != [] else None
     bestY = random.choice(filter(lambda y: y[0] == maxY, hY)) if hY != [] else None
 
 
     #print "=============", bestX, bestY
-    if bestY == None or (bestX != None and bestX[0] < bestY[0]):
+    if bestY == None or (bestX != None and bestX[0] > bestY[0]):
       cur = bestX[1]
       accumEdges.append(("x",cur))
       if cur[1] in found:
@@ -213,36 +216,46 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
       for n in states:
         if n not in found:
           py,px = positions[f]
+          mult = 0
+          if n == page.blankPos:
+            mult = math.log(page.blankCount)
+
           if (py, px+1) not in grid:
             ay, ax = py, px+1
-            nodeX1[f][n] = calcGridScore(ay, ax, n, grid, revGrid, page)
+            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            nodeX1[f][n] = (val[0] + mult, val[1])
+            
 
           if (py, px-1) not in grid:
             ay, ax = py, px-1
-            nodeX2[f][n] = calcGridScore(ay, ax, n, grid, revGrid, page)
+            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            nodeX2[f][n] = (val[0] + mult, val[1])
 
           if (py+1, px) not in grid:
             ay, ax = py+1, px
-            nodeY1[f][n] = calcGridScore(ay, ax, n, grid, revGrid, page)
+            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            nodeY1[f][n] = (val[0] + mult, val[1])
 
           if (py-1, px) not in grid:
             ay, ax = py-1, px
-            nodeY2[f][n] = calcGridScore(ay, ax, n, grid, revGrid, page)
+            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            nodeY2[f][n] = (val[0] + mult, val[1])
 
+          
     #print "X1",nodeX1,'\n'
     #print "X2",nodeX2,'\n'
     #print "Y1",nodeY1,'\n'
     #print "Y2",nodeY2,'\n'
-    """
+    
     for n in states:
 
-      #if lognormalize(nodeX1[n]) != fastLognormalize(nodeX1[n]):
-      #  print "n", lognormalize(nodeX1[n]) 
-      #  print "f", fastLognormalize(nodeX1[n])
-      cX1 = lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
-      cX2 = lognormalize(dict([(x[0],x[1][0]) for x in nodeX2[n].items()]))
-      cY1 = lognormalize(dict([(x[0],x[1][0]) for x in nodeY1[n].items()]))
-      cY2 = lognormalize(dict([(x[0],x[1][0]) for x in nodeY2[n].items()]))
+      #if lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])) != flognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])):
+      #  print "n", lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])) 
+      #  print "f", flognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
+      cX1 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
+      cX2 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeX2[n].items()]))
+      cY1 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeY1[n].items()]))
+      cY2 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeY2[n].items()]))
 
       if not verifyNorm(cX1, cX2, cY1, cY2):
         print "goddammit"
@@ -251,27 +264,27 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
       nodeX2[n] = dict([(k,(cX2[k],nodeX2[n][k][1])) for k in nodeX2[n]])
       nodeY1[n] = dict([(k,(cY1[k],nodeY1[n][k][1])) for k in nodeY1[n]])
       nodeY2[n] = dict([(k,(cY2[k],nodeY2[n][k][1])) for k in nodeY2[n]])
-    """
+    
 
     for v1 in nodeX1:
       for v2 in nodeX1[v1]:
-        #hX.append((nodeX1[v1][v2][0], (v1,v2)))
-        hX.append((nodeX1[v1][v2][0]/nodeX1[v1][v2][1], (v1,v2)))
+        hX.append((nodeX1[v1][v2][0], (v1,v2)))
+        #hX.append((nodeX1[v1][v2][0]/nodeX1[v1][v2][1], (v1,v2)))
 
     for v1 in nodeX2:
       for v2 in nodeX2[v1]:
-        #hX.append((nodeX2[v1][v2][0], (v2,v1)))
-        hX.append((nodeX2[v1][v2][0]/nodeX2[v1][v2][1], (v2,v1)))
+        hX.append((nodeX2[v1][v2][0], (v2,v1)))
+        #hX.append((nodeX2[v1][v2][0]/nodeX2[v1][v2][1], (v2,v1)))
 
     for v1 in nodeY1:
       for v2 in nodeY1[v1]:
-        #hY.append((nodeY1[v1][v2][0], (v1,v2)))
-        hY.append((nodeY1[v1][v2][0]/nodeY1[v1][v2][1], (v1,v2)))
+        hY.append((nodeY1[v1][v2][0], (v1,v2)))
+        #hY.append((nodeY1[v1][v2][0]/nodeY1[v1][v2][1], (v1,v2)))
 
     for v1 in nodeY2:
       for v2 in nodeY2[v1]:
-        #hY.append((nodeY2[v1][v2][0], (v2,v1)))
-        hY.append((nodeY2[v1][v2][0]/nodeY2[v1][v2][1], (v2,v1)))
+        hY.append((nodeY2[v1][v2][0], (v2,v1)))
+        #hY.append((nodeY2[v1][v2][0]/nodeY2[v1][v2][1], (v2,v1)))
 
     #print nodeX1
     """
@@ -357,13 +370,299 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
 
   return positions, accumEdges
 
-def verifyNorm(nodeX1, nodeX2, nodeY1={0:0}, nodeY2={0:0}):
+def prim1(page): # adds best edge to graph already constructed, analog of Prim's agorithm with replacement
+
+  hX = page.heapX
+  hY = page.heapY
+  hX = [(a,b,b[0]) for (a,b) in hX]
+  hY = [(a,b,b[0]) for (a,b) in hY]
+  states = page.states.keys()
+  found = set()
+  posX = 0
+  posY = 0
+  cur = 0
+  chosen = 0
+  notChosen = 0
+  axes = 0
+  positions = {}
+  revGrid = {}
+  pastStates = {}
+  illegal = set()
+  accumEdges = []
+  countPress = 0
+  postProc = True
+  countWhite = False
+  countCycle = 0
+
+  while len(states) > len(found) + 1 or postProc:
+    cX = 0
+    cY = 0
+    posCycle = False
+    #print "---X---", sorted(hX, reverse=True)
+    #print "---Y---", sorted(hY, reverse=True)
+
+    hX = [(score,(f,s), v) for (score,(f,s), v) in hX if f != page.blankPos and s != page.blankPos]
+    hY = [(score,(f,s), v) for (score,(f,s), v) in hY if f != page.blankPos and s != page.blankPos]
+    maxX = max([x[0] for x in hX]) if hX != [] else None
+    maxY = max([x[0] for x in hY]) if hY != [] else None
+
+    bestX = random.choice(filter(lambda x: x[0] == maxX, hX)) if hX != [] else None
+    bestY = random.choice(filter(lambda y: y[0] == maxY, hY)) if hY != [] else None
+
+
+    #print "=============", bestX, bestY
+    if bestY == None or (bestX != None and bestX[0] > bestY[0]):
+      cur = bestX[1]
+      chosen = bestX[2]
+      axes = "x"
+      if cur[1] == chosen:
+        notChosen = cur[0]
+        cX = -1
+      else:
+        assert cur[0] == chosen
+        notChosen = cur[1]
+        cX = 1
+    else:
+      cur = bestY[1]
+      chosen = bestY[2]
+      axes = "y"
+      if cur[1]  == chosen:
+        notChosen = cur[0]
+        cY = -1
+      else:
+        assert cur[0] == chosen
+        notChosen = cur[1]
+        cY = 1
+
+    if len(positions) == 0:
+      #cur = ((2,0),None) # CHEATING
+      found.add(cur[0])
+      positions[cur[0]] = (posY, posX)
+      revGrid[(posY, posX)] = cur[0]
+    else:
+      posY, posX = positions[chosen]
+      if notChosen in found:
+        #print notChosen
+        #print positions[notChosen]
+        #print revGrid[positions[notChosen]]
+        del revGrid[positions[notChosen]]
+        del positions[notChosen]
+        accumEdges = [(a, (c1, c2)) for (a, (c1, c2)) in accumEdges if c1 != notChosen and c2 != notChosen] + [(axes, cur)]
+ 
+      posX += cX
+      posY += cY
+      if cur[0] in found and cur[1] in found:
+        posCycle = True
+
+      found.add(cur[0])
+      found.add(cur[1])
+
+      if cur[0] not in positions:
+        positions[cur[0]] = (posY, posX)
+        revGrid[(posY, posX)] = cur[0]
+        #print cur[0], posX, posY
+
+      if cur[1] not in positions:
+        positions[cur[1]] = (posY, posX)
+        revGrid[(posY, posX)] = cur[1]
+        #print cur[1], posX, posY
+
+    if (frozenset(revGrid.items())) in pastStates:
+      print countCycle, "============ CYCLE DETECTED =============="
+      bestVal = max([x[0] for x in pastStates.values()])
+      bestState = random.choice(filter(lambda x: pastStates[x][0] == bestVal, pastStates.keys()))
+      revGrid = dict(bestState)
+      illegal.add(pastStates[bestState][1])
+      accumEdges = list(pastStates[bestState][2])
+      #print bestVal
+      positions = {}
+      found = set()
+      for k,v in revGrid.items():
+        positions[v] = k
+        found.add(v)
+      print len(found)
+
+
+    if len(states) <= len(found) + 1:
+      countWhite = True
+      print "=========== Post-Processing ============="
+
+    hX = []
+    hY = []
+    #print accumEdges
+    #print found
+    #print positions
+
+    nodeX1 = {}
+    nodeX2 = {}
+    nodeY1 = {}
+    nodeY2 = {}
+    nodeC = {}
+    for n in states:
+      nodeX1[n] = {}
+      nodeX2[n] = {}
+      nodeY1[n] = {}
+      nodeY2[n] = {}
+      nodeC[n] = {}
+
+    for f in found:
+      py,px = positions[f]
+      nodeC[f][f] = calcGridScore(py, px, f, None, revGrid, page, countWhite)
+
+      for n in states:
+        if n != f and (f,n) not in illegal:
+
+          mult = 0
+          if n == page.blankPos:
+            mult = math.log(page.blankCount)
+
+          val = calcGridScore(py, px, n, None, revGrid, page, countWhite)
+          nodeC[f][n] = (val[0] + mult, val[1])
+    
+    for n in states:
+      cC = lognormalize(dict([(x[0],x[1][0]) for x in nodeC[n].items()]))
+      nodeC[n] = dict([(k,(cC[k],nodeC[n][k][1])) for k in nodeC[n]])
+    
+
+    for f in found:
+      py,px = positions[f]
+
+      for n in states:
+        if n != f and (f,n) not in illegal:
+
+          mult = 0
+          if n == page.blankPos:
+            mult = math.log(page.blankCount)
+
+          if (py, px+1) not in revGrid:
+            ay, ax = py, px+1
+            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            nodeX1[f][n] = (val[0] + mult, val[1])
+            
+
+          if (py, px-1) not in revGrid:
+            ay, ax = py, px-1
+            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            nodeX2[f][n] = (val[0] + mult, val[1])
+
+          if (py+1, px) not in revGrid:
+            ay, ax = py+1, px
+            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            nodeY1[f][n] = (val[0] + mult, val[1])
+
+          if (py-1, px) not in revGrid:
+            ay, ax = py-1, px
+            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            nodeY2[f][n] = (val[0] + mult, val[1])
+
+          
+    #print "X1",nodeX1,'\n'
+    #print "X2",nodeX2,'\n'
+    #print "Y1",nodeY1,'\n'
+    #print "Y2",nodeY2,'\n'
+    
+    for n in states:
+
+      #if lognormalize(nodeX1[n]) != fastLognormalize(nodeX1[n]):
+      #  print "n", lognormalize(nodeX1[n]) 
+      #  print "f", fastLognormalize(nodeX1[n])
+      cX1 = lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
+      cX2 = lognormalize(dict([(x[0],x[1][0]) for x in nodeX2[n].items()]))
+      cY1 = lognormalize(dict([(x[0],x[1][0]) for x in nodeY1[n].items()]))
+      cY2 = lognormalize(dict([(x[0],x[1][0]) for x in nodeY2[n].items()]))
+
+      if not verifyNorm(cX1, cX2, cY1, cY2):
+        print "goddammit"
+
+      nodeX1[n] = dict([(k,(cX1[k],nodeX1[n][k][1])) for k in nodeX1[n]])
+      nodeX2[n] = dict([(k,(cX2[k],nodeX2[n][k][1])) for k in nodeX2[n]])
+      nodeY1[n] = dict([(k,(cY1[k],nodeY1[n][k][1])) for k in nodeY1[n]])
+      nodeY2[n] = dict([(k,(cY2[k],nodeY2[n][k][1])) for k in nodeY2[n]])
+    
+    if posCycle:
+      countCycle += 1
+      totProb = 0
+      for n in found:
+        totProb += nodeC[n][n][0]
+      pastStates[frozenset(revGrid.items())] = (totProb, (chosen, notChosen), tuple(accumEdges))
+      print totProb
+    else:
+      countCycle = 0
+      pastStates = {}
+
+    #if (0,0) in revGrid and revGrid[(0,0)] in nodeC:
+    #  print nodeC[revGrid[(0,0)]]
+    #  print nodeC[revGrid[(0,0)]][revGrid[(0,0)]]
+    postProc = False
+
+    for v1 in nodeX1:
+      for v2 in nodeX1[v1]:
+        if v2 in found:
+          #if nodeC[v2][v2] <= nodeX1[v1][v2]:
+            #print positions[v1], positions[v2], nodeC[v2][v2], nodeX1[v1][v2],  nodeC[v2][v2] > nodeX1[v1][v2]
+          if nodeC[v2][v2] > nodeX1[v1][v2]:
+            continue
+          postProc = True
+        hX.append((nodeX1[v1][v2][0], (v1,v2), v1))
+        #hX.append((nodeX1[v1][v2][0]/nodeX1[v1][v2][1], (v1,v2), v1))
+
+    for v1 in nodeX2:
+      for v2 in nodeX2[v1]:
+        if v2 in found:
+          #if nodeC[v2][v2] <= nodeX2[v1][v2]:
+            #print positions[v1], positions[v2], nodeC[v2][v2], nodeX2[v1][v2], nodeC[v2][v2] > nodeX2[v1][v2]
+          if nodeC[v2][v2] > nodeX2[v1][v2]:
+            continue
+          postProc = True
+        hX.append((nodeX2[v1][v2][0], (v2,v1), v1))
+        #hX.append((nodeX2[v1][v2][0]/nodeX2[v1][v2][1], (v2,v1), v1))
+
+    for v1 in nodeY1:
+      for v2 in nodeY1[v1]:
+        if v2 in found:
+          #if nodeC[v2][v2] <= nodeY1[v1][v2]:
+            #print positions[v1], positions[v2], nodeC[v2][v2], nodeY1[v1][v2], nodeC[v2][v2] > nodeY1[v1][v2]
+          if nodeC[v2][v2] > nodeY1[v1][v2]:
+            continue
+          postProc = True
+        hY.append((nodeY1[v1][v2][0], (v1,v2), v1))
+        #hY.append((nodeY1[v1][v2][0]/nodeY1[v1][v2][1], (v1,v2), v1))
+
+    for v1 in nodeY2:
+      for v2 in nodeY2[v1]:
+        if v2 in found:
+          #if nodeC[v2][v2] <= nodeY2[v1][v2]:
+            #print positions[v1], positions[v2], nodeC[v2][v2], nodeY2[v1][v2], nodeC[v2][v2] > nodeY2[v1][v2]
+          if nodeC[v2][v2] > nodeY2[v1][v2]:
+            continue
+          postProc = True
+        hY.append((nodeY2[v1][v2][0], (v2,v1), v1))
+        #hY.append((nodeY2[v1][v2][0]/nodeY2[v1][v2][1], (v2,v1), v1))
+
+    #print nodeX1
+
+    page.vizPos(positions, fl="quuu.jpg")
+    #if countPress > 100:
+    raw_input(str(countPress) + " qqqq")
+    #countPress += 1
+
+  assert len(set(positions.values())) == len(positions.values())
+  #page.vizPos(positions, fl="qqqq" + str(page.sizeX) + ".jpg")
+  #print positions
+  #print accumEdges
+
+
+
+  return positions, accumEdges
+
+def verifyNorm(nodeX1, nodeX2, nodeY1={0:0}, nodeY2={0:0}, nodeC={0:0}):
   correct = True
   v1 = math.fsum(map(math.exp, nodeX1.values()))
   v2 = math.fsum(map(math.exp, nodeX2.values()))
   v3 = math.fsum(map(math.exp, nodeY1.values()))
   v4 = math.fsum(map(math.exp, nodeY2.values()))
-  vs = {1:(v1,nodeX1),2:(v2,nodeX2),3:(v3,nodeY1),4:(v4,nodeY2)}
+  v5 = math.fsum(map(math.exp, nodeC.values()))
+  vs = {1:(v1,nodeX1),2:(v2,nodeX2),3:(v3,nodeY1),4:(v4,nodeY2), 5:(v5,nodeC)}
   for v in vs:
     if len(vs[v][1]) != 0 and abs(vs[v][0] - 1) > delta:
       print v, vs[v]
@@ -380,7 +679,7 @@ def normalizeList(l, tup=False):
     rez = [(x[0]/total,x[1]) for x in l]
   return rez
 
-def lognormalize(l):
+def qlognormalize(l):
   if len(l) == 0:
     return l
   x = [Decimal(str(q)) for q in l.values()]
@@ -397,37 +696,49 @@ def flognormalize(l):
   return ret
 
 #@profile
-def calcGridScore(ay, ax, n, grid, revGrid, page):
+def calcGridScore(ay, ax, n, grid, revGrid, page, countWhite = False, nc = None):
   score = 0
   count = 0
 
-  if (ay, ax+1) in grid:
+  if (ay, ax+1) in revGrid:
+    ps = 0.0
+    if nc != None:
+      ps = nc[revGrid[(ay, ax+1)]][revGrid[(ay, ax+1)]][0]
     ts = page.costX[n, revGrid[(ay, ax+1)]]
-    score += ts
+    score += ts + ps
     count += 1
-  else:
-    score += externalPenalty
+  elif countWhite:
+    score += page.costX[n, page.blankPos]
 
-  if (ay, ax-1) in grid:
+  if (ay, ax-1) in revGrid:
+    ps = 0.0
+    if nc != None:
+      ps = nc[revGrid[(ay, ax-1)]][revGrid[(ay, ax-1)]][0]
     ts = page.costX[revGrid[(ay,ax-1)], n]
-    score += ts
+    score += ts + ps
     count += 1
-  else:
-    score += externalPenalty
+  elif countWhite:
+    score += page.costX[page.blankPos, n]
 
-  if (ay+1, ax) in grid:
+  if (ay+1, ax) in revGrid:
+    ps = 0.0
+    if nc != None:
+      ps = nc[revGrid[(ay+1, ax)]][revGrid[(ay+1, ax)]][0]
     ts = page.costY[n, revGrid[(ay+1, ax)]]
-    score += ts
+    score += ts + ps
     count += 1
-  else:
-    score += externalPenalty
+  elif countWhite:
+    score += page.costY[n, page.blankPos]
 
-  if (ay-1, ax) in grid:
+  if (ay-1, ax) in revGrid:
+    ps = 0.0
+    if nc != None:
+      ps = nc[revGrid[(ay-1, ax)]][revGrid[(ay-1, ax)]][0]
     ts = page.costY[revGrid[(ay-1,ax)], n]
-    score += ts
+    score += ts + ps
     count += 1
-  else:
-    score += externalPenalty
+  elif countWhite:
+    score += page.costY[page.blankPos, n]
 
   return score, count
 

@@ -54,3 +54,4 @@ An alternative clustering approach for reconstructing cross cut shredded text do
 - uses simple greedy to construct and merge clusters
 - uses nr of correct pairs as performance measure, better than "Meta-heuristics for reconstructing cross cut shredded text documents"
 - How does it compare with "A Memetic Algorithm for Reconstructing Cross-Cut Shredded Text Documents" ? Could this be the best one ??
+

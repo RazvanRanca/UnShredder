@@ -7,7 +7,7 @@ import math
 from itertools import groupby
 
 delta = 0.1
-inf = 1000 # float("inf")
+inf = -1000 # float("inf")
 nnD = 0.87
 
 if False:
