@@ -1,0 +1,228 @@
+\chapter{Heuristic Search}
+
+\section{Motivation}
+As discussed in the literature review, many complex methods have been applied to the problem of searching for the best arrangement of shreds. These methods take varied approaches such as reduction to a travelling salesman problem and making use of industrial solvers(\cite{P1}), variable neighbourhood search(\cite{P1,P5,P7}),\todo{add more detail about all of these in lit. review} genetic algorithms(\cite{P7}),ant colony optimization(\cite{P5}) and reformulation as an integer linear programming problem(\cite{P6}).
+
+However, at least in the first instance, we decide to focus upon relatively simple greedy heuristics. Some reasons for this decision are:
+\begin{itemize}
+\item The heuristics run significantly faster than the aforementioned methods. This allows for ease of prototyping and the ability to easily experiment with many variations on both the search and cost functions
+\item The inner-workings of the heuristics are transparent. This transparency allows for ease in diagnosing problems with either the heuristics themselves or with the cost functions. The transparency also allows for easy visualisation of every individual search step which enables us to observe exactly how errors occur and are how they are propagated. In contrast, using some of the previous methods would make it difficult to diagnose, for instance, whether an error is caused by the search or the cost function.
+\item Any advanced search methods need to be compared against a solid baseline. These heuristics provide such a baseline.
+\item Surprisingly good performance has been obtained using greedy heuristics. For instance, \cite{P2} reports that their simple heuristic search managed to outperform both a variable neighbourhood search and an ant colony optimization method.
+\end{itemize}
+
+\section{Description}
+Despite the fact that most of the previous work has focused on complex search algorithms, a few greedy heuristics have been explored before. We first re-implement 3 of these heuristics which, in growing order of complexity, are: the "Row building" heuristic(\cite{P5}), the "Prim based" heuristic(\cite{P5}) and the "ReconstructShreds" heuristic(\cite{P2}). More details about these techniques are available in the literature review section. \todo{add this to lit. review.} Additionally, we implement a fourth, novel, heuristic which is an extension of the "ReconstructShreds" version. 
+
+The central idea behind the "ReconstructShreds" heuristic is that, at each search step, the best available edge should be added to the partial solution. A few steps of the execution of this algorithm are examined in Figure \ref{fig:kruskal}, where all groups of shreds of size 2 or larger are shown (i.e. the individual pieces, which are groups of size 1, are omitted from the figure). The algorithm will continue to add the best possible edge to the partial solution and thus enlarge and merge clusters until only 1 cluster is left. This final cluster is the algorithm's final solution. 
+
+\begin{figure}[h]
+        \centering
+        \begin{subfigure}[b]{0.4\textwidth}
+                \centering
+                \includegraphics[width=\textwidth, height=4cm]{kruskal1}
+                \caption{There are 3 clusters: A, B and C \vspace{2\baselineskip}}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.4\textwidth}
+                \centering
+                \includegraphics[width=\textwidth, height=4cm]{kruskal2}
+                \caption{Best edge was between 2 shreds which belonged to neither cluster. Therefore a new cluster is created}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.4\textwidth}
+                \centering
+                \includegraphics[width=\textwidth, height=4cm]{kruskal3}
+                \caption{Best edge was between a shred belonging to cluster B and one belonging to neither cluster. Therefore cluster B is enlarged.}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.4\textwidth}
+                \centering
+                \includegraphics[width=\textwidth, height=4cm]{kruskal4}
+                \caption{Best edge was between a shred belonging to cluster B and one belonging to cluster C. Therefore the two clusters are merged.}
+        \end{subfigure}
+        \caption{Four steps from the middle of a "ReconstructShreds" search are shown. The clusters are called A, B, C and D, the green pieces highlight the changes that occur in every step and the red pieces show the positions that are considered for the insertion of new shreds.}
+        \label{fig:kruskal}
+\end{figure}
+
+In order to explain the reasoning behind our new algorithm, first "ReconstructShreds" must be more closely looked at.
+
+\subsection{Analysis of "ReconstructShreds"}
+In order to achieve the desired behaviour, this algorithm calculates all the edge probabilities and then simply goes through the list in descending order. Whenever it encounters a valid edge, it adds it to the solution set (see Algorithm \ref{alg:RS} for the pseudocode \footnote{The pseudocode in this chapter assumes the existence of a disjoint-set data structure which can perform operations such as $InitSet(x)$(create a set with the element $x$ in it), $GetSet(x)$(return the set to which $x$ belongs) and various set operations such as $Union(S_x,S_y)$ and $Intersect(S_x,S_y)$}).
+
+\begin{algorithm}[h]
+\caption{The "ReconstructShreds" heuristic}
+\begin{algorithmic}[1]
+\Statex \Comment{Takes the set of edges and the set of shreds as input} 
+\Procedure {ReconstructShreds}{$S_{edges}$, $S_{shreds}$} 
+  \State $probs \gets []$ \Comment{Initialize 2 empty arrays for the probabilities and edges}
+  \State $edges \gets []$ 
+  \ForAll{$E_x \in S_{edges}$} 
+    \ForAll {$E_y \in S_{edges}$}
+      \State $probs[(E_x,E_y)] \gets \Pr(E_x,E_y)$ \Comment{Calculate and store all the probabilities}
+    \EndFor
+  \EndFor
+  \Statex
+  \State $setsLeft \gets |S_{shreds}|$  \Comment{Initially every shred is it's own set, initialize these}
+  \ForAll{$S_x \in S_{shreds}$}
+    \State $InitSet(S_x)$
+  \EndFor
+  \Statex
+  \While{$setsLeft > 1$} \Comment{Get the edges with the max probability}
+    \State $(E_x,E_y) \gets \arg\max_{(E_x,E_y)} probs[(E_x,E_y)]$ 
+    \State $S_x \gets GetSet(E_x)$ \Comment{Retrieve the sets of these 2 edges} 
+    \State $S_y \gets GetSet(E_y)$
+    \If{$S_x \neq S_y ~ \& ~ mergePossible(E_x,E_y)$} 
+      \State $S_x \gets Union(S_x,S_y)$ \Comment{If the edge is valid, merge the two sets}
+      \State $S_y \gets Union(S_x,S_y)$
+      \State $edges.append((E_x,E_y))$
+      \State $setsLeft \gets setsLeft - 1$  
+    \EndIf
+    \State $probs[(E_x,E_y)] \gets 0$ \Comment{make sure the processed edge isn't picked again} 
+  \EndWhile
+  \Statex
+  \State \textbf{return} $edges$ \Comment{The set of returned edges describes a complete solution} 
+\EndProcedure
+\end{algorithmic}
+\label{alg:RS}
+\end{algorithm}
+
+The problem with this approach is that the probabilities used are static and therefore the algorithm is completely ignorant of the formed partial solution. It's only interaction with the current state of the solution occurs via the $mergePossible(E_x,E_y)$ function which just tells the algorithm if the current solution allows for that particular merge. In particular, the algorithm takes no account of the fact that when merging 2 sets of pieces, several new edges may form. Therefore the "ReconstructShreds" heuristic would be happy to merge two large sets of pieces based on 1 good edge resulting from the merge even if several other terrible edges also result from that same match (see Figure x).
+\missingfigure{add figure demonstrating the mentioned bad scenario for RS}
+Our algorithm is designed to address this shortcoming.
+
+\subsection[Kruskal based heuristic] {Kruskal based heuristic\footnote{This method is called a "Kruskal based heuristic" because the main goal of the method, namely that of always adding the best available edge to the solution, is analogous to the goal of the minimum spanning tree algorithm, "Kruskal"\cite{P9}. Therefore the general Kruskal method can be extended to this specific problem, with the only additional difficulty of having to reject potential matches which would result in 2 shreds overlapping. Indeed "ReconstructShreds" is already an extension of the Kruskal method, though the authors do not identify it as such}} 
+One approach towards resolving the problem observed in "ReconstructShreds" is to recalculate the probabilities of two edges matching at every iteration. By doing so we can take into account all the additional matches that would result when the sets corresponding to the 2 edges are merged(see Algorithm \ref{alg:kruskal}). 
+
+\begin{algorithm}[h]
+\caption{The Kruskal based heuristic}
+\begin{algorithmic}[1]
+\Procedure {Kruskal}{$S_{edges}$, $S_{shreds}$} 
+  \State $edges \gets []$ 
+  \State $setsLeft \gets |S_{shreds}|$ 
+  \ForAll{$S_x \in S_{shreds}$}
+    \State $InitSet(S_x)$
+  \EndFor
+  \Statex
+  \While{$setsLeft > 1$}
+    \State $probs \gets []$ \Comment{Probability calculation is done for every iteration}
+    \ForAll{$E_x \in S_{edges}$} 
+      \ForAll {$E_y \in S_{edges}$}
+        \State $probs[(E_x,E_y)] \gets getProb(E_x,E_y)$  \Comment{Helper function is called}
+      \EndFor
+      \State $normalize(probs, E_x, S_{edges})$ \Comment{An extra normalization step is needed}
+    \EndFor
+    \State $(E_x,E_y) \gets \arg\max_{(E_x,E_y)} probs[(E_x,E_y)]$
+    \State $S_x \gets GetSet(E_x)$ 
+    \State $S_y \gets GetSet(E_y)$
+    \If{$S_x \neq S_y ~ \& ~ mergePossible(E_x,E_y)$} 
+      \State $S_x \gets Union(S_x,S_y)$ 
+      \State $S_y \gets Union(S_x,S_y)$
+      \State $edges.append((E_x,E_y))$
+      \State $setsLeft \gets setsLeft - 1$  
+    \EndIf
+    \State $probs[(E_x,E_y)] \gets 0$ 
+  \EndWhile
+  \Statex
+  \State \textbf{return} $edges$ 
+\EndProcedure
+\end{algorithmic}
+\label{alg:kruskal}
+\end{algorithm}
+
+The differences between the "Kruskal" and the "ReconstructShreds" algorithms are:
+\begin{itemize}
+\item The probability calculation has been moved inside the $while loop$, and thus our calculated probabilities need not be static any more.
+\item Rather than simply taking the pre-calculated probability $\Pr(E_x,E_y)$ as the final measure of the likelihood of a match between $E_x$ and $E_y$, the helper function $getProb(E_x,E_y)$ is now called instead. This new function checks the proposed merge and identifies all the new edges that would be formed if this merge is selected (for convenience we assume the set of edges $S_x$ has a function $S_x.neighbours()$ which returns all the pairs of edges that are neighbours under this merge). The final probability is then the given by multiplying the individual probabilities for every newly created edge(see Algorithm \ref{alg:getProb}).
+
+\begin{algorithm}[h]
+\caption{The getProb helper function}
+\begin{algorithmic}[1]
+\Procedure {getProb}{$E_x$, $E_y$}
+  \State $prob \gets 1.0$
+  \State $S_x \gets GetSet(E_x)$ 
+  \State $S_y \gets GetSet(E_y)$ \Comment{Get the set of the proposed match}
+  \State $merged \gets Union(S_x,S_y)$ 
+  \ForAll{$E_a \in S_x$} \Comment{Multiply probs of new neighbours created by the match}
+    \ForAll {$E_b \in S_y$}
+      \If{$ (E_a,E_b) \in merged.neighbours()$} 
+      \State $prob \gets prob * \Pr(E_a,E_b)$
+      \ElsIf{$ (E_b,E_a) \in merged.neighbours()$}
+      \State $prob \gets prob * \Pr(E_b,E_a)$
+      \EndIf
+    \EndFor
+  \EndFor
+  \State \textbf{return} $prob$
+\EndProcedure
+\end{algorithmic}
+\label{alg:getProb}
+\end{algorithm}
+
+\newpage
+\item A normalization step is added. This is necessary because, by potentially multiplying the probabilities of several edges together to get the probability of our match, the sum of all probabilities is no longer guaranteed to be 1. Formally, after the normalization step taken in the calculation of the $\Pr(E_x,E_y)$ values(see Section \ref{sect:norm}) we had the following assurance: \[\forall E_a \sum_{E_x \in S_E} \Pr(E_a,E_x) = 1 \] We would like to have the same assurance regarding $getProb(E_x,E_y)$, which is why the additional normalization step is required. As before, the normalization step takes the form: \[ normProb(E_x,E_y) = \frac{getProb(E_x,E_y)}{\sum_{E_a \in S_E} getProb(E_x,E_a)} \]
+\end{itemize}
+
+
+\subsection{Evaluating the heuristics}\todo{This is a stub, don't have the figures yet}
+Finally we turn to evaluating the strength and weaknesses of the algorithms discussed above. Towards this purpose we run two sets of tests. 
+
+Firstly, look at the performance offered by the various search functions. This is accomplished by running all the heuristics on the same input document, using the same cost function and then comparing the number of correct edges observed in the output. The results can be seen in Figure xx
+\missingfigure{Performance comparison}
+
+Secondly, we analyse the scalability of the algorithms. In real world scenarios an unshredder would potentially have to work with thousands, or even tens of thousands of pieces, which makes scalability an important factor to consider. For comparison purposes, the runtime of some of the more complex search functions are also shown. \todo{check which}
+\missingfigure{Scalability comparison}
+\todo{explain why only Prim and Kruskal are used from this point forward}
+
+\section{Cascading}
+All of the greedy methods presented thus far have in common an inability to correct errors. This makes them prone to a cascading effect through which an error made early in the search process can have a major effect on the result. Since there is no means through which to move the wrongly placed shred, the search will instead try to find additional pieces which match well with said shred, and these pieces will have a significant probability of also being wrong. 
+
+In order to quantify the magnitude of this issue it is helpful to plot the function: $Error_{search}(x)$, where $x = Error_{cost}$ \todo{explain how this is done, especially that it's with artificial data}. This function shows the proportion of errors that the search function commits when given a cost function with a certain error rate. The results of this experiment(see Figure \ref{fig:cascading}) are telling. 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{cascading}
+  \caption{The effect the error in cost/score has on the final error of the method for both search heuristics on 5*5 shreds and for Prim on 30*30 shreds }
+  \label{fig:cascading}
+\end{figure}
+
+Even on a tiny 5 by 5 instance, in order for the Kruskal heuristic to achieve 80\% accuracy the scoring function must be 95\% accurate. As can be seen, the problem only gets worse as the number of shreds increases. On a 30 by 30 instance Prim requires the same 95\% cost function accuracy rate in order to achieve a final accuracy of only 50\%.
+
+In order to address this problem, several error correcting mechanisms were analysed. 
+
+\subsection{Making all shreds movable}
+The simplest approach is to consider pieces that have already been placed as movable and treat them the same as the pieces which haven’t been placed. Using this new formulation in the above cascading experiment yields very interesting results(see Figure \ref{fig:cascadingCorr}).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{cascadingCorrection}
+  \caption{The effect the error in cost/score has on the final error of the method for the old heuristics and the new error correcting one }
+  \label{fig:cascadingCorr}
+\end{figure}
+
+In theory, this approach should solve the cascading problem. \todo{explain "S" shape of curve} However, in practice, this basic approach can lead to an infinite cycle of moves if it happens that one piece is the best match for two different edges, as the greedy algorithm will continue to switch it between the two. This specific problem can be solved by giving the greedy correction algorithm a lookahead of size one, by only moving a piece if this would increase it’s probabilistic score. This solution however will only eliminate cycles of length 2, in order to eliminate all cycles in this way would require a complete examination of the search tree from that point onwards, which quickly becomes intractable.\todo{explain locality of prob score which allows for infinite cycles to occur}
+
+In order to eliminate cycles while using a fixed size lookahead, all previous states that the search has passed through can be remembered and therefore cycles can be detected. Once a cycle is detected, the algorithm can choose to revert to the best state encountered within the cycle and then pick a move that breaks the cycle.
+
+\subsection{Adding a post-processing step}
+Another problem that plagues the heuristic search methods presented here is that while the search is in progress it cannot be known which pieces will end up on an outer edge and which will be in the centre. This means we cannot take account of the score of an edge piece adjacent to white space, which in turn places no incentive on the search to find compact shapes that have less pieces on an outer edge .
+
+This problem can be ameliorated by doing a post-processing step to the search. When all the pieces have been placed we finally know what the proposed outside edges are, so we can now keep count of the external whitespace score and apply the same search and cycle detecting process described above. Since the search we perform is still greedy, in order for the method to find correct solutions, it will require a large lookahead (see Figure \ref{fig:lookahead}). This requirement again becomes quickly intractable. However, since all previous states are recorded, this post-processing step is guaranteed to obtain a final state that’s either better or at least equivalent to the one it started with. This guarantee cannot be made for the previous correction heuristic.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{lookahead}
+  \caption{Since external whitespace is not counted towards the score, solutions 1 and 2 have the same score even though 1 has 16 external edges and 2 has only 12. In order to move from 1 to 2 the greedy search would have to pass through 3 which also has 16 external edges. In this case the transition to the correct result will only be made if the search can see at least 3 moves ahead}
+  \label{fig:lookahead}
+\end{figure}
+
+\subsection{Evaluating the error-correcting methods}
+Both of the above error-correcting mechanism slow down the run-time of the search significantly. The problem is that, even though infinite cycles are detected, the algorithm can still make a large number of moves before it returns to a previous state where a cycle can be stopped.
+\missingfigure{add scalability figure with error-correcting methods}
+
+The performance hit shown above limits the size of the lookahead that can be used and the size of the lookahead can severely limit the performance boost obtained. With a lookahead of 1, the corrections done during the running of the search seem prone to noise and may actually hurt the result. The post-processing step however provides a small but consistent boost in performance (see Figure \ref{fig:errorCorrecting})
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{errorCorrecting}
+  \caption{Comparison between the basic Prim algorithm and the enhanced versions either with just the post-processing step or with both the run-time corrections and the post-processing. The run-time corrections are not very consistent when using a small lookahead}
+  \label{fig:errorCorrecting}
+\end{figure}

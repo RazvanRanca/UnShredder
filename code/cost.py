@@ -1,13 +1,14 @@
 import random
+import numpy as np
 import pickle
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 import math
-from itertools import groupby
+from itertools import groupby, combinations
 
 delta = 0.1
-inf = -1000 # float("inf")
+inf = -1000000 # float("inf")
 nnD = 0.87
 
 if False:
@@ -28,7 +29,7 @@ if False:
               dny[n] = netY.activate(n)
 
 
-def picker(s, page, px = None, py = None, prior = None):
+def picker(s, page, px = None, py = None, prior = None, dt = None):
   if s == "bit":
     return calcBitCost(page)
   elif s == "gaus":
@@ -51,6 +52,12 @@ def picker(s, page, px = None, py = None, prior = None):
     return calcPercentCost(page, px, py)
   elif s == "prediction":
     return calcPredictionCost(page, px, py, prior)
+  elif s == "prediction1":
+    return calcPredictionCost(page, px, py, prior, 1)
+  elif s == "prediction7":
+    return calcPredictionCost7(page, px, py, prior)
+  elif s == "decisionTree":
+    return calcDTCost(page, dt)
 
 def indivPicker(s, a,b, tp, page, px = None, py = None, prior = None, selective = False): #selective is a flag showing wether to give infinity of zero for stuff like blank on blank
   blank = page.blank
@@ -102,9 +109,77 @@ def indivPicker(s, a,b, tp, page, px = None, py = None, prior = None, selective 
     elif tp == "y":
       return imgPredCostY(page.dataPieces[a], page.dataPieces[b], pieces[a].size, pieces[b].size, page.pry, page.prior)
 
+def evaluateProb(page, sx, sy): # calculate percent of edges whose best match given by the cost function is the true neighbour and ammount of error
+  costX = logNorm(page.costX)
+  costY = logNorm(page.costY)
+  bestX = {}
+  bestY = {}
+  #print costX
+  #print costY
+  for (k1,k2),v in costX.items():
+    if k1 not in bestX or v > bestX[k1][1]:
+      bestX[k1] = (k2, v, 1)
+    elif v == bestX[k1][1]:
+      bestX[k1] = (bestX[k1][0],bestX[k1][1],bestX[k1][2]+1)
+
+  for (k1,k2),v in costY.items():
+    if k1 not in bestY or v > bestY[k1][1]:
+      bestY[k1] = (k2, v, 1)
+    elif v == bestY[k1][1]:
+      bestY[k1] = (bestY[k1][0], bestY[k1][1], bestY[k1][2]+1)
+
+  correct = 0
+  count = 0
+  error = 0
+  prob = {}
+  for x in range(sx):
+    for y in range(sy):
+      cx = x + 1
+      cy = y
+      if cx < sx:
+        count += 1
+        rawP = math.exp(bestX[(y,x)][1])
+        p = int(rawP * 10 + 0.5)
+        try:
+          prob[p] = (prob[p][0], prob[p][1]+1, prob[p][2] + rawP)
+        except:
+          prob[p] = (0, 1, rawP)
+        
+        if costX[((y,x),(cy,cx))] == bestX[(y,x)][1]:
+          correct += 1.0/bestX[(y,x)][2]
+          #print "X", y, x, bestX[(y,x)][2]
+          prob[p] = (prob[p][0] +1.0/bestX[(y,x)][2], prob[p][1], prob[p][2])
+        else:
+          #print "XX", y,x
+          error += abs(costX[((y,x),(cy,cx))] - bestX[(y,x)][1])
+
+      cx = x
+      cy = y + 1
+      if cy < sy:
+        count += 1
+        rawP = math.exp(bestY[(y,x)][1])
+        p = int(rawP * 10 + 0.5)
+        try:
+          prob[p] = (prob[p][0], prob[p][1]+1, prob[p][2] + rawP)
+        except:
+          prob[p] = (0, 1, rawP)
+
+        if costY[((y,x),(cy,cx))] == bestY[(y,x)][1]:
+          correct += 1.0/bestY[(y,x)][2]
+          #print "Y", y, x, bestY[(y,x)][2]
+          prob[p] = (prob[p][0] +1.0/bestY[(y,x)][2], prob[p][1], prob[p][2])
+        else:
+          #print "YY", y,x
+          error += abs(costY[((y,x),(cy,cx))] - bestY[(y,x)][1])
+  #print correct, count
+  #print sorted(bestX.items())
+  #print sorted(bestY.items())
+  #print "fff", sorted([(x,q,y/z,z) for (x,(y,z,q)) in prob.items()])
+  return float(correct) / count, float(error) / count, prob
+
 def evaluateCost(page, sx, sy): # calculate percent of edges whose best match given by the cost function is the true neighbour and ammount of error
   costX = page.costX
-  costY = page.costY  
+  costY = page.costY
   bestX = {}
   bestY = {}
   #print costX
@@ -151,6 +226,30 @@ def evaluateCost(page, sx, sy): # calculate percent of edges whose best match gi
   #print sorted(bestX.items())
   #print sorted(bestY.items())
   return float(correct) / count, float(error) / count
+
+def logNorm(cost):
+  d = {}
+  for (k1,k2),v in cost.items():
+    try:
+      d[k1][k2] = v
+    except:
+      d[k1] = {k2:v}
+
+  nCost = {}
+  for (k,v) in d.items():
+    nv = flognormalize(v)
+    for (k2,v) in nv.items():
+      nCost[(k,k2)] = v
+
+  return nCost
+  
+def flognormalize(l):
+  if len(l) == 0:
+    return l
+  x = np.array([q for q in l.values()])
+  a = np.logaddexp.reduce(x)
+  ret = dict([(q[0], q[1] - a) for q in l.items()])
+  return ret
 
 def normalizeCost(cost):
   count = {}
@@ -235,14 +334,152 @@ def processCostY(page):
   
   return sProb
 
-def calcPredictionCost(page, px, py, prior):
+def calcDTCost(page, dt):
   pieces = page.states
   costX = {}
   costY = {}
   for x in pieces.keys():
     for y in pieces.keys():
-      costX[(y, x)] = imgPredCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px, prior)
+      costX[(y, x)] = dtCostX(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, dt) 
+      costY[(y, x)] = dtCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, dt)
+
+  return costX, costY
+
+def dtCostY(data1, data2, (wa,ha),(wb,hb), dt):
+
+  data1Mat = []
+  for i in range(0, len(data1), wa):
+    data1Mat.append(data1[i:i+wa])
+
+  data2Mat = []
+  for i in range(0, len(data2), wb):
+    data2Mat.append(data2[i:i+wb])
+
+  c = 255.0
+  #print [dt.getProb(data1Mat, x, data2Mat[0][x], "H") for x in range(0,10)]
+  rezl = [math.log(dt.getProb(data1Mat, x, data2Mat[0][x], "H")) for x in range(0,wb)]
+  rezl = math.fsum(rezl)
+
+  return rezl
+
+def dtCostX(data1, data2, (wa,ha),(wb,hb), dt):
+
+  data1Mat = []
+  for i in range(0, len(data1), wa):
+    data1Mat.append(data1[i:i+wa])
+
+  data2Mat = []
+  for i in range(0, len(data2), wb):
+    data2Mat.append(data2[i:i+wb])
+
+  c = 255.0
+  #print [dt.getProb(data1Mat, x, data2Mat[x][0], "V") for x in range(0,10)]
+  rezl = [math.log(dt.getProb(data1Mat, x, data2Mat[x][0], "V")) for x in range(0,hb)]
+  rezl = math.fsum(rezl)
+
+  return rezl
+
+def calcPredictionCost7(page, px, py, prior, tp = 0):
+  pieces = page.states
+  costX = {}
+  costY = {}
+  for x in pieces.keys():
+    for y in pieces.keys():
+      costX[(y, x)] = imgPredCostX7(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px, prior) 
+
+      #if x != page.blankPos and y != page.blankPos and tp == 1:
+      #  costX[(y,x)] += rowCost(page.piecesSmallRows[y], page.piecesSmallRows[x])
+
+      costY[(y, x)] = imgPredCostY7(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, py, prior)
+      #print y, x, rowCost(page.piecesSmallRows[y], page.piecesSmallRows[x]), imgPredCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px, prior)
+
+  #print costX[((1,0),(0,0))]
+  #print costX[((1,0),(1,1))]
+  #a = costX[((0,1),(0,2))]
+  #b = costX[((0,1),(-42,-42))]
+  #print math.fsum(a[0]), math.fsum(a[1]), math.fsum(b[0]), math.fsum(b[1])
+  #print  math.fsum(map(math.log,a)), [(key,len(list(group))) for key, group in groupby(sorted(a))]
+  #print  math.fsum(map(math.log,b)), [(key,len(list(group))) for key, group in groupby(sorted(b))]
+  #assert False
+  return costX, costY
+
+def imgPredCostY7(a, b, (wa,ha),(wb,hb), (pl,pr), prior, selective = True, blank = None):
+  if a == b:
+    if not selective and a == blank:
+      return 0
+    return inf
+  data1 = a[-wa:]
+  data11 = a[-2*wa:-wa]
+  data2 = b[:wb]
+  data21 = b[wb:2*wb]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  c = 255.0
+  first = 1 - prior
+  if data2[0] == 0:
+    first = prior
+  rezl = [math.log(first)]
+  rezl += [math.log(pl[(data2[x-1]/c,data2[x]/c,data2[x+1]/c,data1[x-1]/c,data21[x-1]/c,data21[x]/c,data21[x+1]/c)][data1[x]/c]) for x in range(1,size-1)]
+  #last = prior * pl[(data2[-2]/c,data2[-1]/c,0,data1[-2]/c)][data1[-1]/c] + (1 - prior) * pl[(data2[-2]/c,data2[-1]/c,1,data1[-2]/c)][data1[-1]/c]
+  #rezl += [math.log(last)]
+
+  rezr = [math.log(first)]
+  rezr += [math.log(pr[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data11[x-1]/c,data11[x]/c,data11[x+1]/c)][data2[x]/c]) for x in range(1,size-1)]
+  #last = prior * pr[(data1[-2]/c,data1[-1]/c,0,data2[-2]/c)][data2[-1]/c] + (1 - prior) * pr[(data1[-2]/c,data1[-1]/c,1,data2[-2]/c)][data2[-1]/c]
+  #rezr += [math.log(last)]
+
+  rezl = math.fsum(rezl)
+  rezr = math.fsum(rezr)
+  deb = (rezl, rezr)
+
+  return min(rezl,rezr)
+
+def imgPredCostX7(ra, rb, (wa,ha),(wb,hb), (pl,pr), prior, selective = True, blank = None):
+  if ra == rb:
+    if not selective and ra == blank:
+      return 0
+    return inf
+  data1 = ra[:ha]
+  data11 = ra[ha:2*ha]
+  data2 = rb[-hb:]
+  data21 = ra[-2*hb:-hb]
+  #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
+  #  return inf
+  size = min(len(data1), len(data2))
+  c = 255.0
+  first = 1 - prior
+  if data2[0] == 0:
+    first = prior
+  rezl = [math.log(first)]
+  rezl += [math.log(pl[(data2[x-1]/c,data2[x]/c,data2[x+1]/c,data1[x-1]/c,data21[x-1]/c,data21[x]/c,data21[x+1]/c)][data1[x]/c]) for x in range(1,size-1)]
+  #last = prior * pl[(data2[-2]/c,data2[-1]/c,0,data1[-2]/c)][data1[-1]/c] + (1 - prior) * pl[(data2[-2]/c,data2[-1]/c,1,data1[-2]/c)][data1[-1]/c]
+  #rezl += [math.log(last)]
+
+  rezr = [math.log(first)]
+  rezr += [math.log(pr[(data1[x-1]/c,data1[x]/c,data1[x+1]/c,data2[x-1]/c,data11[x-1]/c,data11[x]/c,data11[x+1]/c)][data2[x]/c]) for x in range(1,size-1)]
+  #last = prior * pr[(data1[-2]/c,data1[-1]/c,0,data2[-2]/c)][data2[-1]/c] + (1 - prior) * pr[(data1[-2]/c,data1[-1]/c,1,data2[-2]/c)][data2[-1]/c]
+  #rezr += [math.log(last)]
+
+  rezl = math.fsum(rezl)
+  rezr = math.fsum(rezr)
+  deb = (rezl, rezr)
+
+  return min(rezl,rezr)
+
+def calcPredictionCost(page, px, py, prior, tp = 0):
+  pieces = page.states
+  costX = {}
+  costY = {}
+  for x in pieces.keys():
+    for y in pieces.keys():
+      costX[(y, x)] = imgPredCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px, prior) 
+
+      if x != page.blankPos and y != page.blankPos and tp == 1:
+        costX[(y,x)] += rowCost(page.piecesSmallRows[y], page.piecesSmallRows[x])
+
       costY[(y, x)] = imgPredCostY(page.dataPieces[y], page.dataPieces[x], pieces[y].size, pieces[x].size, py, prior)
+      #print y, x, rowCost(page.piecesSmallRows[y], page.piecesSmallRows[x]), imgPredCostX(page.rotDataPieces[y], page.rotDataPieces[x], pieces[y].size, pieces[x].size, px, prior)
 
   #print costX[((1,0),(0,0))]
   #print costX[((1,0),(1,1))]
@@ -260,8 +497,9 @@ def imgPredCostY(a, b, (wa,ha),(wb,hb), (pl,pr), prior, selective = True, blank 
       return 0
     return inf
   data1 = a[-wa:]
-  #data0 = a[-2*wa:-wa]
+  #data11 = a[-2*wa:-wa]
   data2 = b[:wb]
+  #data21 = b[wb:2*wb]
   #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
   #  return inf
   size = min(len(data1), len(data2))
@@ -291,8 +529,9 @@ def imgPredCostX(ra, rb, (wa,ha),(wb,hb), (pl,pr), prior, selective = True, blan
       return 0
     return inf
   data1 = ra[:ha]
-  #data0 = ra[ha:2*ha]
+  #data11 = ra[ha:2*ha]
   data2 = rb[-hb:]
+  #data21 = ra[-2*hb:-hb]
   #if len(filter(lambda x: x == 0, data1)) < 3 or len(filter(lambda x: x == 0, data2)) < 3:
   #  return inf
   size = min(len(data1), len(data2))
@@ -315,6 +554,45 @@ def imgPredCostX(ra, rb, (wa,ha),(wb,hb), (pl,pr), prior, selective = True, blan
   deb = (rezl, rezr)
 
   return min(rezl,rezr)
+
+def rowCost(rowsA, rowsB):
+  ra = sorted([end for (start, end) in rowsA])
+  rb = sorted([end for (start, end) in rowsB])
+
+  diffNo = abs(len(ra) - len(rb))
+  bestDiffSum = float("inf")
+
+  if len(ra) < len(rb):
+    aux = ra
+    ra = rb
+    rb = aux
+
+  if len(ra) == 0:
+    return 0.0
+
+  for mask in list(combinations(range(len(ra)), diffNo)):
+    raa = []
+    for i in range(len(ra)):
+      if i not in mask:
+        raa.append(ra[i])
+    diffSum = 0
+    assert(len(raa) == len(rb))
+    for i in range(len(raa)):
+      diffSum += abs(raa[i] - rb[i])
+    
+    if diffSum < bestDiffSum:
+      bestDiffSum = diffSum
+
+  bestDiffSum = bestDiffSum / float(len(ra))
+
+  stdDev1 = 1.0
+  #gNorm = 1.0 / (stdDev * math.sqrt(2.0 * math.pi))
+  logProb1 = -1.0 * bestDiffSum**2 / (2.0 * stdDev1**2)
+
+  stdDev2 = 1.0
+  logProb2 = -1.0 * diffNo**2 / (2.0 * stdDev2**2)
+
+  return logProb1 + logProb2  
 
 def calcPercentCost(page, px, py):
   pieces = page.states

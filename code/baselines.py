@@ -5,9 +5,221 @@ import cost
 import verifCost
 import pages
 import time
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import random
 import numpy as np
+import math
+from scipy.stats import mode
+import os
+
+class DNode:
+  def __init__(self, tp = None, probB = None, feat = None, b = None, w = None):
+    self.feature = feat
+    self.type = tp
+    if probB == None:
+      self.isLeaf = False
+      self.probBlack = None
+      self.probWhite = None
+    else:
+      self.isLeaf = True
+      self.probBlack = probB
+      self.probWhite = 1 - probB
+
+    self.whiteChild = w
+    self.blackChild = b
+
+  def getProb(self, data, tind, tval):
+    if self.isLeaf:
+      if tval == 0:
+        return self.probBlack
+      else:
+        return self.probWhite
+    else:
+      if self.type == "V":
+        r = tind + self.feature[0]
+        c = len(data[r]) + self.feature[1]
+
+      if self.type == "H":
+        r = len(data) + self.feature[0]
+        c = tind + self.feature[1]
+      try:
+        if data[r][c] == 0:
+          return self.blackChild.getProb(data, tind, tval)
+        else:
+          return self.whiteChild.getProb(data, tind, tval)
+      except:
+        return None
+
+class DTree:
+  def __init__(self, ims, depth=5):
+    self.rootH = None
+    self.rootV = None
+    extentSize = 3
+    contextV = []
+    for f in range(-extentSize,extentSize+1):
+      for s in range(-extentSize,0):
+        if not (f==0 and s==0):
+          contextV.append((f,s))
+
+    contextH = []
+    for f in range(-extentSize,0):
+      for s in range(-extentSize,extentSize+1):
+        if not (f==0 and s==0):
+          contextH.append((f,s))  
+
+    featuresV = {}
+    categsV = []
+    featuresH = {}
+    categsH = []
+    for c in contextV:
+      featuresV[c] = []
+
+    for c in contextH:
+      featuresH[c] = []
+
+    for im in ims:
+      w,h = im.size
+      ld = list(im.getdata())
+      
+      self.priorBlack = ld.count(0) / float(len(ld))
+      self.priorWhite = 1 - self.priorBlack
+
+      bd = []
+      for r in range(h):
+        bd.append([])
+        for c in range(w):
+          bd[r].append(ld[r*w + c])
+
+      div = 255.0
+      for r in range(extentSize, h -extentSize):
+        for c in range(extentSize, w):
+          vr = bd[r][c]/div
+          categsV.append(vr)
+          for i in contextV:
+            nr = r+i[0]
+            nc = c+i[1]
+            featuresV[i].append(bd[nr][nc]/div)
+
+      for r in range(extentSize, h):
+        for c in range(extentSize, w - extentSize):
+          vr = bd[r][c]/div
+          categsH.append(vr)
+          for i in contextH:
+            nr = r+i[0]
+            nc = c+i[1]
+            featuresH[i].append(bd[nr][nc]/div)
+
+    self.rootV = self.getFeature(categsV, featuresV, depth, "V")
+    self.rootH = self.getFeature(categsH, featuresH, depth, "H")
+
+  def getFeature(self, categs, features, maxDepth, cat, depth=1, pReach = 1.0):
+    minEnt = 1.0
+    bestFeature = None
+    bestData = None
+
+    for (k,v) in features.items():
+      count = 0.0
+      blacks = 0.0
+      predB = 0.0
+      predW = 0.0    
+      for i in range(len(v)):
+        ct = categs[i]
+        count += 1
+        if v[i] == 0:
+          blacks += 1
+          if ct == 0:
+            predB += 1
+        else:
+          if ct == 1:
+            predW += 1
+
+      probB = blacks/count
+      probW = 1 - probB
+      whites = count - blacks
+
+      ent = 0
+      if probB > 0:
+        ent += probB * getH2(predB / blacks) 
+      if probW > 0:
+        ent += probW * getH2(predW / whites)
+
+      if ent < minEnt:
+        minEnt = ent
+        bestFeature = k
+        bestData = probB, probW, predB / blacks, predW / whites
+
+    catPredB = "B"
+    predB = bestData[2]
+    if predB < 0.5:
+      catPredB = "W"
+      predB = 1 - predB
+
+    catPredW = "W"
+    predW = bestData[3]
+    if predW < 0.5:
+      catPredW = "W"
+      predW = 1 - predW
+
+    probCorr = bestData[0] * predB + bestData[1] * predW
+
+    print cat, depth, pReach, bestData, bestFeature, minEnt, catPredB, catPredW, probCorr
+
+    if depth >= maxDepth:
+      return DNode(tp = cat, feat = bestFeature, b = DNode(cat,bestData[2]), w = DNode(cat,1 - bestData[3]))
+
+    nCatB = []
+    nCatW = []
+    setFeatB = set()
+    nFeatB = {}
+    nFeatW = {}
+    for c in features.keys():
+      if c == bestFeature:
+        continue
+      nFeatB[c] = []
+      nFeatW[c] = []
+
+    bv = features[bestFeature]
+    for i in range(len(bv)):
+      ct = categs[i]
+      if bv[i] == 0:
+        nCatB.append(ct)
+        setFeatB.add(i)
+      else:
+        nCatW.append(ct)
+
+    for (k,v) in features.items():
+      if k == bestFeature:
+        continue
+      for i in range(len(v)):
+        if i in setFeatB:
+          nFeatB[k].append(v[i])
+        else:
+          nFeatW[k].append(v[i])
+
+    pcB = self.getFeature(nCatB, nFeatB, maxDepth, cat, depth+1, pReach*bestData[0])
+    pcW = self.getFeature(nCatW, nFeatW, maxDepth, cat, depth+1, pReach*bestData[1])
+
+    return DNode(tp = cat, b = pcB, w = pcW, feat = bestFeature)
+
+  def getProb(self, data, tind, tval, cat):
+    ret = -1
+    if cat == "H":
+      ret = self.rootH.getProb(data, tind, tval)
+    if cat == "V":
+      ret = self.rootV.getProb(data, tind, tval)
+    if ret == None:
+      if tval == 0:
+        return self.priorBlack
+      else:
+        return self.priorWhite
+
+    return ret
+
+def imgRotate(img, deg, bCol = (255,0,127,0), format="RGBA"): # rotates image clockwise
+  img.save("tempRot.png","PNG")
+  os.system("convert -background 'rgb" + str(bCol) +"' -rotate " + str(deg) + " tempRot.png tempRot.png")
+  img = Image.open("tempRot.png").convert(format)
+  return img
 
 def genEdges(sx, sy): # edges of page starting at (0,0)
   xedges = set()
@@ -22,6 +234,547 @@ def genEdges(sx, sy): # edges of page starting at (0,0)
     xedges.add(((sy-1,c),(sy-1,c+1)))
 
   return xedges, yedges
+
+def scrambleImage(sx, sy, img):
+  img = img.convert('RGBA')
+  margin = 20
+  width,height = img.size
+  h = height / sy
+  w = width / sx
+  pieces = []
+  backCol = (255,0,127,0)
+
+  totalW = margin
+  maxTotalW = 0
+  maxH = 0
+  lb = int(math.sqrt(sx*sy))
+  for i in range(sy):
+    for j in range(sx):
+      g = img.crop((j*w,i*h,(j+1)*w,(i+1)*h))
+      rotAngle = 0#random.random()*20 - 10
+      if random.random() > 0.5:
+        rotAngle += 180
+      g = imgRotate(g, rotAngle) # g.rotate(rotAngle, Image.BICUBIC, expand=True) #
+      gw, gh = g.size
+      maxH = max(maxH, gh)
+      totalW += gw + margin
+      pieces.append(g)
+      maxTotalW = max(maxTotalW, totalW)
+      if len(pieces) % lb == 0:
+        totalW = margin
+
+  #random.shuffle(pieces)
+  totalH = margin + (maxH + margin) * (len(pieces)/lb + 1)
+  scrambled = Image.new("RGBA", (maxTotalW, totalH), backCol)
+  ind = 0
+  curW = margin
+  curH = margin
+  for i in range(sy):
+    for j in range(sx):
+      if ind % lb == 0:
+        curW = margin
+        curH = margin + (maxH+margin) * ind/lb
+      scrambled.paste(pieces[ind], (curW, curH), pieces[ind])
+      w, h = pieces[ind].size
+      curW += w + margin
+      ind += 1
+
+  scrambled.save("scrambled","PNG")
+
+def processScan(img, bCol = None):
+  if bCol == None:
+    bCol = img.getpixel((0,0))
+
+  print bCol
+  tolerance = 400
+  minSize = 100
+
+  neigh8 = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
+  found = []
+  maxs = []
+  seen = set()
+  w, h = img.size
+  print w, h
+  data = list(img.getdata())
+  data2D = []
+  for i in range(h):
+    data2D.append(data[i*w:(i+1)*w])
+
+  assert(''.join(map(str, data)) == ''.join(map(lambda x: ''.join(map(str,x)), data2D)))
+
+  ind = 0
+  for r in range(len(data2D)):
+    if r % 100 == 0:
+      print r
+    for c in range(len(data2D[r])):
+      if (r,c) in seen:
+        continue
+      pixel = data2D[r][c]
+      diff = abs(pixel[0] - bCol[0]) + abs(pixel[1] - bCol[1]) + abs(pixel[2] - bCol[2]) + pixel[3]
+      #print pixel
+      if diff > tolerance:
+        seen.add((r,c))
+        minR = r
+        minC = c
+        maxR = r
+        maxC = c
+        curList = [(r,c)]
+        cind = 0
+        while cind < len(curList):
+          cr, cc = curList[cind]
+          cind += 1
+          for (nr, nc) in neigh8:
+            next = (cr + nr, cc + nc)
+            if next not in seen:
+              pixel = data2D[next[0]][next[1]]
+              diff = abs(pixel[0] - bCol[0]) + abs(pixel[1] - bCol[1]) + abs(pixel[2] - bCol[2]) + pixel[3]
+              if diff > tolerance:
+                seen.add(next)
+                curList.append(next)
+                if next[0] < minR:
+                  minR = next[0]
+                if next[1] < minC:
+                  minC = next[1]
+                if next[0] > maxR:
+                  maxR = next[0]
+                if next[1] > maxC:
+                  maxC = next[1]
+        found.append({})
+        maxs.append((maxR-minR,maxC-minC))
+        #print ind, minR, minC, maxR, maxC
+        for (row,col) in curList:
+          found[ind][(row-minR,col-minC)] = data2D[row][col]
+        ind += 1
+  
+  print map(len,found)
+  nFound = []
+  nMaxs = []
+  for i in range(len(found)):
+    if len(found[i]) > minSize:
+      nFound.append(found[i])
+      nMaxs.append(maxs[i])
+
+  found = nFound
+  maxs = nMaxs
+  print len(found), "pieces detected"
+
+  shreds = []
+  lens = []
+  turnPoint = []
+  maxRs = []
+  for ind in range(len(found)):
+    shreds.append([])
+    lens.append([])
+    maxR = 0
+    minC = float("inf")
+    point = None
+    for r in range(maxs[ind][0]):
+      for c in range(maxs[ind][1]):
+        if (r,c) not in found[ind]:
+          shreds[ind].append(bCol)
+        else:
+          shreds[ind].append(found[ind][(r,c)])
+          if (r,c-1) not in found[ind]:
+            lens[ind].append((c,r))
+            if c < minC:
+              minC = c
+              point = r
+            if r > maxR:
+              maxR = r
+    turnPoint.append(point)
+    maxRs.append(maxR)
+
+  angles = []
+  medAngles = []
+  #print turnPoint
+  #print maxRs
+  #print maxs
+  #print map(len, found)
+  for ind in range(len(lens)):
+    if turnPoint[ind] > maxRs[ind] / 2:
+      run = lens[ind][:turnPoint[ind]]
+    else:
+      run = lens[ind][turnPoint[ind]:]
+    curR = run[-1][1]
+    curMinC = min(run)[0]
+    mult = 1
+    if run[0][0] - run[-1][0] < 0:
+      #mult = -1
+      curR = run[0][1]
+    angles.append([])
+    #if ind == 0:
+    #  print '\n'.join(map(lambda x : str((x,float(x[0] - curMinC)/(curR - x[1]-1), math.degrees(math.atan2(x[0] - curMinC, curR - x[1])))),run))
+    for i in range(len(run)):
+      angles[ind].append(math.atan2(run[i][0] - curMinC, curR - run[i][1]))
+    medAngles.append(math.degrees(mult*sorted(angles[ind])[len(angles[ind])/2]))
+
+
+  print medAngles[0]
+  print sorted(angles[0])
+  #print maxRs
+  #print turnPoint
+  #print medAngles
+  rezs = []
+  minMaxW = float("inf")
+  minMaxH = float("inf")
+  lefts = []
+  ups = []
+  orients = []
+  for ind in range(len(medAngles)):
+    wip = Image.new("RGBA", (maxs[ind][1], maxs[ind][0]), bCol)
+    wip.putdata(shreds[ind])
+    #wip.save("wipInit" + str(ind),"PNG")
+    wip = wip.rotate(medAngles[ind], Image.BICUBIC, expand=True) # imgRotate(wip, -1*medAngles[ind], bCol) 
+    #wip.save("wipRot" + str(ind),"PNG")
+    wipBack = Image.new("RGBA", wip.size, bCol)
+    wipBack.paste(wip, None, wip)
+    #wipBack.save("wipBack" + str(ind),"PNG")
+    wipOrient = orient2(wipBack, str(ind))
+    (left, up, maxW, maxH) = extractShred(wipOrient, bCol, str(ind))
+    orients.append(wipOrient)
+    lefts.append(left)
+    ups.append(up)
+    if maxW < minMaxW:
+      minMaxW = maxW
+    if maxH < minMaxH:
+      minMaxH = maxH
+
+  for ind in range(len(orients)):
+    wipCropped = orients[ind].crop((lefts[ind],ups[ind],lefts[ind] + minMaxW, ups[ind] + minMaxH))
+    w,h = wipCropped.size
+    #wipCropped = wipCropped.resize((w/2,h/2), Image.ANTIALIAS)
+    wipCropped = polarize(wipCropped, bCol)
+    rezs.append(wipCropped)
+    wipCropped.save("wip" + str(ind),"JPEG")
+
+  return rezs
+
+def polarize(img, col):
+  data = list(img.getdata())
+  threshold = 200
+  #print threshold
+  #print data[200:220]
+  newData = map(lambda x: 0 if x[0] + x[1] + x[2] < threshold else 255, data)
+  newImg = Image.new("1", img.size)
+  newImg.putdata(newData)
+  return newImg
+ 
+def extractShred(img, bCol = None, name = ""): # assumes shred is at 90 degree angles
+  if bCol == None:
+    bCol = img.getpixel((0,0))
+
+
+  tolerance = 500
+  data = list(img.getdata())
+  data2D = []
+  w, h = img.size
+  for i in range(h):
+    data2D.append(data[i*w:(i+1)*w])
+
+  minAccHeight = 10
+  minAccWidth = 5
+
+  maxWidth = 0
+  maxHeight = 0
+  width = 0
+  height = 0
+
+  count = 0
+  widths = []
+  for r in range(len(data2D)): 
+    start = 0
+    found = False
+    for c in range(len(data2D[r])):
+      pixel = data2D[r][c]
+      diff = abs(pixel[0] - bCol[0]) + abs(pixel[1] - bCol[1]) + abs(pixel[2] - bCol[2]) + pixel[3]
+      if diff > tolerance and start == 0:
+        start = c
+      if diff <= tolerance and start != 0:
+        #print start, r, pixel
+        width = c - start
+        found = True
+        break
+    if found:
+      widths.append(width)
+      count += 1
+    elif start != 0:
+      widths.append(w)
+      count += 1
+
+  maxWidth = int(mode(filter(lambda w: w >= minAccWidth, widths))[0][0]) #sorted(widths)[count/2]
+
+  lefts = []
+  for r in range(len(data2D)):  
+    for c in range(len(data2D[r])):
+      pixel = data2D[r][c]
+      diff = abs(pixel[0] - bCol[0]) + abs(pixel[1] - bCol[1]) + abs(pixel[2] - bCol[2]) + pixel[3]
+      if diff > tolerance:
+        lefts.append(c)
+        break
+
+  ups = []
+  for c in range(len(data2D[0])):
+    for r in range(len(data2D)):  
+      pixel = data2D[r][c]
+      diff = abs(pixel[0] - bCol[0]) + abs(pixel[1] - bCol[1]) + abs(pixel[2] - bCol[2]) + pixel[3]
+      if diff > tolerance:
+        ups.append(r)
+        break
+
+  left = int(mode(lefts)[0][0]) #sorted(lefts)[len(lefts)/2]
+  up = int(mode(ups)[0][0]) #sorted(ups)[len(ups)/2]
+
+  count = 0
+  heights = []
+  for c in range(len(data2D[0])):
+    start = 0
+    found = False
+    for r in range(len(data2D)):
+      pixel = data2D[r][c]
+      diff = abs(pixel[0] - bCol[0]) + abs(pixel[1] - bCol[1]) + abs(pixel[2] - bCol[2]) + pixel[3]
+      if diff > tolerance and start == 0:
+        start = r
+      if diff <= tolerance and start != 0:
+        #print start, r, pixel
+        height = r - start
+        found = True
+        break
+    if found:
+      heights.append(height)
+      count += 1
+    elif start != 0:
+      heights.append(h)
+      count += 1
+
+
+  maxHeight = int(mode(filter(lambda h: h >= minAccHeight, heights))[0][0]) #sorted(heights)[count/2]
+
+  print img.size, up, left, maxWidth, maxHeight
+
+  #cropped = img.crop((left,up,left + maxWidth, up + maxHeight))
+  #cropped.save("wipCropped" + name, "PNG")
+
+  return (left,up,maxWidth,maxHeight)
+
+
+def orient1(img): # figure out if piece is vertical or horizontal
+
+  data = list(img.getdata())
+  pixels = []
+  w, h = img.size
+  for i in range(h):
+    pixels.append(data[i*w:(i+1)*w])
+
+  curY = 0
+  curX = 0
+  rows = []
+  tolerance = 250
+
+  while True:
+    start = None
+    while curY < len(pixels):
+      curX = 0
+      while curX < len(pixels[curY]):
+        pixel = pixels[curY][curX]
+        diff = pixel[0] + pixel[1] + pixel[2]
+        if diff < tolerance:
+          start = curY
+          break
+        curX += 1
+      curY += 1
+      if start != None:
+        break
+    if start == None:
+      break
+    while curY < len(pixels):
+      curX = 0
+      cont = False
+      while curX < len(pixels[curY]):
+        pixel = pixels[curY][curX]
+        diff = pixel[0] + pixel[1] + pixel[2]
+        if diff < tolerance:
+          cont = True
+          break
+        curX += 1
+      curY += 1
+      if not cont:
+        break
+    rows.append((start, curY))
+
+  rotImg = imgRotate(img, 90) #img.rotate(90)
+  data = list(rotImg.getdata())
+  pixels = []
+  w, h = rotImg.size
+  for i in range(h):
+    pixels.append(data[i*w:(i+1)*w])
+
+  curY = 0
+  curX = 0
+  rotRows = []
+
+  while True:
+    start = None
+    while curY < len(pixels):
+      curX = 0
+      while curX < len(pixels[curY]):
+        pixel = pixels[curY][curX]
+        diff = pixel[0] + pixel[1] + pixel[2]
+        if diff < tolerance:
+          start = curY
+          break
+        curX += 1
+      curY += 1
+      if start != None:
+        break
+    if start == None:
+      break
+    while curY < len(pixels):
+      curX = 0
+      cont = False
+      while curX < len(pixels[curY]):
+        pixel = pixels[curY][curX]
+        diff = pixel[0] + pixel[1] + pixel[2]
+        if diff < tolerance:
+          cont = True
+          break
+        curX += 1
+      curY += 1
+      if not cont:
+        break
+    rotRows.append((start, curY))
+
+  #print "rot90", len(rows), len(rotRows)
+
+  if len(rows) > len(rotRows):
+    return (img, rows)
+  else:
+    return (rotImg, rotRows)
+
+
+def orient2(img, name = ""): # figure out if upside down or not
+
+  (img, bigRows) = orient1(img)
+  tolerance = 700
+
+  data = list(img.getdata())
+  #assert((0,0,0,255) in data)
+
+  minAccRowSize = 5
+
+  pixels = []
+  w, h = img.size
+  for i in range(h):
+    pixels.append(data[i*w:(i+1)*w])
+
+  rowTops = {}
+  rowBottoms = {}
+  heights = {}
+  
+  curY = 0
+  curX = 0
+  prevRow = 0
+  curRow = -1000
+  nextRow = 0
+  while curY < len(pixels):
+    nextRow = 0
+    curX = 0
+    while curX < len(pixels[curY]):
+      pixel = pixels[curY][curX]
+      diff = pixel[0] + pixel[1] + pixel[2]
+      if diff < tolerance:
+        nextRow += 1
+      curX += 1
+
+    posTop = curRow - prevRow
+    posBot = curRow - nextRow
+    if posTop > posBot and posTop > 0:
+      rowTops[curY-1] = posTop
+
+    if posBot > posTop and posBot > 0:
+      rowBottoms[curY] = posBot
+    prevRow = curRow
+    if prevRow == -1000:
+      prevRow = 0
+    curRow = nextRow
+    curY += 1
+
+  orderedTops = sorted(rowTops.items(), key=lambda x:x[1], reverse=True)
+  orderedBottoms = sorted(rowBottoms.items(), key=lambda x:x[1], reverse=True)
+  #modeHeight = sorted(heights.items(), key=lambda x:x[1], reverse=True)[0][0]
+
+  finTops = {}
+  finBottoms = {}
+
+  for (topY, topV) in orderedTops:
+    for (start, end) in bigRows:
+      if topY >= start and topY <= end - (end-start)/2 and (start, end) not in finTops:
+        finTops[(start, end)] = topY
+
+  for (bottomY, bottomV) in orderedBottoms:
+    for (start, end) in bigRows:
+      if bottomY >= start + (end-start)/2 and bottomY <= end and (start, end) not in finBottoms:
+        finBottoms[(start, end)] = bottomY
+
+  smallRows = []
+  for key in bigRows:
+    if key not in finTops:
+      finTops[key] = key[0]
+    if key not in finBottoms:
+      finBottoms[key] = key[1]
+    smallRows.append((finTops[key], finBottoms[key]))
+
+  orient = {}
+  top = 0
+  bottom = 0
+
+  """
+  final = Image.new("RGB", img.size)
+  drawFin = ImageDraw.Draw(final)
+  final.paste(img, (0,0))
+  for (start,end) in bigRows:
+    drawFin.line([(0,start), (w,start)], fill=(255,0,0))
+    drawFin.line([(0,end), (w,end)], fill=(255,0,255))
+
+  #for (start,end) in smallRows:
+  #  drawFin.line([(0,start), (w,start)], fill=(0,255,0))
+  #  drawFin.line([(0,end), (w,end)], fill=(0,0,255))
+  final.save("wipRows" + name,"PNG")
+  """
+
+  assert( len(smallRows) == len(bigRows) )
+
+  for c in range(len(smallRows)):
+    if smallRows[c][1] - smallRows[c][0] < minAccRowSize:
+      continue
+    curY = bigRows[c][0]
+    while curY < smallRows[c][0]:
+      curX = 0
+      while curX < w:
+        if curY >= 0 and curY < len(pixels):
+          pixel = pixels[curY][curX]
+          diff = pixel[0] + pixel[1] + pixel[2]
+          if diff < tolerance:
+            top += 1
+        curX += 1
+      curY += 1
+
+    curY = smallRows[c][1] + 1
+    while curY <= bigRows[c][1]:
+      curX = 0
+      while curX < w:
+        if curY >= 0 and curY < len(pixels):
+          pixel = pixels[curY][curX]
+          diff = pixel[0] + pixel[1] + pixel[2]
+          if diff < tolerance:
+            bottom += 1
+        curX += 1
+      curY += 1
+
+  print top, bottom
+  if top >= bottom:
+    return img
+  else:
+    return imgRotate(img, 180) #img.rotate(180, Image.BICUBIC)
 
 def simPrim(f, sx, sy, rand = False): # simulate prim with failure prob f
   states = []
@@ -345,7 +1098,270 @@ def simError(ex1,ey1,ex2,ey2):
   et = (float(len(cx)) + float(len(cy))) / (len(ex1) + len(ey1)) 
   return ex, ey, et
 
-def getPrediction(ims):
+
+def getDecisionTree(ims):
+  context = []
+  extentSize = 6
+  for f in range(-extentSize,extentSize+1):
+    for s in range(-extentSize,0):
+      if not (f==0 and s==0):
+        context.append((f,s)) 
+
+  features = {}
+  categs = []
+  for c in context:
+    features[c] = []
+
+  for im in ims:
+    w,h = im.size
+    ld = list(im.getdata())
+    
+    bd = []
+    for r in range(h):
+      bd.append([])
+      for c in range(w):
+        bd[r].append(ld[r*w + c])
+
+    div = 255.0
+    for r in range(extentSize, h -extentSize):
+      for c in range(extentSize, w):
+        vr = bd[r][c]/div
+        categs.append(vr)
+        for i in context:
+          nr = r+i[0]
+          nc = c+i[1]
+          features[i].append(bd[nr][nc]/div)
+
+  print getFeature(categs, features, 5)
+
+def getFeature(categs, features, maxDepth, depth=1, pReach = 1.0):
+  minEnt = 1.0
+  bestFeature = None
+  bestData = None
+
+  for (k,v) in features.items():
+    count = 0.0
+    blacks = 0.0
+    predB = 0.0
+    predW = 0.0    
+    for i in range(len(v)):
+      ct = categs[i]
+      count += 1
+      if v[i] == 0:
+        blacks += 1
+        if ct == 0:
+          predB += 1
+      else:
+        if ct == 1:
+          predW += 1
+
+    probB = blacks/count
+    probW = 1 - probB
+    whites = count - blacks
+
+    ent = 0
+    if probB > 0:
+      ent += probB * getH2(predB / blacks) 
+    if probW > 0:
+      ent += probW * getH2(predW / whites)
+
+    if ent < minEnt:
+      minEnt = ent
+      bestFeature = k
+      bestData = probB, probW, predB / blacks, predW / whites
+
+  catPredB = "B"
+  predB = bestData[2]
+  if predB < 0.5:
+    catPredB = "W"
+    predB = 1 - predB
+
+  catPredW = "W"
+  predW = bestData[3]
+  if predW < 0.5:
+    catPredW = "W"
+    predW = 1 - predW
+
+  probCorr = bestData[0] * predB + bestData[1] * predW
+
+  print depth, pReach, bestData, bestFeature, minEnt, catPredB, catPredW, probCorr
+
+  if depth >= maxDepth:
+    return probCorr * pReach
+
+  nCatB = []
+  nCatW = []
+  setFeatB = set()
+  nFeatB = {}
+  nFeatW = {}
+  for c in features.keys():
+    if c == bestFeature:
+      continue
+    nFeatB[c] = []
+    nFeatW[c] = []
+
+  bv = features[bestFeature]
+  for i in range(len(bv)):
+    ct = categs[i]
+    if bv[i] == 0:
+      nCatB.append(ct)
+      setFeatB.add(i)
+    else:
+      nCatW.append(ct)
+
+  for (k,v) in features.items():
+    if k == bestFeature:
+      continue
+    for i in range(len(v)):
+      if i in setFeatB:
+        nFeatB[k].append(v[i])
+      else:
+        nFeatW[k].append(v[i])
+
+  pcB = getFeature(nCatB, nFeatB, maxDepth, depth+1, pReach*bestData[0])
+  pcW = getFeature(nCatW, nFeatW, maxDepth, depth+1, pReach*bestData[1])
+
+  return pcB + pcW
+
+def getContextEffects(ims):
+  context = []
+  extentSize = 6
+  for f in range(-extentSize,extentSize+1):
+    for s in range(-extentSize,0):
+      context.append((f,s)) 
+  pixCount = {}
+  totCount = {}
+  pixPred = {}
+  for c in context:
+    totCount[c] = 0.0
+    pixCount[c] = 0.0
+    pixPred[c] = [0.0,0.0]
+
+  for im in ims:
+    w,h = im.size
+    ld = list(im.getdata())
+    
+    bd = []
+    for r in range(h):
+      bd.append([])
+      for c in range(w):
+        bd[r].append(ld[r*w + c])
+
+    div = 255.0
+    for r in range(h):
+      for c in range(w):
+        vr = bd[r][c]/div
+        for i in context:
+          nr = r+i[0]
+          nc = c+i[1]
+          if nr >= 0 and nr < h and nc >= 0 and nc < w:
+            totCount[i] += 1
+            if bd[nr][nc] == 0:
+              pixCount[i] += 1
+              if vr == 0:
+                pixPred[i][0] += 1
+            else:
+              if vr == 0:
+                pixPred[i][1] += 1
+
+  #print pixCount, totCount, pixPred
+  rez = {}
+  sol = None
+  minH2 = 1.0
+  for (k,v) in pixPred.items():
+    count = totCount[k]
+    blackCount = pixCount[k]
+    whiteCount = count - pixCount[k]
+    probBlack = blackCount / count
+    probWhite = 1 - probBlack
+    h2 = probBlack * getH2(v[0]/blackCount) + probWhite * getH2(v[1]/whiteCount)
+    rez[k] = (v[0]/blackCount, v[1]/whiteCount, h2)
+    #print k, v[0]/blackCount, v[1]/whiteCount, h2)
+
+  print '\n'.join(map(str, sorted(rez.items(), key=lambda x: x[1][2])))
+  #print sol
+
+def getPrediction7(ims):
+  predXl = {}
+  predYl = {}
+  predXr = {}
+  predYr = {}
+  prior = 0
+  for im in ims:
+    w,h = im.size
+    ld = list(im.getdata())
+    
+    prior = ld.count(0) / float(len(ld))
+    #print w,h, len(ld)
+    bd = []
+    for r in range(h):
+      bd.append([])
+      for c in range(w):
+        bd[r].append(ld[r*w + c])
+
+    div = 255.0
+    for r in range(1,h-1):
+      for c in range(2,w-1):
+        nl = (bd[r-1][c]/div,bd[r][c]/div,bd[r+1][c]/div,bd[r-1][c-1]/div, bd[r-1][c+1]/div,bd[r][c+1]/div,bd[r+1][c+1]/div)
+        vl = bd[r][c-1]/div
+        try:
+          predXl[nl][vl] += 1
+        except:
+          predXl[nl] = {vl : 2.0, 1-vl : 1.0}
+
+        nr = (bd[r-1][c-1]/div,bd[r][c-1]/div,bd[r+1][c-1]/div,bd[r-1][c]/div, bd[r-1][c-2]/div,bd[r][c-2]/div,bd[r+1][c-2]/div)
+        vr = bd[r][c]/div
+        try:
+          predXr[nr][vr] += 1
+        except:
+          predXr[nr] = {vr : 2.0, 1-vr : 1.0}
+
+    for r in range(2,h-1):
+      for c in range(1,w-1):
+        nl = (bd[r][c-1]/div,bd[r][c]/div,bd[r][c+1]/div,bd[r-1][c-1]/div, bd[r+1][c-1]/div,bd[r+1][c]/div,bd[r+1][c+1]/div)
+        vl = bd[r-1][c]/div
+        try:
+          predYl[nl][vl] += 1
+        except:
+          predYl[nl] = {vl : 2.0, 1-vl : 1.0}
+
+        nr = (bd[r-1][c-1]/div,bd[r-1][c]/div,bd[r-1][c+1]/div,bd[r][c-1]/div, bd[r-2][c-1]/div,bd[r-2][c]/div,bd[r-2][c+1]/div)
+        vr = bd[r][c]/div
+        try:
+          predYr[nr][vr] += 1
+        except:
+          predYr[nr] = {vr : 2.0, 1-vr : 1.0}
+
+  for i1 in [0,1]:
+    for i2 in [0,1]:
+      for i3 in [0,1]:
+        for i4 in [0,1]:
+          for i5 in [0,1]:
+            for i6 in [0,1]:
+              for i7 in [0,1]:
+                n = tuple(map(float,(i1,i2,i3,i4,i5,i6,i7)))
+                if n not in predXl:
+                  print n
+                  predXl[n] = {0.0 : prior, 1.0 : (1-prior)}
+                if n not in predYl:
+                  print n
+                  predYl[n] = {0.0 : prior, 1.0 : (1-prior)}
+
+                if n not in predXr:
+                  print n
+                  predXr[n] = {0.0 : prior, 1.0 : (1-prior)}
+                if n not in predYr:
+                  print n
+                  predYr[n] = {0.0 : prior, 1.0 : (1-prior)}
+                print n, predXl[n][0.0] + predXl[n][1.0]
+                predXl[n] = normalize(predXl[n])
+                predYl[n] = normalize(predYl[n])
+                predXr[n] = normalize(predXr[n])
+                predYr[n] = normalize(predYr[n])
+
+  return prior, predXl, predYl, predXr, predYr
+
+def getPrediction4(ims):
   predXl = {}
   predYl = {}
   predXr = {}
@@ -366,14 +1382,14 @@ def getPrediction(ims):
     div = 255.0
     for r in range(1,h-1):
       for c in range(1,w):
-        nl = (bd[r-1][c]/div,bd[r][c]/div,bd[r+1][c]/div,bd[r-1][c-1]/div)#,bd[r][c]/div,bd[r+1][c]/div,bd[r-1][c+1]/div)
+        nl = (bd[r-1][c]/div,bd[r][c]/div,bd[r+1][c]/div,bd[r-1][c-1]/div)#, bd[r-1][c+1]/div,bd[r][c+1]/div,bd[r+1][c+1]/div)
         vl = bd[r][c-1]/div
         try:
           predXl[nl][vl] += 1
         except:
           predXl[nl] = {vl : 2.0, 1-vl : 1.0}
 
-        nr = (bd[r-1][c-1]/div,bd[r][c-1]/div,bd[r+1][c-1]/div,bd[r-1][c]/div)#,bd[r][c]/div,bd[r+1][c]/div,bd[r-1][c+1]/div)
+        nr = (bd[r-1][c-1]/div,bd[r][c-1]/div,bd[r+1][c-1]/div,bd[r-1][c]/div)#, bd[r-1][c-2]/div,bd[r][c-2]/div,bd[r+1][c-2]/div)
         vr = bd[r][c]/div
         try:
           predXr[nr][vr] += 1
@@ -382,14 +1398,14 @@ def getPrediction(ims):
 
     for r in range(1,h):
       for c in range(1,w-1):
-        nl = (bd[r][c-1]/div,bd[r][c]/div,bd[r][c+1]/div,bd[r-1][c-1]/div)#,bd[r][c]/div,bd[r][c+1]/div,bd[r+1][c-1]/div)
+        nl = (bd[r][c-1]/div,bd[r][c]/div,bd[r][c+1]/div,bd[r-1][c-1]/div)#, bd[r+1][c-1]/div,bd[r+1][c]/div,bd[r+1][c+1]/div)
         vl = bd[r-1][c]/div
         try:
           predYl[nl][vl] += 1
         except:
           predYl[nl] = {vl : 2.0, 1-vl : 1.0}
 
-        nr = (bd[r-1][c-1]/div,bd[r-1][c]/div,bd[r-1][c+1]/div,bd[r][c-1]/div)#,bd[r][c]/div,bd[r][c+1]/div,bd[r+1][c-1]/div)
+        nr = (bd[r-1][c-1]/div,bd[r-1][c]/div,bd[r-1][c+1]/div,bd[r][c-1]/div)#, bd[r-2][c-1]/div,bd[r-2][c]/div,bd[r-2][c+1]/div)
         vr = bd[r][c]/div
         try:
           predYr[nr][vr] += 1
@@ -414,7 +1430,7 @@ def getPrediction(ims):
           if n not in predYr:
             print n
             predYr[n] = {0.0 : prior, 1.0 : (1-prior)}
-
+          print n, predXl[n][0.0] + predXl[n][1.0]
           predXl[n] = normalize(predXl[n])
           predYl[n] = normalize(predYl[n])
           predXr[n] = normalize(predXr[n])
@@ -588,6 +1604,11 @@ def plotResults(c, p, g, y, costEval):
 
   plt.show()
 
+def getH2(prob):
+  if prob == 1 or prob == 0:
+    return 0
+  rp = 1.0 - prob
+  return -prob*math.log(prob,2) - rp*math.log(rp,2)
 
 if __name__ == "__main__":
   arg = ""
@@ -705,9 +1726,37 @@ if __name__ == "__main__":
     ik = []
     y = []
     costEval = []
-    #prior, prx, pry = getPrediction([Image.open("SampleDocs/text31.jpg").convert("1")])
+    prob = {}
+    im = Image.open("SampleDocs/p01.png").convert("1")
+    getContextEffects([im])
+    
+    dt = DTree([im],5)
+    rawDataV = """
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+"""
 
-    for i in range(2,16):
+    rawDataH = """
+0 0 0 0 0 0 0
+0 0 0 0 0 0 0
+0 0 0 0 0 0 0
+"""
+    dataH = map(lambda x: map(int,x.strip().split(' ')), rawDataH.strip().split('\n'))
+    dataV = map(lambda x: map(int,x.strip().split(' ')), rawDataV.strip().split('\n'))
+    
+    #print dt.getProb(dataV, 3, 0, "V"), dt.getProb(dataV, 3, 255, "V"), dt.getProb(dataH, 3, 0, "H"), dt.getProb(dataH, 3, 255, "H")
+    #assert(False)
+
+    #prior, prxl, pryl, prxr, pryr = getPrediction([im])
+    #print prior
+    #print prxl
+
+    for i in range(2,21):#[10,15,25,35]:
       print i
       sx = i
       sy = i
@@ -719,48 +1768,63 @@ if __name__ == "__main__":
       intG1D = 0
       intPrm = 0
       
-      page = pages.ImagePage(sx, sy, "SampleDocs/text31.jpg")
-      #page.setCost("prediction", prx, pry, prior)
-      page.setCost("blackGaus")
+      page = pages.ImagePage(sx, sy, im)
+      #page.setCost("prediction", (prxl,prxr),(pryl,pryr), prior)
+      page.setCost("decisionTree", dt = dt)
+      
+      #page.setCost("blackGaus")
       #page.output(page.states[(1,1)])
       #print cost.indivPicker(page.costType,(1,1), (-42,-42), "x",  page, False)
       #g1DMat = search.picker("g1D", page)
       #page.heapify()
-      (pos, edges) = search.picker("kruskal", page)
+      ###(pos, edges) = search.picker("kruskal", page)
       #page.heapify()
       #(kpos, kedges) = search.picker("kruskal", page)
       #print g1DMat
       #print edges
       #print pos
       #print convertMatPos(g1DMat)
-      correct += sum(page.totalCost)
+      ###correct += sum(page.totalCost)
       #g1D += sum(page.calcCostMat(g1DMat))
-      prm += sum(page.calcCostList(pos))
-      intCorrect += sum(page.totalInternalCost)
+      ###prm += sum(page.calcCostList(pos))
+      ###intCorrect += sum(page.totalInternalCost)
       #intG1D += sum(page.calcCostMat(g1DMat, True))
 
-      intPrm += sum(page.calcCostList(pos, True))
-      costEval.append(cost.evaluateCost(page, sx, sy)[0])
-      print intCorrect/reps, intPrm/reps#, intG1D/reps
-      print correct/reps, prm/reps#, g1D/reps
-      print "cost eval", cost.evaluateCost(page, sx, sy)
-      edgeP = page.calcCorrectEdges(pos)
+      ###intPrm += sum(page.calcCostList(pos, True))
+      evalCost = cost.evaluateCost(page, sx, sy)
+      """
+      ps = evalCost[2]
+      for (k,(v,n,q)) in ps.items():
+        try:
+          prob[k] = (prob[k][0] + v, prob[k][1] + n, prob[k][2]+q)
+        except:
+          prob[k] = (v,n,q)
+
+      #print sorted([(x,q/z,y/z,z) for (x,(y,z,q)) in ps.items()])
+      sys.stdout.flush()
+      costEval.append(evalCost[0])
+      """
+      print i*i, evalCost[0]
+      ###print intCorrect/reps, intPrm/reps#, intG1D/reps
+      ###print correct/reps, prm/reps#, g1D/reps
+      #print "cost eval", evalCost
+      ###edgeP = page.calcCorrectEdges(pos)
       #edgeK = page.calcCorrectEdges(kpos)
       #edgeG = page.calcCorrectEdges(convertMatPos(g1DMat))
-      edgeC = 1.0
-      print "edges", edgeP#, edgeK, edgeG
+      ###edgeC = 1.0
+      ###print "edges", edgeP#, edgeK, edgeG
       #print sorted(page.calcCostList(convertMatPos(g1DMat), False)) == sorted(page.calcCostMat(g1DMat, False))
-      c.append(correct)
-      p.append(prm)
+      ###c.append(correct)
+      ###p.append(prm)
       #g.append(g1D)
-      ec.append(edgeC)
-      ep.append(edgeP)
+      ###ec.append(edgeC)
+      ###ep.append(edgeP)
       #eg.append(edgeG)
       #ek.append(edgeK)
-      ic.append(intCorrect)
-      ip.append(intPrm)
+      ###ic.append(intCorrect)
+      ###ip.append(intPrm)
       #ig.append(intG1D)
-      y.append(i*i)
+      ###y.append(i*i)
       #print sum(page.calcCostList({(0, 1): (0, 1), (1, 0): (1, 0), (0, 0): (0, 0), (1, 1): (1, 1)}))
 
     #print ' '.join(map(str,c))
@@ -769,34 +1833,99 @@ if __name__ == "__main__":
     #print ' '.join(map(str,ip))
     #print ' '.join(map(str,ep))
 
+    print costEval
+    """
+    print "total"
+    print sorted([(x,q/z,y/z,z) for (x,(y,z,q)) in prob.items()])
+    
+    i20 = [(0, 0.0091290199977457874, 0.0068998597138859733, 286), (1, 0.092875041027483327, 0.066666666666666666, 30), (2, 0.20176894214720276, 0.083333333333333329, 42), (3, 0.30044528043338581, 0.2011494252873563, 29), (4, 0.39621885825235331, 0.19318181818181818, 44), (5, 0.4962001060077475, 0.43518518518518517, 54), (6, 0.59526841334815284, 0.18518518518518517, 27), (7, 0.70110502957891263, 0.30188679245283018, 53), (8, 0.80761362174707341, 0.57692307692307687, 26), (9, 0.90416987434502882, 0.58695652173913049, 46), (10, 0.99045721751689209, 0.84552845528455289, 123)]
 
-    plt.plot(y,c, 'r', y,p, 'g', y, ic, 'b', y, ip, 'm')
-    plt.annotate("Total Correct cost", (y[3],c[3]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Total Kruskal cost", (y[6],p[6]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Interior Correct cost", (y[9],ic[9]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Interior Kruskal cost", (y[13],ip[13]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.xlabel("Number of shreds")
-    plt.ylabel("Cost")
+
+    i15 = [(0, 0.013073051832917114, 0.015012214045887347, 123), (1, 0.082391694555403835, 0.22222222222222221, 6), (2, 0.19853881242630023, 0.15972222222222221, 24), (3, 0.30610217401542761, 0.30952380952380948, 14), (4, 0.40082441591543333, 0.22727272727272727, 22), (5, 0.50312162443339137, 0.35483870967741937, 31), (6, 0.60729359843637487, 0.52173913043478259, 23), (7, 0.70220134833037362, 0.375, 16), (8, 0.80751561857713794, 0.55555555555555558, 27), (9, 0.90423706913703805, 0.58333333333333337, 24), (10, 0.99330265415059882, 0.84545454545454546, 110)]
+
+    i25 = [(0, 0.0065074182268112946, 0.0098764975360062564, 456), (1, 0.097282393877329995, 0.085826620636747217, 79), (2, 0.20443546027653856, 0.1134831460674157, 89), (3, 0.29711203602975828, 0.22286821705426357, 86), (4, 0.39354827331547881, 0.18604651162790697, 86), (5, 0.49714061259646991, 0.29054054054054052, 74), (6, 0.59607211095047263, 0.28888888888888886, 45), (7, 0.70224646123796075, 0.4838709677419355, 31), (8, 0.80420865703465916, 0.43333333333333335, 30), (9, 0.90498060789312651, 0.39344262295081966, 61), (10, 0.9875027577745592, 0.86503067484662577, 163)]
+
+    i35 = [(0, 0.0049548121476102333, 0.0043816311259321679, 1058), (1, 0.10178276332411157, 0.068770372360450666, 383), (2, 0.19033366043199831, 0.1202294685990338, 276), (3, 0.30013198327547702, 0.16129032258064516, 155), (4, 0.40233988394593101, 0.19047619047619047, 105), (5, 0.49616325472001949, 0.28488372093023256, 86), (6, 0.60431272339467534, 0.31578947368421051, 57), (7, 0.69794424446217418, 0.22222222222222221, 63), (8, 0.80592706421796689, 0.59259259259259256, 54), (9, 0.90944283777256696, 0.68493150684931503, 73), (10, 0.98215014964015013, 0.91428571428571426, 70)]
+
+
+    x20,l20 = ([q[0]/10.0 for q in i20], [q[2] for q in i20])
+    x15,l15 = ([q[0]/10.0 for q in i15], [q[2] for q in i15])
+    x25,l25 = ([q[0]/10.0 for q in i25], [q[2] for q in i25])
+    x35,l35 = ([q[0]/10.0 for q in i35], [q[2] for q in i35])
+    #xTotal,lTotal = ([q[0] for q in iTotal], [q[2] for q in iTotal])
+
+    plt.plot(x35,l35, 'r-*', x25,l25, 'g-H', x15,l15, 'b-d', x20,l20, 'm-+')#, x5,l5, 'c')#,xTotal,lTotal, 'k')
+    plt.annotate("35*35", (x35[3],l35[3]), xytext = (0.2, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("25*25", (x25[6],l25[6]), xytext = (0.2, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("15*15", (x15[3],l15[3]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("20*20", (x20[5],l20[5]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("25*25", (x25[13],l25[13]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Total Sum", (xTotal[13],lTotal[13]), xytext = (0.2, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.xlabel("Predicted probability")
+    plt.ylabel("Observed probability")
     plt.show()
+    """
 
   elif "4" in arg:
     ys = []
-    #prior, prxl, pryl, prxr, pryr = getPrediction([Image.open("SampleDocs/text31.jpg").convert("1")])
-    for i in range(2,21):
-      sx = i
-      sy = i
+    im = Image.open("SampleDocs/text31.jpg").convert("1")
 
-      page = pages.ImagePage(sx, sy, "SampleDocs/text31.jpg")
+    #w, h = im.size
+    #im = im.resize((w/2, h/2), Image.ANTIALIAS)
+    #prior, prxl, pryl, prxr, pryr = getPrediction([im])
+    errors = {}
+    unknowns = {}
+    for j in [1,10,50,100]:#range(30,91,10):
+      errors[j] = []
+      unknowns[j] = []
+      for i in range(10,201,20):
+        sx = i
+        sy = j
+
+        page = pages.ImagePage(sx, sy, im)
+
+        #boxes = page.getBoxes()
+        #bigRows, smallRows = page.getRows1()
+        page.calcPiecesRows()
+        
+        white, unknown, upside = page.calcOrients()
+        errors[j].append(float(upside) / (i*j))
+        unknowns[j].append(float(unknown) / (i*j))
+        print j, i, white, unknown, upside, float(white) / (i*j), float(unknown) / (i*j), float(upside) / (i*j), float(unknown + upside) / (i*j)
+      #print smallRows, len(smallRows)
+      #final = Image.new("RGB", im.size)
+      #drawFin = ImageDraw.Draw(final)
+      #final.paste(im, (0,0))
+      #if boxes != None:
+      #  for (start,end) in boxes:
+      #    drawFin.rectangle([(start[1],start[0]), (end[1],end[0])], outline=(255,0,0))
+
+      #if bigRows != None:
+      #  for (start,end) in bigRows:
+      #    drawFin.line([(0,start), (im.size[0],start)], fill=(255,0,0))
+      #    drawFin.line([(0,end), (im.size[0],end)], fill=(255,0,255))
+
+      #if smallRows != None:
+      #  for (start,end) in smallRows:
+      #    drawFin.line([(0,start), (im.size[0],start)], fill=(0,255,0))
+      #    drawFin.line([(0,end), (im.size[0],end)], fill=(0,0,255))
+      #final.save("ghhghh","JPEG")
+      #break
       #print page.whites
 
       #print verifCost.checkAll(page)
-      page.setCost("gaus")
+      #page.setCost("gaus")
       #page.setCost("blackGaus")
-      #page.setCost("prediction", (prxl,prxr),(pryl,pryr), prior)
+      
+      ###page.setCost("prediction", (prxl,prxr),(pryl,pryr), prior)
       
       #g1DMat = search.picker("g1D", page)
       #page.heapify()
-      #(pos, edges) = search.picker("kruskal", page)
+
+      ###(pos, edges) = search.picker("prim", page)
+      ###page.vizPos(pos, None, False, True)
+
+      #break
       #page.heapify()
       #(kPos, kEdges) = search.picker("kruskal", page, True)
       #print edges
@@ -804,9 +1933,9 @@ if __name__ == "__main__":
       #print g1DMat
       #print sum(page.totalInternalCost), sum(page.calcCostList(kPos, True)), sum(page.calcCostList(pos, True)), sum(page.calcCostMat(g1DMat, True))
       #print sum(page.totalCost),sum(page.calcCostList(kPos)), sum(page.calcCostList(pos)), sum(page.calcCostMat(g1DMat))
-      cc = cost.evaluateCost(page, sx, sy)
-      print i, cc#,page.calcCorrectEdges(kPos, True), page.calcCorrectEdges(pos), page.calcCorrectEdges(convertMatPos(g1DMat))
-      ys.append(cc)
+      ###cc = cost.evaluateCost(page, sx, sy)
+      ###print i, cc#,page.calcCorrectEdges(kPos, True), page.calcCorrectEdges(pos), page.calcCorrectEdges(convertMatPos(g1DMat))
+      ###ys.append(cc[0])
       #page.vizPos(kPos, "kruskal")
       #page.vizPos(pos, "prim")
       #page.vizPos(convertMatPos(g1DMat), "g1d")
@@ -831,24 +1960,28 @@ if __name__ == "__main__":
       #plt.ylabel('')
       #plt.grid(True)
       #plt.show()
-    print ys
+    print errors
+    print unknowns
   elif "5" in arg:
     #px, py = getPercents([Image.open("SampleDocs/text3.jpg").convert("1")])
     #print "orig px", '\n'.join(map(str,sorted(px.items(), key=lambda x : x[1]))), '\n======'
     #print "orig py",  '\n'.join(map(str,sorted(py.items(), key=lambda x : x[1]))), '\n======'
-    prior, prxl, pryl, prxr, pryr = getPrediction([Image.open("SampleDocs/p01.png").convert("1")])
+    im = Image.open("SampleDocs/p01.png").convert("1")
+    prior, prxl, pryl, prxr, pryr = getPrediction4([im])
+
     #print prior
     #print "orig prxr", '\n'.join(map(str,sorted(prxr.items(), key=lambda x : x[1][0.0]))), '\n======'
     #print "orig prxl",  '\n'.join(map(str,sorted(prxl.items(), key=lambda x : x[1][0.0]))), '\n======'
     ns = []
     xs = []
     ys = []
+    ec = []
     for i in range(2,21):
       start = time.clock()
       sx = i
       sy = i
       #print "ff"
-      page = pages.ImagePage(sx, sy, "SampleDocs/p01.png")
+      page = pages.ImagePage(sx, sy, im)
       #rr = page.confEdges(4)
       #print i, rr
       #xs.append(rr)
@@ -857,19 +1990,32 @@ if __name__ == "__main__":
       #print "piece py", sorted(py, key=lambda x : x[1]), '\n======'
       #print "qq"
       page.setCost("prediction", (prxl,prxr),(pryl,pryr), prior)
-      #page.setCost("blackGaus")
-      (pPos, pEdges) = search.picker("prim", page)
+
+
+      #page.setCost("gaus")
+      evalCost = cost.evaluateProb(page, sx, sy)
+      print i, evalCost[0]
+      ec.append(evalCost[0])
+      (pPos, pEdges) = search.picker("kruskal", page)
+
+      #gp = page.calcGroups(pPos)
+      #groupP = (len(gp),sorted(gp, reverse = True) )
       #page.heapify()
-      #(kPos, kEdges) = search.picker("prim1", page)
+      #(kPos, kEdges) = search.picker("kruskalMulti", page)
+      #gk = page.calcGroups(kPos)
+      #groupK = (len(gk),sorted(gk, reverse = True) )
       corrp = page.calcCorrectEdges(pPos)
-      corrk = 0#page.calcCorrectEdges(kPos)
+      corrk = 0 #page.calcCorrectEdges(kPos)
       ns.append(i*i)
       xs.append(corrp)
       ys.append(corrk)
       sys.stderr.write(str(i) + " " + str(corrp) + " " + str(corrk) + " " + str(time.clock() - start) + "\n")
+      #print groupP
+      #print groupK
 
-    print "prim", xs
-    print "kruskal", ys
+    print ec
+    #print "prim", xs
+    #print "kruskal", ys
     plt.plot(ns,xs, 'r-', ns,ys, 'g-')
     
     #plt.xlabel("Number of shreds")
@@ -892,9 +2038,9 @@ if __name__ == "__main__":
     ts = []
     ns = []
 
-    ex12, ey12 = genEdges(1,1024)
-    ex13, ey13 = genEdges(4,256)
-    ex14, ey14 = genEdges(32,32)
+    ex12, ey12 = genEdges(10,10)
+    #ex13, ey13 = genEdges(4,256)
+    #ex14, ey14 = genEdges(32,32)
     for f in np.arange(0.0, 1.001, 0.01):
       sumXp = 0.0
       sumYp = 0.0
@@ -906,59 +2052,137 @@ if __name__ == "__main__":
       sumYq = 0.0
       sumTq = 0.0
       for i in range(count):
-        ex2, ey2 = simPrim(f,1,1024)
-        ex3, ey3 = simPrim(f,4,256)
-        ex4, ey4 = simPrim(f,32,32)
+        #ex2, ey2 = simPrim(f,5,5)
+        ex3, ey3 = simPrim1(f,10,10)
+        #ex4, ey4 = simPrim(f,32,32)
         #print ex1, ey1
         #print ex2, ey2
-        xk,yk,tk = simError(ex12,ey12,ex2,ey2)
-        sumXk += xk
-        sumYk += yk
-        sumTk += tk
-        xp,yp,tp = simError(ex13,ey13,ex3,ey3)
+        #xk,yk,tk = simError(ex12,ey12,ex2,ey2)
+        #sumXk += xk
+        #sumYk += yk
+        #sumTk += tk
+        xp,yp,tp = simError(ex12,ey12,ex3,ey3)
         sumXp += xp
         sumYp += yp
         sumTp += tp
-        xq,yq,tq = simError(ex14,ey14,ex4,ey4)
-        sumXq += xq
-        sumYq += yq
-        sumTq += tq
+        #xq,yq,tq = simError(ex14,ey14,ex4,ey4)
+        #sumXq += xq
+        #sumYq += yq
+        #sumTq += tq
 
       sumXp /= count
       sumYp /= count
       sumTp /= count
 
-      sumXk /= count
-      sumYk /= count
-      sumTk /= count
+      #sumXk /= count
+      #sumYk /= count
+      #sumTk /= count
 
-      sumXq /= count
-      sumYq /= count
-      sumTq /= count
+      #sumXq /= count
+      #sumYq /= count
+      #sumTq /= count
 
       print "Prim", f, sumXp, sumYp, sumTp
-      print "Prim1", f, sumXk, sumYk, sumTk
+      #print "Prim1", f, sumXk, sumYk, sumTk
       xs.append(sumTp)
-      ys.append(sumTk)
-      ts.append(sumTq)
+      #ys.append(sumTk)
+      #ts.append(sumTq)
       ns.append(f)
 
-    print ts
+    #print ts
     #print ys
+    print xs
     plt.figure(1)
-    plt.plot(ns,xs, 'r-', ns,ys, 'g-', ns, [1-x for x in ns], 'b-', ns, ts, 'm-')
+    plt.plot(ns,xs, 'r-', ns, [1-x for x in ns], 'b-')
     plt.show()
   elif "7" in arg:
+    
+    bg =[0.80000000000000004, 0.77499999999999991, 0.51715686274509798, 0.50961538461538469, 0.37567567567567578, 0.39785714285714285, 0.37994505494505526, 0.51058604336043412, 0.31468646864686495, 0.33885991058122245, 0.31266980146290535, 0.26257541478129698, 0.23832766218553006, 0.24430046354825141, 0.23577739948119428, 0.23483772819472648, 0.27312468577174348, 0.25027866627895617, 0.17653782211138913]
+
+    bgS1 = [0.80000000000000004, 0.77499999999999991, 0.60049019607843135, 0.65961538461538471, 0.56734234234234238, 0.4330952380952382, 0.38901098901098929, 0.46553184281842852, 0.32307480748074835, 0.37067809239940436, 0.34097439916405475, 0.31389517345399665, 0.21197774306911341, 0.24552254530130665, 0.20417207090358941, 0.20168610547667373, 0.21838612368024038, 0.1973630361969998, 0.13505435971474938]
+
+    bgD15=[0.80000000000000004, 0.76666666666666661, 0.52696078431372539, 0.48461538461538467, 0.32612612612612624, 0.20952380952380942, 0.27740384615384611, 0.44478319783197873, 0.25962596259625992, 0.2038002980625935, 0.21833855799373086, 0.16332956259426917, 0.22986277681709147, 0.17363042562157646, 0.15585278858625259, 0.16710826572008147, 0.13565191888721254, 0.20285962758338499, 0.10166633853961705]
+
+    bgN01 = [1.0, 0.75, 0.50245098039215685, 0.46346153846153848, 0.38378378378378381, 0.40547619047619049, 0.30467032967032964, 0.4697662601626017, 0.25948844884488448, 0.3283904619970196, 0.28132183908045999, 0.23305052790346911, 0.20804745170227387, 0.21873156342182906, 0.19149238002594085, 0.2036806964164978, 0.23487347075582299, 0.20526396562308166, 0.14092236513978296]
+
+    g = [0.58333333333333337, 0.78571428571428559, 0.54930555555555549, 0.49107142857142866, 0.50151282051282053, 0.48057133838383848, 0.48014133683776572, 0.5629844114219118, 0.38519148353408322, 0.42024187371275878, 0.37804269339450219, 0.40595504806416166, 0.3169970337368318, 0.31459838764519366, 0.28409745104446577, 0.2986933407921355, 0.33914342133293579, 0.33097146277829392, 0.24350653476865139]
+
+    gS1 = [0.083333333333333329, 0.61111111111111116, 0.52499999999999991, 0.50416666666666665, 0.3653637566137567, 0.32734772069747442, 0.37196575126262627, 0.40771842486781512, 0.29894866097940986, 0.29025678574191238, 0.29772215762090676, 0.24823862859012599, 0.18749510298392447, 0.19769368819849203, 0.18726326742244212, 0.16572105944047236, 0.18408309821080471, 0.18387389844794888, 0.13633024400463054]
+
+    gD15 = [0.58333333333333337, 0.78571428571428559, 0.32959401709401698, 0.41250000000000009, 0.4634081196581199, 0.25885996097689645, 0.30090702947845799, 0.46614587986539213, 0.33605977462682551, 0.34502226153561127, 0.26135871007497691, 0.18248812657907118, 0.30656756826867315, 0.24194728561680573, 0.173538960832294, 0.24199637974912272, 0.17105737346303648, 0.25830401711607281, 0.12840981415346278]
+
+    gN01 = [0.25, 0.41666666666666669, 0.25, 0.28749999999999998, 0.24166666666666667, 0.18849206349206349, 0.3125, 0.37754629629629627, 0.21481481481481485, 0.23322510822510822, 0.23683425160697888, 0.16312321937321941, 0.17664581795016579, 0.1743640350877193, 0.17069196428571426, 0.19848442192192192, 0.22230846042120553, 0.18013356363579194, 0.12641072607153861]
+
+
+    ceP01 = [0.83333333333333337, 0.78571428571428559, 0.73333333333333339, 0.56250000000000011, 0.5848461538461539, 0.55640106421356439, 0.53290107709750612, 0.66639876327376368, 0.47658037242297213, 0.49462497488831275, 0.47456038732868699, 0.4577243257949779, 0.38022948376897703, 0.39844405316105758, 0.33730559887765532, 0.35500473869091898, 0.4049667472915936, 0.37398131139288998, 0.27935091212040064]
+
+    ceP01N01 = [0.5, 0.5, 0.25, 0.27500000000000002, 0.31666666666666665, 0.23809523809523808, 0.22321428571428573, 0.34722222222222221, 0.19444444444444445, 0.18636363636363637, 0.17803030303030304, 0.17307692307692307, 0.14285714285714285, 0.15238095238095239, 0.12916666666666668, 0.13051470588235295, 0.18300653594771241, 0.14342105263157895, 0.099404761904761912]
+
+    ceP01S1 = [0.83333333333333337, 0.86111111111111105, 0.56666666666666654, 0.59166666666666656, 0.56142857142857139, 0.4947660098522168, 0.47097368777056275, 0.53677358521108554, 0.37162804462370574, 0.37649637992669349, 0.36716328569738321, 0.34871035475593737, 0.24795041163949696, 0.28920157434418264, 0.26236539160544864, 0.20410522782676188, 0.26553916204266487, 0.24747212443233477, 0.17352132229138117]
+
+    ceP01D15 = [0.58333333333333337, 0.78571428571428559, 0.48611111111111116, 0.48869047619047629, 0.4776056505223174, 0.31670026881720426, 0.37307964852607728, 0.48932709679660902, 0.38207829314534397, 0.40164902449149009, 0.26878340862036515, 0.20215104135692849, 0.31426862492806312, 0.23318901237499315, 0.19409114173815625, 0.2642352817804971, 0.18245958228412834, 0.28917584550543329, 0.13892766180777641]
+
+    c7 = [0.83333333333333337, 0.78571428571428559, 0.73333333333333339, 0.54345238095238102, 0.54317948717948716, 0.50585091991342002, 0.49718679138322031, 0.60158840002590042, 0.42658037242297203, 0.50371759795152415, 0.45767962316531413, 0.48016022323087537, 0.37438263701303937, 0.38100898822599272, 0.32888613953557638, 0.35814120853010351, 0.38771836054023096, 0.38415674448394904, 0.30750685781714499]
+
+    c7N01 = []
+    c7S1 = []
+    c7D15 = []
+
+    diffN01 = [y/x for (x,y) in zip(g,gN01)]
+    diffS1 = [y/x for (x,y) in zip(g,gS1)]
+    diffD15 = [y/x for (x,y) in zip(g,gD15)]
+    xs = [i*i for i in range(2,21)]
+
+    minInd = 4
+    #plt.plot(xs[minInd:],diffN01[minInd:], 'g-H', xs[minInd:], diffD15[minInd:], 'r-*', xs[minInd:], diffS1[minInd:], 'b-d')
+
+    #plt.plot(xs,ceP01, 'g-H', xs, ceP01D15, 'r-*', xs, ceP01N01, 'b-d', xs, ceP01S1, 'm->')
+    
+    p1 = ceP01S1
+    p2 = bgS1
+    plt.plot(xs,p1, 'g-H', xs, p2, 'r-*')
+
+    plt.annotate("ProbScore", (xs[11],p1[11]), xytext = (70, 15), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("GaussCost", (xs[8],p2[8]), xytext = (50, -30), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+
+    #plt.annotate("Original Image", (xs[10],ceP01[10]), xytext = (50, 15), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Downsampled", (xs[12],ceP01D15[12]), xytext = (60, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Flipped pixels", (xs[8],ceP01N01[8]), xytext = (40, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Shuffled pixels", (xs[16],ceP01S1[16]), xytext = (50, 15), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+
+    #plt.annotate("Downsampled", (xs[12],diffD15[12]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Flipped pixels", (xs[7],diffN01[7]), xytext = (60, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Shuffled pixels", (xs[14],diffS1[14]), xytext = (60, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+
+    
+    plt.xlabel("Number of shreds", size=20)
+    plt.ylabel("% correct edges", size=20)
+    plt.tick_params(axis='both', labelsize=18)
+    plt.show()
+    """
     
     a = [1.0, 0.95924999999999994, 0.86175000000000024, 0.84450000000000003, 0.78900000000000015, 0.71624999999999983, 0.71700000000000019, 0.70824999999999994, 0.64249999999999996, 0.63174999999999992, 0.55525000000000002, 0.56450000000000033, 0.55025000000000002, 0.49775000000000008, 0.51724999999999999, 0.47599999999999992, 0.48950000000000016, 0.45925000000000005, 0.42825000000000008, 0.44024999999999997, 0.39824999999999994, 0.39075000000000015, 0.38525000000000004, 0.35549999999999998, 0.37799999999999989, 0.33949999999999997, 0.34899999999999998, 0.30175000000000018, 0.3040000000000001, 0.30774999999999997, 0.29999999999999993, 0.28549999999999992, 0.29249999999999993, 0.25200000000000006, 0.30374999999999991, 0.25999999999999995, 0.24599999999999997, 0.24399999999999999, 0.23824999999999999, 0.2382500000000001, 0.24549999999999994, 0.21424999999999997, 0.21799999999999994, 0.20200000000000004, 0.19724999999999987, 0.19624999999999995, 0.18700000000000003, 0.18899999999999989, 0.18075000000000002, 0.17675000000000002, 0.17050000000000004, 0.17450000000000002, 0.1717499999999999, 0.16449999999999998, 0.15525000000000003, 0.15024999999999999, 0.14849999999999997, 0.15274999999999997, 0.14024999999999996, 0.14074999999999999, 0.13100000000000001, 0.1235, 0.12924999999999998, 0.11574999999999992, 0.11724999999999999, 0.10725000000000001, 0.098500000000000018, 0.11399999999999995, 0.09425, 0.10250000000000002, 0.092250000000000013, 0.095499999999999988, 0.086749999999999994, 0.089250000000000065, 0.085750000000000007, 0.076249999999999998, 0.070500000000000007, 0.067999999999999991, 0.063999999999999974, 0.062249999999999986, 0.056250000000000008, 0.056250000000000001, 0.056749999999999988, 0.052999999999999999, 0.044499999999999984, 0.04474999999999997, 0.0395, 0.032249999999999973, 0.037749999999999964, 0.031999999999999973, 0.027249999999999983, 0.027249999999999969, 0.023499999999999986, 0.019249999999999993, 0.015749999999999997, 0.015499999999999998, 0.008750000000000006, 0.01125, 0.0080000000000000036, 0.0032500000000000003, 0.0]
     b = [1.0, 0.95650000000000024, 0.92099999999999993, 0.90675000000000039, 0.87725000000000009, 0.81824999999999992, 0.79049999999999965, 0.77375000000000016, 0.74724999999999975, 0.75525000000000009, 0.71325000000000049, 0.70825000000000016, 0.66849999999999998, 0.65724999999999978, 0.6382500000000001, 0.65750000000000031, 0.61624999999999985, 0.6472500000000001, 0.59250000000000003, 0.59449999999999992, 0.56799999999999995, 0.57774999999999999, 0.56950000000000001, 0.56149999999999989, 0.53625000000000012, 0.51849999999999996, 0.49825000000000008, 0.50075000000000014, 0.47950000000000009, 0.48399999999999999, 0.47225000000000017, 0.45674999999999988, 0.44550000000000012, 0.4517500000000001, 0.44950000000000018, 0.43250000000000016, 0.43224999999999997, 0.39850000000000002, 0.40100000000000008, 0.39624999999999999, 0.39775000000000021, 0.38274999999999987, 0.38425000000000009, 0.36475000000000007, 0.36575000000000002, 0.34900000000000003, 0.34449999999999981, 0.32899999999999996, 0.32450000000000012, 0.31300000000000006, 0.31049999999999994, 0.30600000000000011, 0.30399999999999999, 0.27724999999999977, 0.27250000000000008, 0.27175000000000005, 0.26949999999999991, 0.26525000000000004, 0.25974999999999993, 0.25724999999999992, 0.23725000000000004, 0.23775000000000004, 0.22725000000000012, 0.23549999999999996, 0.2205, 0.21399999999999988, 0.21475000000000005, 0.18275000000000002, 0.19450000000000001, 0.185, 0.18375000000000019, 0.16824999999999996, 0.16575000000000004, 0.1515, 0.16674999999999987, 0.15475, 0.13674999999999998, 0.13599999999999998, 0.13424999999999998, 0.13125000000000001, 0.12024999999999995, 0.11225000000000003, 0.099999999999999978, 0.096000000000000002, 0.090750000000000011, 0.089749999999999941, 0.080749999999999975, 0.087499999999999967, 0.07400000000000001, 0.068500000000000019, 0.058749999999999976, 0.058499999999999955, 0.051249999999999983, 0.038999999999999972, 0.036499999999999984, 0.031749999999999966, 0.02424999999999998, 0.017499999999999988, 0.012000000000000002, 0.0075000000000000023, 0.0]
     c = [1.0, 0.97250000000000003, 0.94999999999999996, 0.88749999999999984, 0.87333333333333329, 0.87083333333333313, 0.83999999999999997, 0.80666666666666642, 0.78833333333333333, 0.75833333333333297, 0.73833333333333317, 0.72833333333333328, 0.69583333333333341, 0.66749999999999998, 0.64583333333333326, 0.63333333333333353, 0.64166666666666661, 0.62916666666666676, 0.58583333333333332, 0.57833333333333325, 0.60999999999999988, 0.59083333333333343, 0.57999999999999996, 0.56583333333333319, 0.51249999999999996, 0.50583333333333325, 0.54749999999999999, 0.47833333333333333, 0.51083333333333336, 0.47333333333333322, 0.47166666666666662, 0.45666666666666667, 0.41166666666666657, 0.42416666666666658, 0.45250000000000007, 0.41499999999999998, 0.42083333333333328, 0.38249999999999995, 0.41749999999999998, 0.40250000000000002, 0.36749999999999994, 0.36333333333333345, 0.35249999999999998, 0.36499999999999999, 0.35666666666666669, 0.32166666666666666, 0.33749999999999991, 0.33833333333333343, 0.31833333333333336, 0.32000000000000001, 0.30583333333333323, 0.30250000000000005, 0.25333333333333335, 0.2583333333333333, 0.25083333333333346, 0.255, 0.28083333333333338, 0.26083333333333336, 0.25083333333333335, 0.22333333333333333, 0.21083333333333332, 0.20999999999999996, 0.20499999999999999, 0.19833333333333342, 0.18583333333333341, 0.17666666666666664, 0.19916666666666658, 0.1783333333333334, 0.1883333333333333, 0.16250000000000003, 0.18416666666666667, 0.15083333333333335, 0.16, 0.16333333333333333, 0.13750000000000001, 0.13250000000000001, 0.12333333333333338, 0.11166666666666668, 0.10249999999999999, 0.10999999999999996, 0.10583333333333332, 0.088333333333333361, 0.098333333333333356, 0.090833333333333321, 0.07333333333333332, 0.072499999999999995, 0.07333333333333332, 0.066666666666666666, 0.055833333333333332, 0.058333333333333341, 0.047500000000000001, 0.043333333333333328, 0.054166666666666634, 0.04250000000000001, 0.026666666666666665, 0.022499999999999999, 0.018333333333333333, 0.013333333333333331, 0.011666666666666667, 0.0033333333333333331, 0.00083333333333333328]
-    d = [1.0, 0.96833333333333338, 0.97416666666666663, 0.93916666666666659, 0.93999999999999984, 0.89333333333333331, 0.89083333333333325, 0.86416666666666653, 0.87333333333333341, 0.84916666666666674, 0.85333333333333317, 0.83750000000000002, 0.82833333333333348, 0.78333333333333333, 0.78750000000000009, 0.76500000000000001, 0.76333333333333342, 0.74666666666666659, 0.75083333333333324, 0.72333333333333338, 0.71499999999999997, 0.66583333333333339, 0.6958333333333333, 0.66833333333333345, 0.66083333333333327, 0.65666666666666662, 0.65916666666666668, 0.62500000000000011, 0.61916666666666653, 0.62666666666666671, 0.61249999999999993, 0.64333333333333331, 0.60500000000000009, 0.58916666666666684, 0.56000000000000005, 0.56833333333333336, 0.53083333333333338, 0.5558333333333334, 0.54416666666666658, 0.52499999999999991, 0.53750000000000009, 0.51249999999999996, 0.52916666666666656, 0.47583333333333344, 0.48583333333333334, 0.45750000000000002, 0.44166666666666665, 0.47499999999999987, 0.44500000000000001, 0.43166666666666681, 0.44583333333333319, 0.41166666666666663, 0.38333333333333336, 0.40416666666666656, 0.38916666666666672, 0.37583333333333335, 0.35499999999999998, 0.37083333333333329, 0.35833333333333345, 0.3600000000000001, 0.33916666666666673, 0.34083333333333321, 0.32583333333333336, 0.31083333333333324, 0.31000000000000005, 0.3075, 0.27750000000000002, 0.28083333333333338, 0.27083333333333331, 0.23999999999999994, 0.25416666666666665, 0.2558333333333333, 0.24083333333333329, 0.22583333333333333, 0.21416666666666664, 0.21583333333333329, 0.20499999999999999, 0.19000000000000003, 0.18250000000000002, 0.18166666666666667, 0.19166666666666665, 0.16333333333333336, 0.16833333333333333, 0.13749999999999998, 0.12000000000000004, 0.13999999999999999, 0.097500000000000003, 0.10416666666666666, 0.10166666666666666, 0.099166666666666681, 0.095000000000000001, 0.071666666666666642, 0.078333333333333352, 0.055833333333333339, 0.059166666666666673, 0.036666666666666681, 0.03500000000000001, 0.031666666666666683, 0.014166666666666662, 0.0083333333333333332, 0.0]
+    d = [1.0, 0.99311111111111106, 0.96477777777777773, 0.95877777777777806, 0.92844444444444452, 0.91866666666666663, 0.91777777777777803, 0.90311111111111098, 0.9013333333333331, 0.87522222222222223, 0.88777777777777767, 0.85833333333333373, 0.85033333333333294, 0.83899999999999997, 0.83455555555555549, 0.80033333333333379, 0.81411111111111112, 0.80466666666666664, 0.77188888888888885, 0.77744444444444449, 0.77055555555555566, 0.75844444444444425, 0.73988888888888893, 0.73922222222222222, 0.74744444444444436, 0.73733333333333351, 0.71155555555555561, 0.72277777777777774, 0.70011111111111124, 0.69177777777777782, 0.6885555555555557, 0.6657777777777778, 0.66766666666666663, 0.67277777777777759, 0.66333333333333333, 0.65977777777777757, 0.6403333333333332, 0.64399999999999991, 0.64444444444444438, 0.62844444444444447, 0.62766666666666671, 0.61211111111111105, 0.6183333333333334, 0.60644444444444445, 0.59633333333333349, 0.59100000000000019, 0.58299999999999996, 0.57788888888888901, 0.56255555555555581, 0.56611111111111112, 0.56611111111111123, 0.553111111111111, 0.54122222222222216, 0.54188888888888909, 0.54655555555555546, 0.54066666666666663, 0.51799999999999979, 0.52488888888888874, 0.5126666666666666, 0.50566666666666671, 0.50422222222222213, 0.48622222222222228, 0.48122222222222222, 0.48200000000000004, 0.45722222222222209, 0.47611111111111115, 0.44899999999999984, 0.45688888888888873, 0.43833333333333324, 0.43466666666666653, 0.42677777777777776, 0.43322222222222206, 0.41977777777777786, 0.39466666666666661, 0.41644444444444434, 0.37777777777777771, 0.36033333333333345, 0.35911111111111105, 0.35977777777777781, 0.35188888888888892, 0.34366666666666662, 0.32211111111111124, 0.30200000000000005, 0.30311111111111111, 0.28788888888888897, 0.27833333333333327, 0.26466666666666666, 0.24155555555555552, 0.23177777777777775, 0.20833333333333337, 0.19444444444444448, 0.19411111111111112, 0.1705555555555556, 0.14000000000000001, 0.12588888888888886, 0.11388888888888882, 0.09166666666666666, 0.080666666666666706, 0.052888888888888888, 0.024666666666666667, 0.0]
 
     e = [1.0, 0.72856321839080451, 0.59290804597701141, 0.55678160919540209, 0.51726436781609186, 0.47637931034482761, 0.4502298850574713, 0.44370114942528738, 0.41986206896551725, 0.4029655172413793, 0.39204597701149424, 0.37698850574712645, 0.36618390804597689, 0.36439080459770118, 0.34603448275862081, 0.33450574712643677, 0.32603448275862074, 0.32320689655172408, 0.30795402298850566, 0.30362068965517236, 0.30194252873563221, 0.29325287356321839, 0.28470114942528729, 0.28109195402298853, 0.27531034482758626, 0.26432183908045975, 0.25879310344827589, 0.25162068965517237, 0.24998850574712647, 0.2400114942528736, 0.23591954022988504, 0.23263218390804599, 0.22832183908045978, 0.22405747126436781, 0.21643678160919536, 0.21001149425287355, 0.20580459770114945, 0.20125287356321833, 0.200367816091954, 0.1940804597701149, 0.19020689655172413, 0.18373563218390807, 0.18062068965517242, 0.17901149425287366, 0.17331034482758617, 0.17091954022988506, 0.16589655172413795, 0.16049425287356323, 0.15728735632183899, 0.1545747126436782, 0.15128735632183907, 0.14503448275862066, 0.14375862068965517, 0.14036781609195403, 0.13337931034482756, 0.13277011494252869, 0.12825287356321843, 0.12514942528735631, 0.12145977011494249, 0.11555172413793102, 0.11522988505747125, 0.11054022988505746, 0.10733333333333332, 0.10427586206896551, 0.10268965517241377, 0.099781609195402257, 0.094149425287356328, 0.090839080459770127, 0.087425287356321865, 0.086172413793103447, 0.082666666666666652, 0.079402298850574718, 0.07736781609195402, 0.072091954022988514, 0.070172413793103461, 0.066655172413793096, 0.063241379310344834, 0.061609195402298846, 0.058126436781609191, 0.054068965517241371, 0.054563218390804601, 0.05013793103448274, 0.048402298850574697, 0.044816091954023002, 0.041689655172413798, 0.039160919540229877, 0.035770114942528734, 0.033885057471264371, 0.030747126436781604, 0.028356321839080451, 0.024839080459770114, 0.022402298850574705, 0.019540229885057471, 0.017735632183908046, 0.015494252873563218, 0.012839080459770115, 0.010379310344827586, 0.0071379310344827597, 0.0052068965517241377, 0.0025632183908045987, 0.0]
-
+    
     ns = np.arange(0.0, 1.001, 0.01)
+    
     rns = [1-x for x in ns]
+    plt.plot(ns,e, 'g-', ns,b, 'r-', ns, d, 'b-', ns, rns, 'm-')
+    plt.annotate("Prim - 30*30", (ns[20],e[20]), xytext = (40, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("Kruskal - 5*5", (ns[60],b[60]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("No cascading", (ns[20],rns[20]), xytext = (60, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("Prim_Correction - 10*10", (ns[70],d[70]), xytext = (100, 20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Prim 1*25", (ns[60],c[60]), xytext = (-30, -10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Kruskal 1*25", (ns[50],d[50]), xytext = (30, 20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.xlabel("Cost/score function error rate")
+    plt.ylabel("% correct edges")
+    plt.show()
+    
+    """
     """
     pbgcc = [1.0, 0.416666666667, 1.0, 0.825, 0.966666666667, 0.571428571429, 0.660714285714, 0.611111111111, 0.494444444444, 0.359090909091, 0.371212121212, 0.304487179487, 0.266483516484, 0.316666666667, 0.322916666667, 0.257352941176, 0.218954248366, 0.191520467836, 0.192105263158]
     ppcc = [1.0, 0.666666666667, 0.916666666667, 1.0, 0.783333333333, 0.738095238095, 0.633928571429, 0.555555555556, 0.672222222222, 0.445454545455, 0.5, 0.38141025641, 0.423076923077, 0.430952380952, 0.63125, 0.4375, 0.34477124183, 0.210526315789, 0.284210526316 ]
@@ -977,12 +2201,13 @@ if __name__ == "__main__":
     q = [x[0] for x in [(0.75, 1.8038133282386566), (0.6375000000000001, 3.3425124410695517), (0.6458333333333333, 3.7734125617064875), (0.825, 3.850164457453277), (0.7438034188034188, 1.3747400868759352), (0.6380772005772007, 3.077451618253361), (0.6554950105042018, 1.8730934144411424), (0.5480492365019806, 2.622829437435161), (0.664290577342048, 2.8995891642396208), (0.5844615384615385, 4.1993985788788875), (0.5716104258178918, 2.581604924076438), (0.47467194438519866, 2.631028637773309), (0.5029462800682958, 2.6249431552190754), (0.49803137443307877, 2.071597279028274), (0.5990971453033893, 1.610507205822009), (0.4543868542575038, 2.234360306630231), (0.447287362649943, 1.7974495531844519), (0.33342581207942107, 2.949557047232156), (0.41095526460619297, 3.9095273918431)] ]
     r = [x[0] for x in [(0.75, 1.5), (0.6375000000000001, 5.583333333333333), (0.6458333333333333, 5.625), (0.6799999999999999, 5.075), (0.710989010989011, 2.1), (0.606677713820571, 2.988095238095238), (0.5789996700434561, 2.1607142857142856), (0.49700418850571304, 2.8819444444444446), (0.5779050567595461, 3.0944444444444446), (0.5208831353831352, 4.213636363636364), (0.5099144917079702, 3.0), (0.43490715884544184, 2.8076923076923075), (0.43365558242670266, 2.697802197802198), (0.4134172319871909,2.461904761904762), (0.5225286406387423, 2.0458333333333334), (0.3619443696207882, 2.4981617647058822), (0.37367085904016933, 2.076797385620915), (0.27045133427066786, 2.953216374269006), (0.32327951086021617, 4.102631578947369)] ]
     
+    
     xs = [i*i for i in range(2, 21)]
 
     plt.plot(xs,p, 'g-*', xs,q, 'r-H', xs, r, 'b-d')#, ns, c, 'm-', ns, d, 'c-')
-    plt.annotate("BlackGausCost", (xs[13],p[13]), xytext = (25, 30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("BlackGaussCost", (xs[13],p[13]), xytext = (25, 30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     plt.annotate("ProbScore", (xs[14],q[14]), xytext = (45, 7), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("GausCost", (xs[7], r[7]), xytext = (22, -20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("GaussCost", (xs[7], r[7]), xytext = (22, -20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     plt.xlabel("Number of shreds")
     plt.ylabel("% correct edges")
     plt.yticks([0.25,0.35,0.45,0.55,0.65,0.75,0.85,0.95])
@@ -998,11 +2223,12 @@ if __name__ == "__main__":
     plt.annotate("Prim - 5*5", (ns[20],a[20]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     plt.annotate("Kruskal - 5*5", (ns[60],b[60]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     plt.annotate("No cascading", (ns[30],rns[30]), xytext = (60, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Prim - 30*30", (ns[30],e[30]), xytext = (30, -40), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("Prim - 30*30", (ns[30],e[30]), xytext = (30, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     #plt.annotate("Prim 1*25", (ns[60],c[60]), xytext = (-30, -10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     #plt.annotate("Kruskal 1*25", (ns[50],d[50]), xytext = (30, 20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     plt.xlabel("Cost/score function error rate")
     plt.ylabel("% correct edges")
+    """
     """
     prim = [1.0, 0.75, 0.66666666666666663, 0.47499999999999998, 0.58333333333333337, 0.52380952380952384, 0.625, 0.58333333333333337, 0.42777777777777776]
     prim1 = [1.0, 0.75, 0.66666666666666663, 0.625, 0.66666666666666663, 0.5714285714285714, 0.6785714285714286, 0.75, 0.46666666666666667]
@@ -1010,14 +2236,111 @@ if __name__ == "__main__":
 
     xs = [x**2 for x in range(2,11)]
     plt.plot(xs, prim, 'b-*', xs, prim1, 'r-H', xs, prim2, 'g-d')
-    plt.annotate("Prim", (xs[6],prim[6]), xytext = (0, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("Prim", (xs[6],prim[6]), xytext = (10, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     plt.annotate("Prim - PostProc", (xs[7],prim1[7]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Prim - RunTime & PostProc", (xs[4],prim2[4]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("Prim - RunTime & PostProc", (xs[4],prim2[4]), xytext = (60, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     plt.xlabel("Number of shreds")
     plt.ylabel("% correct edges")
 
     a = plt.gca()
     a.set_ylim([0.4,1.0])
+    plt.show()
+    """
+
+  
+  elif "8" in arg:
+    scrambleImage(10,1,Image.open("SampleDocs/p01.png"))
+    #im = Image.open("SampleDocs/p01.png")
+    #im = imgRotate(im, 10)
+    #im = im.rotate(-10, Image.BICUBIC, expand=True)
+    #im = im.rotate(10, Image.BICUBIC, expand=True)
+    #im.save("cmon", "PNG")
+  elif "9" in arg:
+    """
+    im = Image.open("SampleDocs/p01.png").convert("1")
+    prior, prxl, pryl, prxr, pryr = getPrediction([im])
+    for i in range(2,10):
+      scrambleImage(i,1,im)
+      imgs = processScan(Image.open("scrambled"))
+
+      page = pages.ImagePage(i, 1, imgs, None, True)
+      page.setCost("prediction", (prxl,prxr),(pryl,pryr), prior)
+      (pPos, pEdges) = search.picker("kruskal", page)
+      gp = page.calcGroups(pPos)
+      groupP = (len(gp),sorted(gp, reverse = True) )
+      corrP = page.calcCorrectEdges(pPos)
+      print i, corrP
+      print groupP
+    """
+    test="scrambled"    
+    p01_0 = "SampleDocs/p01Strips0_ptb4.png"
+    p01_1 = "SampleDocs/p01Strips1_ptb4.png"
+    p01 = "SampleDocs/p01_Shreds.png"
+    processScan(Image.open(test),(255,0,127,0))
+    #extractShred(Image.open("wipBack1"))
+    #orient1(Image.open("wip0"))
+    #orient2(Image.open("wip0"))
+  elif "a" in arg:
+    imgs = [[]]
+    for s in range(10):
+      imgs[0].append(Image.open("wip" + str(s)).convert("1"))
+
+    #im = Image.open("SampleDocs/p01.png").convert("1")
+    prior, prxl, pryl, prxr, pryr = getPrediction4(imgs[0])
+
+    page = pages.ImagePage(10, 1, imgs, None, True)
+    page.setCost("prediction", (prxl,prxr),(pryl,pryr), prior)
+    #page.setCost("blackGaus")
+    (pPos, pEdges) = search.picker("prim", page)
+    gp = page.calcGroups(pPos)
+    groupP = (len(gp),sorted(gp, reverse = True) )
+    corrP = page.calcCorrectEdges(pPos)
+    print corrP
+    print groupP
+
+  elif "b" in arg:
+    noRow = [0.47658037242297213, 0.49462497488831275, 0.47456038732868699, 0.4577243257949779, 0.38022948376897703, 0.39844405316105758, 0.33730559887765532, 0.35500473869091898, 0.4049667472915936, 0.37398131139288998, 0.27935091212040064]
+
+    row = [max(x) for x in zip([0.48184353031770905, 0.5034886112519491, 0.4819714545223629, 0.45598821468386685, 0.38699586553535881, 0.40893963396913829, 0.34238992427448067, 0.34700094266031156, 0.41984430684254576, 0.38252607601433813, 0.28751009684692286], [0.47073241920659792, 0.50803406579740362, 0.4819714545223629, 0.46560359929925144, 0.37875410729360054, 0.40893963396913829, 0.344473257607814, 0.34516270736619392, 0.43455018919548688, 0.38739937036131666, 0.30571185123288758])]
+
+    xs = [x**2 for x in range(10,len(noRow)+10)]
+    print len(xs), len(noRow)
+    plt.plot(xs, noRow, 'b-*', xs, row, 'g-d')
+    plt.annotate("ProbScore", (xs[4],noRow[4]), xytext = (0, -30), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("ProbScore + RowScore", (xs[8],row[8]), xytext = (40, 10), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("Prim - RunTime & PostProc", (xs[4],prim2[4]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.xlabel("Number of shreds",size=20)
+    plt.ylabel("% correct edges",size=20)
+    plt.tick_params(axis='both', labelsize=18)
+    plt.show()
+  elif "c" in arg:
+    #orient = {25: [0.024, 0.045999999999999999, 0.049333333333333333, 0.042999999999999997, 0.065600000000000006, 0.062666666666666662, 0.073714285714285718, 0.076499999999999999, 0.076888888888888896, 0.069199999999999998, 0.073090909090909095, 0.046666666666666669, 0.046153846153846156, 0.047142857142857146, 0.049333333333333333, 0.050250000000000003, 0.050823529411764705, 0.052444444444444446, 0.065263157894736842, 0.066799999999999998, 0.068380952380952376, 0.070181818181818179, 0.10243478260869565, 0.10333333333333333, 0.10384, 0.10507692307692308, 0.10355555555555555, 0.104, 0.10524137931034483, 0.10546666666666667], 10: [0.0, 0.0, 0.01, 0.012500000000000001, 0.028000000000000001, 0.026666666666666668, 0.035714285714285712, 0.025000000000000001, 0.032222222222222222, 0.032000000000000001, 0.035454545454545454, 0.02, 0.014615384615384615, 0.014999999999999999, 0.017999999999999999, 0.015625, 0.014705882352941176, 0.016111111111111111, 0.015789473684210527, 0.016, 0.015238095238095238, 0.015909090909090907, 0.017826086956521738, 0.017500000000000002, 0.016799999999999999, 0.016923076923076923, 0.016666666666666666, 0.016428571428571428, 0.016551724137931035, 0.017999999999999999], 20: [0.035000000000000003, 0.042500000000000003, 0.028333333333333332, 0.026249999999999999, 0.050000000000000003, 0.051666666666666666, 0.054285714285714284, 0.073124999999999996, 0.061111111111111109, 0.058999999999999997, 0.05909090909090909, 0.035416666666666666, 0.031153846153846153, 0.030357142857142857, 0.033000000000000002, 0.033125000000000002, 0.033235294117647057, 0.033888888888888892, 0.045263157894736845, 0.045499999999999999, 0.045476190476190476, 0.046818181818181821, 0.06347826086956522, 0.064375000000000002, 0.064600000000000005, 0.065576923076923074, 0.065185185185185179, 0.065892857142857142, 0.066724137931034488, 0.068000000000000005], 5: [0.0, 0.0, 0.0, 0.0050000000000000001, 0.012, 0.013333333333333334, 0.0057142857142857143, 0.01, 0.0066666666666666671, 0.016, 0.0072727272727272727, 0.0066666666666666671, 0.0061538461538461538, 0.0057142857142857143, 0.0093333333333333341, 0.01, 0.0094117647058823521, 0.0088888888888888889, 0.010526315789473684, 0.01, 0.0095238095238095247, 0.0090909090909090905, 0.0086956521739130436, 0.0083333333333333332, 0.0080000000000000002, 0.0076923076923076927, 0.0074074074074074077, 0.0071428571428571426, 0.0075862068965517242, 0.0093333333333333341], 15: [0.02, 0.016666666666666666, 0.037777777777777778, 0.041666666666666664, 0.048000000000000001, 0.058888888888888886, 0.075238095238095243, 0.069166666666666668, 0.06222222222222222, 0.070000000000000007, 0.055757575757575756, 0.037777777777777778, 0.033333333333333333, 0.035714285714285712, 0.038666666666666669, 0.033333333333333333, 0.033333333333333333, 0.033703703703703701, 0.038596491228070177, 0.039, 0.038412698412698412, 0.039393939393939391, 0.054202898550724639, 0.055555555555555552, 0.054933333333333334, 0.055128205128205127, 0.054320987654320987, 0.053095238095238098, 0.053103448275862067, 0.055111111111111111], 70: [0.16714285714285715, 0.15642857142857142, 0.15952380952380951, 0.15392857142857144, 0.15485714285714286, 0.14523809523809525, 0.14163265306122449, 0.14607142857142857, 0.14428571428571429, 0.13642857142857143, 0.13844155844155845, 0.13, 0.13076923076923078, 0.13255102040816327, 0.13104761904761905, 0.13312499999999999, 0.13394957983193279, 0.13293650793650794, 0.16541353383458646, 0.16585714285714287, 0.16646258503401359, 0.16688311688311688, 0.21254658385093167, 0.21261904761904762, 0.21154285714285714, 0.21164835164835163, 0.21111111111111111, 0.21158163265306124, 0.21157635467980296, 0.20871428571428571], 40: [0.1825, 0.14499999999999999, 0.1275, 0.10875, 0.111, 0.10541666666666667, 0.10000000000000001, 0.1065625, 0.097500000000000003, 0.089749999999999996, 0.093181818181818185, 0.073749999999999996, 0.074230769230769225, 0.073392857142857149, 0.074166666666666672, 0.071406250000000004, 0.070294117647058826, 0.071388888888888891, 0.096710526315789469, 0.097125000000000003, 0.096666666666666665, 0.097840909090909089, 0.14586956521739131, 0.14531250000000001, 0.14480000000000001, 0.14538461538461539, 0.14481481481481481, 0.14455357142857142, 0.14491379310344826, 0.14391666666666666], 80: [0.20624999999999999, 0.185, 0.18041666666666667, 0.16125, 0.152, 0.14624999999999999, 0.13660714285714284, 0.13500000000000001, 0.13416666666666666, 0.12862499999999999, 0.12806818181818183, 0.11458333333333333, 0.11336538461538462, 0.11321428571428571, 0.11241666666666666, 0.11874999999999999, 0.11941176470588236, 0.11791666666666667, 0.14348684210526316, 0.14299999999999999, 0.14291666666666666, 0.14335227272727272, 0.18461956521739131, 0.18359375, 0.18354999999999999, 0.18326923076923077, 0.18240740740740741, 0.18272321428571428, 0.18301724137931036, 0.17970833333333333], 50: [0.14000000000000001, 0.122, 0.10933333333333334, 0.098500000000000004, 0.106, 0.095000000000000001, 0.098857142857142852, 0.099000000000000005, 0.10044444444444445, 0.092999999999999999, 0.090363636363636368, 0.074499999999999997, 0.073692307692307696, 0.074714285714285719, 0.075866666666666666, 0.081625000000000003, 0.081529411764705878, 0.083111111111111108, 0.11810526315789474, 0.11890000000000001, 0.11866666666666667, 0.12045454545454545, 0.18226086956521739, 0.18174999999999999, 0.18104000000000001, 0.18092307692307694, 0.17962962962962964, 0.17935714285714285, 0.17965517241379311, 0.17773333333333333], 90: [0.24888888888888888, 0.22555555555555556, 0.2088888888888889, 0.18861111111111112, 0.17577777777777778, 0.1711111111111111, 0.15777777777777777, 0.15916666666666668, 0.15135802469135803, 0.14433333333333334, 0.14484848484848484, 0.13305555555555557, 0.13059829059829059, 0.13007936507936507, 0.12785185185185186, 0.13104166666666667, 0.13098039215686275, 0.12919753086419752, 0.15222222222222223, 0.15183333333333332, 0.15153439153439152, 0.15151515151515152, 0.18386473429951691, 0.18291666666666667, 0.18244444444444444, 0.18269230769230768, 0.18164609053497943, 0.1823015873015873, 0.18195402298850574, 0.17892592592592593], 60: [0.16166666666666665, 0.12583333333333332, 0.12055555555555555, 0.10875, 0.10766666666666666, 0.11333333333333333, 0.10404761904761904, 0.10270833333333333, 0.10277777777777777, 0.098166666666666666, 0.10090909090909091, 0.090416666666666673, 0.090256410256410263, 0.088928571428571426, 0.088666666666666671, 0.096458333333333326, 0.095784313725490192, 0.096018518518518517, 0.12780701754385965, 0.12691666666666668, 0.12619047619047619, 0.12696969696969698, 0.17376811594202898, 0.17347222222222222, 0.17380000000000001, 0.1742948717948718, 0.17314814814814813, 0.17410714285714285, 0.17448275862068965, 0.17194444444444446], 30: [0.11666666666666667, 0.098333333333333328, 0.093333333333333338, 0.088333333333333333, 0.104, 0.10166666666666667, 0.10380952380952381, 0.10208333333333333, 0.10481481481481482, 0.096666666666666665, 0.085757575757575755, 0.066944444444444445, 0.059743589743589745, 0.059999999999999998, 0.061777777777777779, 0.067083333333333328, 0.067843137254901958, 0.067962962962962961, 0.082631578947368417, 0.082000000000000003, 0.082063492063492061, 0.083181818181818176, 0.12028985507246377, 0.12069444444444444, 0.12026666666666666, 0.12051282051282051, 0.12012345679012346, 0.12059523809523809, 0.12103448275862069, 0.12077777777777778]}
+    orient = {1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 10: [0.02, 0.023333333333333334, 0.034000000000000002, 0.052857142857142859, 0.06222222222222222, 0.055454545454545458, 0.043846153846153847, 0.043999999999999997, 0.032352941176470591, 0.033157894736842108], 100: [0.23200000000000001, 0.20066666666666666, 0.155, 0.12814285714285714, 0.11144444444444444, 0.093636363636363643, 0.080384615384615388, 0.070599999999999996, 0.05464705882352941, 0.054473684210526313], 50: [0.154, 0.13200000000000001, 0.12759999999999999, 0.11514285714285714, 0.10511111111111111, 0.089272727272727267, 0.07923076923076923, 0.066799999999999998, 0.051294117647058823, 0.051473684210526317]}
+
+    unknowns = {1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 10: [0.0, 0.0, 0.002, 0.012857142857142857, 0.012222222222222223, 0.0081818181818181825, 0.015384615384615385, 0.014666666666666666, 0.013529411764705882, 0.015263157894736841], 100: [0.025999999999999999, 0.026333333333333334, 0.032399999999999998, 0.037999999999999999, 0.046555555555555558, 0.055909090909090908, 0.055538461538461537, 0.062333333333333331, 0.067176470588235296, 0.065631578947368416], 50: [0.02, 0.021999999999999999, 0.026800000000000001, 0.032571428571428571, 0.035555555555555556, 0.040909090909090909, 0.036307692307692305, 0.040533333333333331, 0.045294117647058825, 0.045894736842105266]}
+
+
+
+
+    for k in orient:
+      orient[k] = map(lambda (x,y): 1.0 -(x+y), zip(orient[k],unknowns[k]))
+
+    o1 = orient[1]
+    o2 = orient[10]
+    o3 = orient[50]
+    o4 = orient[100]
+    xs = range(10,201,20)
+
+    plt.plot(xs, o1, 'b-*', xs, o2, 'g-d', xs, o3, 'r-H', xs, o4, 'm-*')
+    plt.annotate("0 Horizontal Cuts", (xs[4],o1[4]), xytext = (80, 20), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("10 Horizontal Cuts", (xs[6],o2[6]), xytext = (60, 15), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("50 Horizontal Cuts", (xs[3],o3[3]), xytext = (60, 15), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.annotate("100 Horizontal Cuts", (xs[7],o4[7]), xytext = (100, -35), fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.xlabel("Number of vertical cuts", size=20)
+    plt.ylabel("% correct orientations detected", size=20)
+    a = plt.gca()
+    a.set_ylim([0.7,1.05])
+    plt.tick_params(axis='both', labelsize=18)
     plt.show()
   else:
     print 'Unrecognized argument'

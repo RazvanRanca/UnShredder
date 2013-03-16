@@ -1,0 +1,27 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}
+\BOOKMARK [0][-]{chapter.2}{Literature Review}{}
+\BOOKMARK [0][-]{chapter.3}{Probabilistic Score}{}
+\BOOKMARK [1][-]{section.3.1}{Motivation}{chapter.3}
+\BOOKMARK [1][-]{section.3.2}{Description}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.2.1}{Edge likelihood}{section.3.2}
+\BOOKMARK [2][-]{subsection.3.2.2}{Normalization}{section.3.2}
+\BOOKMARK [2][-]{subsection.3.2.3}{Learning}{section.3.2}
+\BOOKMARK [1][-]{section.3.3}{Evaluation}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.3.1}{Comparison with Gaussian cost functions}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.2}{Validity of predicted probabilities}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.3}{Robustness}{section.3.3}
+\BOOKMARK [1][-]{section.3.4}{Drawbacks}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.4.1}{Uniformity assumption}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.2}{Lack of symmetry}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.3}{Ignoring non-edge information}{section.3.4}
+\BOOKMARK [0][-]{chapter.4}{Heuristic Search}{}
+\BOOKMARK [1][-]{section.4.1}{Motivation}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Description}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.2.1}{Analysis of "ReconstructShreds"}{section.4.2}
+\BOOKMARK [2][-]{subsection.4.2.2}{Kruskal based heuristic}{section.4.2}
+\BOOKMARK [2][-]{subsection.4.2.3}{Evaluating the heuristics}{section.4.2}
+\BOOKMARK [1][-]{section.4.3}{Cascading}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.3.1}{Making all shreds movable}{section.4.3}
+\BOOKMARK [2][-]{subsection.4.3.2}{Adding a post-processing step}{section.4.3}
+\BOOKMARK [2][-]{subsection.4.3.3}{Evaluating the error-correcting methods}{section.4.3}
+\BOOKMARK [0][-]{chapter*.28}{Bibliography}{}

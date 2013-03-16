@@ -18,6 +18,8 @@ def picker(s, page, ignoreWhites = False):
     return prim1(page)
   elif s == "kruskal":
     return kruskal(page, ignoreWhites)
+  elif s == "kruskalMulti":
+    return kruskalMultiset(page, ignoreWhites)
   else:
     raise Exception("Unknown search method: " + s)
 
@@ -146,7 +148,7 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
     maxY = max([x[0] for x in hY]) if hY != [] else None
 
     bestX = random.choice(filter(lambda x: x[0] == maxX, hX)) if hX != [] else None
-    bestY = random.choice(filter(lambda y: y[0] == maxY, hY)) if hY != [] else None
+    bestY = [-100000] # random.choice(filter(lambda y: y[0] == maxY, hY)) if hY != [] else None
 
 
     #print "=============", bestX, bestY
@@ -222,23 +224,23 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
 
           if (py, px+1) not in grid:
             ay, ax = py, px+1
-            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeX1[f][n] = (val[0] + mult, val[1])
             
 
           if (py, px-1) not in grid:
             ay, ax = py, px-1
-            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeX2[f][n] = (val[0] + mult, val[1])
 
           if (py+1, px) not in grid:
             ay, ax = py+1, px
-            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeY1[f][n] = (val[0] + mult, val[1])
 
           if (py-1, px) not in grid:
             ay, ax = py-1, px
-            val = calcGridScore(ay, ax, n, grid, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeY2[f][n] = (val[0] + mult, val[1])
 
           
@@ -252,10 +254,10 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
       #if lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])) != flognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])):
       #  print "n", lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])) 
       #  print "f", flognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
-      cX1 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
-      cX2 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeX2[n].items()]))
-      cY1 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeY1[n].items()]))
-      cY2 = qlognormalize(dict([(x[0],x[1][0]) for x in nodeY2[n].items()]))
+      cX1 = flognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
+      cX2 = flognormalize(dict([(x[0],x[1][0]) for x in nodeX2[n].items()]))
+      cY1 = flognormalize(dict([(x[0],x[1][0]) for x in nodeY1[n].items()]))
+      cY2 = flognormalize(dict([(x[0],x[1][0]) for x in nodeY2[n].items()]))
 
       if not verifyNorm(cX1, cX2, cY1, cY2):
         print "goddammit"
@@ -358,15 +360,13 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
     #page.vizPos(positions, fl="quuu.jpg")
     #raw_input("Press any key to continue...")
   """
-    #page.vizPos(positions, fl="quuu.jpg")
+    #page.vizPos(positions, fl="prim.jpg", multiple=False, rows=False)
     #raw_input("qqqq")
 
   assert len(set(positions.values())) == len(positions.values())
-  #page.vizPos(positions, fl="qqqq" + str(page.sizeX) + ".jpg")
+  #page.vizPos(positions, fl="prim" + str(page.sizeX) + ".jpg")
   #print positions
   #print accumEdges
-
-
 
   return positions, accumEdges
 
@@ -468,7 +468,7 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
         #print cur[1], posX, posY
 
     if (frozenset(revGrid.items())) in pastStates:
-      print countCycle, "============ CYCLE DETECTED =============="
+      #print countCycle, "============ CYCLE DETECTED =============="
       bestVal = max([x[0] for x in pastStates.values()])
       bestState = random.choice(filter(lambda x: pastStates[x][0] == bestVal, pastStates.keys()))
       revGrid = dict(bestState)
@@ -480,12 +480,14 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
       for k,v in revGrid.items():
         positions[v] = k
         found.add(v)
-      print len(found)
+      #print len(found)
 
 
     if len(states) <= len(found) + 1:
+      if countWhite == False:
+        print "---", page.calcCorrectEdges(positions)
       countWhite = True
-      print "=========== Post-Processing ============="
+      #print "=========== Post-Processing ============="
 
     hX = []
     hY = []
@@ -507,7 +509,7 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
 
     for f in found:
       py,px = positions[f]
-      nodeC[f][f] = calcGridScore(py, px, f, None, revGrid, page, countWhite)
+      nodeC[f][f] = calcGridScore(py, px, f, revGrid, page, countWhite)
 
       for n in states:
         if n != f and (f,n) not in illegal:
@@ -516,11 +518,11 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
           if n == page.blankPos:
             mult = math.log(page.blankCount)
 
-          val = calcGridScore(py, px, n, None, revGrid, page, countWhite)
+          val = calcGridScore(py, px, n, revGrid, page, countWhite)
           nodeC[f][n] = (val[0] + mult, val[1])
     
     for n in states:
-      cC = lognormalize(dict([(x[0],x[1][0]) for x in nodeC[n].items()]))
+      cC = flognormalize(dict([(x[0],x[1][0]) for x in nodeC[n].items()]))
       nodeC[n] = dict([(k,(cC[k],nodeC[n][k][1])) for k in nodeC[n]])
     
 
@@ -530,29 +532,32 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
       for n in states:
         if n != f and (f,n) not in illegal:
 
+          if n in found and not countWhite:
+            continue
+
           mult = 0
           if n == page.blankPos:
             mult = math.log(page.blankCount)
 
           if (py, px+1) not in revGrid:
             ay, ax = py, px+1
-            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeX1[f][n] = (val[0] + mult, val[1])
             
 
           if (py, px-1) not in revGrid:
             ay, ax = py, px-1
-            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeX2[f][n] = (val[0] + mult, val[1])
 
           if (py+1, px) not in revGrid:
             ay, ax = py+1, px
-            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeY1[f][n] = (val[0] + mult, val[1])
 
           if (py-1, px) not in revGrid:
             ay, ax = py-1, px
-            val = calcGridScore(ay, ax, n, None, revGrid, page, countWhite)
+            val = calcGridScore(ay, ax, n, revGrid, page, countWhite)
             nodeY2[f][n] = (val[0] + mult, val[1])
 
           
@@ -566,10 +571,10 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
       #if lognormalize(nodeX1[n]) != fastLognormalize(nodeX1[n]):
       #  print "n", lognormalize(nodeX1[n]) 
       #  print "f", fastLognormalize(nodeX1[n])
-      cX1 = lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
-      cX2 = lognormalize(dict([(x[0],x[1][0]) for x in nodeX2[n].items()]))
-      cY1 = lognormalize(dict([(x[0],x[1][0]) for x in nodeY1[n].items()]))
-      cY2 = lognormalize(dict([(x[0],x[1][0]) for x in nodeY2[n].items()]))
+      cX1 = flognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()]))
+      cX2 = flognormalize(dict([(x[0],x[1][0]) for x in nodeX2[n].items()]))
+      cY1 = flognormalize(dict([(x[0],x[1][0]) for x in nodeY1[n].items()]))
+      cY2 = flognormalize(dict([(x[0],x[1][0]) for x in nodeY2[n].items()]))
 
       if not verifyNorm(cX1, cX2, cY1, cY2):
         print "goddammit"
@@ -585,7 +590,7 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
       for n in found:
         totProb += nodeC[n][n][0]
       pastStates[frozenset(revGrid.items())] = (totProb, (chosen, notChosen), tuple(accumEdges))
-      print totProb
+      #print totProb
     else:
       countCycle = 0
       pastStates = {}
@@ -641,9 +646,9 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
 
     #print nodeX1
 
-    page.vizPos(positions, fl="quuu.jpg")
+    #page.vizPos(positions, fl="quuu.jpg")
     #if countPress > 100:
-    raw_input(str(countPress) + " qqqq")
+    #raw_input(str(countPress) + " qqqq")
     #countPress += 1
 
   assert len(set(positions.values())) == len(positions.values())
@@ -696,9 +701,13 @@ def flognormalize(l):
   return ret
 
 #@profile
-def calcGridScore(ay, ax, n, grid, revGrid, page, countWhite = False, nc = None):
+def calcGridScore(ay, ax, n, revGrid, page, countWhite = False, nc = None, multi = False):
   score = 0
   count = 0
+
+  if multi:
+    n = n[0]
+    revGrid = dict([(k,v) for (k,(v,c)) in revGrid.items()])
 
   if (ay, ax+1) in revGrid:
     ps = 0.0
@@ -906,7 +915,7 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
                   overlap = True
                   break
                 
-                (score, count) = calcGridScore(ny, nx, node, grid[f1], revGrid[f1], page)
+                (score, count) = calcGridScore(ny, nx, node, revGrid[f1], page)
                 if score != cost.inf:
                   infinite = False
                   totalScore += score
@@ -933,7 +942,7 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
                   overlap = True
                   break
                 
-                (score, count) = calcGridScore(ny, nx, node, grid[f1], revGrid[f1], page)
+                (score, count) = calcGridScore(ny, nx, node, revGrid[f1], page)
                 if score != cost.inf:
                   infinite = False
                   totalScore += score
@@ -952,7 +961,7 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
               if (py, px+1) not in grid[forest]:
                 ay, ax = py, px+1
                 
-                (score, count) = calcGridScore(ay, ax, n2, grid[forest], revGrid[forest], page)
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page)
                 if count == 0:
                   assert score == cost.inf
                   nodeX[n1][n2] = (cost.inf, 1)
@@ -961,7 +970,7 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
 
               if (py, px-1) not in grid[forest]:
                 ay, ax = py, px-1
-                (score, count) = calcGridScore(ay, ax, n2, grid[forest], revGrid[forest], page)
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page)
                 if count == 0:
                   assert score == cost.inf
                   nodeX[n2][n1] = (cost.inf, 1)
@@ -970,7 +979,7 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
 
               if (py+1, px) not in grid[forest]:
                 ay, ax = py+1, px
-                (score, count) = calcGridScore(ay, ax, n2, grid[forest], revGrid[forest], page)
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page)
                 if count == 0:
                   assert score == cost.inf
                   nodeY[n1][n2] = (cost.inf, 1)
@@ -979,7 +988,7 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
 
               if (py-1, px) not in grid[forest]:
                 ay, ax = py-1, px
-                (score, count) = calcGridScore(ay, ax, n2, grid[forest], revGrid[forest], page)
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page)
                 if count == 0:
                   assert score == cost.inf
                   nodeY[n2][n1] = (cost.inf, 1)
@@ -999,8 +1008,8 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
       #  print "n", lognormalize(nodeX1[n]) 
       #  print "f", fastLognormalize(nodeX1[n])
 
-      cX = lognormalize(dict([(x[0],x[1][0]) for x in nodeX[n].items()]))
-      cY = lognormalize(dict([(x[0],x[1][0]) for x in nodeY[n].items()]))
+      cX = flognormalize(dict([(x[0],x[1][0]) for x in nodeX[n].items()]))
+      cY = flognormalize(dict([(x[0],x[1][0]) for x in nodeY[n].items()]))
 
       if not verifyNorm(cX, cY):
         print "goddammit"
@@ -1019,14 +1028,331 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
         hY.append((nodeY[v1][v2][0], (v1,v2)))
         #hY.append((nodeY[v1][v2][0]/nodeY[v1][v2][1], (v1,v2)))
 
+    if not firstOne:
+      #page.vizPos({1:{(0,0):(0,1),(0,1):(0,1)}}, fl="quuu.jpg", multiple = True)
+      page.vizPos(positions, fl="kruskal.jpg", multiple = True)
+      raw_input("Press any key to continue...")
+
+    firstOne = False
+
+  f = nodeForest[(0,0)]
+  #print f, positions
+  assert len(positions) == 1
+  assert len(set(positions[f].values())) == len(positions[f].values())
+  #page.vizPos(positions, fl="kruskal" + str(page.sizeX), multiple = True)
+  #print positions
+  #print accumEdges
+  return positions[f], accumEdges
+
+def kruskalMultiset(page, ignoreWhites = False):
+  hX = page.heapX
+  hY = page.heapY
+  states = [(n, 0) for n in page.states.keys()]
+  found = set()
+  nodeForest = {}
+  posX = 0
+  posY = 0
+  cur = 0
+  positions = {}
+  grid = {}
+  revGrid = {}
+  accumEdges = []
+  numForests = 0
+  firstOne = True
+
+  while len(hX) > 0 or len(hY) > 0:
+    if not firstOne:
+      forest = None
+      tp = None
+
+      hX = [(score,(f,s)) for (score,(f,s)) in hX if f[0] != page.blankPos and s[0] != page.blankPos]
+      hY = [(score,(f,s)) for (score,(f,s)) in hY if f[0] != page.blankPos and s[0] != page.blankPos]
+      if len(hX) == 0 and len(hY) == 0:
+        break
+
+      #print "---X---", [(math.exp(x[0]),x[1]) for x in sorted(hX, key=lambda x : x[0], reverse = True)]
+      #print "---Y---", [(math.exp(x[0]),x[1]) for x in sorted(hY, key=lambda x : x[0], reverse = True)]
+
+      bestX = max(hX) if hX != [] else None
+      bestY = max(hY) if hY != [] else None
+
+      print "+++++++++++++", bestX, bestY
+      if bestY == None or (bestX != None and bestX[0] > bestY[0]):
+        cur = bestX[1]
+        accumEdges.append(("x", (cur[0][0],cur[1][0])))
+        tp = "x"
+        #hY.append(bestY)
+      else:
+        cur = bestY[1]
+        accumEdges.append(("y", (cur[0][0],cur[1][0])))
+        tp = "y"
+        #hX.append(bestX)
+
+      if cur[0] in found and cur[1] in found: # merge forests
+        forest = nodeForest[cur[0]]
+        posY, posX = positions[forest][cur[0][0]]
+        if tp == "x":
+          posX += 1
+        elif tp == "y":
+          posY += 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        oldForest = nodeForest[cur[1]]
+        oldY, oldX = positions[oldForest][cur[1][0]]
+        dY = oldY - posY
+        dX = oldX - posX
+        #print cur[0], cur[1], forest, oldForest, revGrid, revGrid[oldForest].items()
+        for ((pY, pX),node) in revGrid[oldForest].items():
+          nodeForest[node] = forest
+          grid[forest].add((pY-dY, pX-dX))
+          if (pY-dY, pX-dX) in revGrid[forest]:
+            del nodeForest[revGrid[forest][(pY-dY, pX-dX)]]
+            found.remove(revGrid[forest][(pY-dY, pX-dX)])
+            states.remove(revGrid[forest][(pY-dY, pX-dX)])
+          revGrid[forest][(pY-dY, pX-dX)] = node
+          positions[forest][node[0]] = (pY-dY, pX-dX)
+
+        del grid[oldForest]
+        del revGrid[oldForest]
+        del positions[oldForest]
+        
+      elif cur[0] in found: # add to forest
+        forest = nodeForest[cur[0]]
+        posY, posX = positions[forest][cur[0][0]]
+
+        if tp == "x":
+          posX += 1
+        elif tp == "y":
+          posY += 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        positions[forest][cur[1][0]] = (posY, posX)
+        found.add(cur[1])
+        states.append((cur[1][0],cur[1][1]+1))
+        grid[forest].add((posY, posX))
+        revGrid[forest][(posY, posX)] = cur[1]
+        nodeForest[cur[1]] = forest
+
+      elif cur[1] in found: # add to forest
+        forest = nodeForest[cur[1]]
+        posY, posX = positions[forest][cur[1][0]]
+        if tp == "x":
+          posX -= 1
+        elif tp == "y":
+          posY -= 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        positions[forest][cur[0][0]] = (posY, posX)
+        found.add(cur[0])
+        states.append((cur[0][0],cur[0][1]+1))
+        grid[forest].add((posY, posX))
+        revGrid[forest][(posY, posX)] = cur[0]
+        nodeForest[cur[0]] = forest
+
+      else: # make new forest
+        posX = 0
+        posY = 0
+        posNX = 0
+        posNY = 0
+        if tp == "x":
+          posNX = 1
+        elif tp == "y":
+          posNY = 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        numForests += 1
+        forest = numForests
+        grid[forest] = set([(posY, posX),(posNY, posNX)])
+        nodeForest[cur[0]] = forest
+        nodeForest[cur[1]] = forest
+        found.add(cur[0])
+        found.add(cur[1])
+        states.append((cur[1][0],cur[1][1]+1))
+        states.append((cur[0][0],cur[0][1]+1))
+        revGrid[forest] = {(posY, posX):cur[0], (posNY, posNX):cur[1]}
+        positions[forest] = {cur[0][0]:(posY, posX), cur[1][0]:(posNY, posNX)}
+
+    hX = []
+    hY = []
+    #print accumEdges
+    #print found
+    #print positions
+    #print grid
+    nodeX = {}
+    nodeY = {}
+
+    for n in states:
+      nodeX[n] = {}
+      nodeY[n] = {}
+    
+    print positions
+    print revGrid
+    print nodeForest
+    #print "founD", found
+    for i1 in range(len(states)):
+      n1 = states[i1]
+      if not ignoreWhites or n1 not in page.whites:
+        for i2 in range(len(states)):
+          n2 = states[i2]
+          if i1 != i2 and (not ignoreWhites or n2 not in page.whites):
+            if n1 in found and n2 in found and nodeForest[n1] != nodeForest[n2]: # possible merge
+              f1 = nodeForest[n1]
+              f2 = nodeForest[n2]
+              p1Y, p1X = positions[f1][n1[0]]
+              p2Y, p2X = positions[f2][n2[0]]
+
+              np2Y, np2X = p1Y, p1X + 1
+              dY, dX = p2Y - np2Y, p2X - np2X
+
+              wrongOverlap = False
+              infinite = True
+              totalScore = 0
+              totalCount = 0
+              totalInfCount = 0
+              for ((pY, pX),node) in revGrid[f2].items():
+                overlap = False
+                ny, nx = pY-dY, pX-dX
+                if (ny,nx) in grid[f1]:
+                  if node[0] == revGrid[f1][(ny,nx)][0]:
+                    overlap = True
+                  else:
+                    wrongOverlap = True
+                    break
+                
+                if not overlap:
+                  (score, count) = calcGridScore(ny, nx, node, revGrid[f1], page, multi=True)
+                  if score != cost.inf:
+                    infinite = False
+                    totalScore += score
+                    totalCount += count
+
+              totalCount = 1
+              if not wrongOverlap:
+                if infinite:
+                  nodeX[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeX[n1][n2] = (totalScore,totalCount)
+
+              np2Y, np2X = p1Y + 1, p1X
+              dY, dX = p2Y - np2Y, p2X - np2X
+
+              overlap = False
+              infinite = True
+              totalScore = 0
+              totalCount = 0
+              totalInfCount = 0
+              for ((pY, pX),node) in revGrid[f2].items():
+                overlap = False
+                ny, nx = pY-dY, pX-dX
+                if (ny,nx) in grid[f1]:
+                  if node[0] == revGrid[f1][(ny,nx)][0]:
+                    overlap = True
+                  else:
+                    wrongOverlap = True
+                    break
+                
+                if not overlap:
+                  (score, count) = calcGridScore(ny, nx, node, revGrid[f1], page, multi=True)
+                  if score != cost.inf:
+                    infinite = False
+                    totalScore += score
+                    totalCount += count
+ 
+              totalCount = 1
+              if not wrongOverlap:
+                if infinite:
+                  nodeY[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeY[n1][n2] = (totalScore,totalCount)
+
+            if n1 in found and n2 not in found and n2[0] not in [f for (f,s) in revGrid[nodeForest[n1]].values()]:
+
+              forest = nodeForest[n1]
+              py,px = positions[forest][n1[0]]
+              if (py, px+1) not in grid[forest]:
+                ay, ax = py, px+1
+                
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page, multi=True)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeX[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeX[n1][n2] = (score,count)
+
+              if (py, px-1) not in grid[forest]:
+                ay, ax = py, px-1
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page, multi=True)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeX[n2][n1] = (cost.inf, 1)
+                else:
+                  nodeX[n2][n1] = (score,count)
+
+              if (py+1, px) not in grid[forest]:
+                ay, ax = py+1, px
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page, multi=True)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeY[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeY[n1][n2] = (score,count)
+
+              if (py-1, px) not in grid[forest]:
+                ay, ax = py-1, px
+                (score, count) = calcGridScore(ay, ax, n2, revGrid[forest], page, multi=True)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeY[n2][n1] = (cost.inf, 1)
+                else:
+                  nodeY[n2][n1] = (score,count)
+
+            if n1 not in found and n2 not in found and (n1[1] == 0 or n2[1] == 0): # 2 outside edges
+              nodeX[n1][n2] = (page.costX[(n1[0],n2[0])], 1)
+              nodeY[n1][n2] = (page.costY[(n1[0],n2[0])], 1)
+
+    #print "X",sorted(nodeX.items()),'\n'
+    #print "Y",sorted(nodeY.items()),'\n'
+    
+    for n in states:
+
+      #if lognormalize(nodeX1[n]) != fastLognormalize(nodeX1[n]):
+      #  print "n", lognormalize(nodeX1[n]) 
+      #  print "f", fastLognormalize(nodeX1[n])
+
+      cX = flognormalize(dict([(x[0],x[1][0]) for x in nodeX[n].items()]))
+      cY = flognormalize(dict([(x[0],x[1][0]) for x in nodeY[n].items()]))
+
+      if not verifyNorm(cX, cY):
+        print "goddammit"
+
+      nodeX[n] = dict([(k,(cX[k],nodeX[n][k][1])) for k in nodeX[n]])
+      nodeY[n] = dict([(k,(cY[k],nodeY[n][k][1])) for k in nodeY[n]])
+    
+    
+    for v1 in nodeX:
+      for v2 in nodeX[v1]:
+        hX.append((nodeX[v1][v2][0], (v1 , v2)))
+        #hX.append((nodeX[v1][v2][0]/nodeX[v1][v2][1], (v1,v2)))
+
+    for v1 in nodeY:
+      for v2 in nodeY[v1]:
+        hY.append((nodeY[v1][v2][0], (v1, v2)))
+        #hY.append((nodeY[v1][v2][0]/nodeY[v1][v2][1], (v1,v2)))
+
     #if not firstOne:
       #page.vizPos({1:{(0,0):(0,1),(0,1):(0,1)}}, fl="quuu.jpg", multiple = True)
+      #print positions
+      #print dict([(f, dict([(v,pos) for ((v, c), pos) in x.items()])) for (f,x) in positions.items()])
       #page.vizPos(positions, fl="quuu.jpg", multiple = True)
       #raw_input("Press any key to continue...")
 
     firstOne = False
 
-  f = nodeForest[(0,0)]
+  f = nodeForest[((0,0),0)]
   #print f, positions
   assert len(positions) == 1
   assert len(set(positions[f].values())) == len(positions[f].values())
