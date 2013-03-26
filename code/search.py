@@ -752,7 +752,7 @@ def calcGridScore(ay, ax, n, revGrid, page, countWhite = False, nc = None, multi
   return score, count
 
 #@profile
-def kruskal(page, ignoreWhites = False): # constructs and merges forests of best nodes, analog of Kruskal's algorithm.
+def kruskal(page, ignoreWhites = False, multPos = False): # constructs and merges forests of best nodes, analog of Kruskal's algorithm.
   hX = page.heapX
   hY = page.heapY
   states = page.states.keys()
@@ -767,6 +767,8 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
   accumEdges = []
   numForests = 0
   firstOne = True
+  certainty = 1
+  minCertainty = 0.9
 
   while len(hX) > 0 or len(hY) > 0:
     if not firstOne:
@@ -785,16 +787,23 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
 
       #print "+++++++++++++", bestX, bestY
       if bestY == None or (bestX != None and bestX[0] > bestY[0]):
+        certainty *= math.exp(bestX[0])
         cur = bestX[1]
         accumEdges.append(("x",cur))
         tp = "x"
         #hY.append(bestY)
       else:
+        certainty *= math.exp(bestY[0])
         cur = bestY[1]
         accumEdges.append(("y",cur))
         tp = "y"
         #hX.append(bestX)
 
+      print certainty, " ",
+      if certainty < minCertainty:
+        print "Certainty too low, stopping"
+        break
+        
       if cur[0] in found and cur[1] in found: # merge forests
         forest = nodeForest[cur[0]]
         posY, posX = positions[forest][cur[0]]
@@ -1028,21 +1037,25 @@ def kruskal(page, ignoreWhites = False): # constructs and merges forests of best
         hY.append((nodeY[v1][v2][0], (v1,v2)))
         #hY.append((nodeY[v1][v2][0]/nodeY[v1][v2][1], (v1,v2)))
 
-    if not firstOne:
+    #if not firstOne:
       #page.vizPos({1:{(0,0):(0,1),(0,1):(0,1)}}, fl="quuu.jpg", multiple = True)
-      page.vizPos(positions, fl="kruskal.jpg", multiple = True)
-      raw_input("Press any key to continue...")
+      #page.vizPos(positions, fl="kruskal.jpg", multiple = True)
+      #print page.calcGroups(positions)
+      #raw_input("Press any key to continue...")
 
     firstOne = False
 
-  f = nodeForest[(0,0)]
   #print f, positions
-  assert len(positions) == 1
-  assert len(set(positions[f].values())) == len(positions[f].values())
+  
+  if len(positions) == 1 and multPos:
+    f = nodeForest[(0,0)]
+    assert len(set(positions[f].values())) == len(positions[f].values())
+    positions = positions[f]
+  
   #page.vizPos(positions, fl="kruskal" + str(page.sizeX), multiple = True)
   #print positions
   #print accumEdges
-  return positions[f], accumEdges
+  return positions, accumEdges
 
 def kruskalMultiset(page, ignoreWhites = False):
   hX = page.heapX

@@ -251,35 +251,41 @@ class ImagePage():
     plt.imshow(image)
     plt.show()
 
-  def calcGroups(self, pos): # calculates sizes of correct groups given positions
-    revPos = dict([(v,k) for (k,v) in pos.items()])
+  def calcGroups(self, poss): # calculates sizes of correct groups given positions
+    try:
+      l = poss.items()
+    except:
+      poss = {1:poss}
+      
     groups = {}
-    gs = 0
-
     nX = [0,0,1,-1]
     nY = [1,-1,0,0]
+    gs = 0
+    
+    for pos in poss.values():
+      revPos = dict([(v,k) for (k,v) in pos.items()])
 
-    while len(revPos) > 0:
-      curInd = min(revPos.keys())
-      groups[gs] = {}
+      while len(revPos) > 0:
+        curInd = min(revPos.keys())
+        groups[gs] = {}
 
-      while curInd != None:
-        curPiece = revPos[curInd]
-        del revPos[curInd]
-        groups[gs][curPiece] = curInd
+        while curInd != None:
+          curPiece = revPos[curInd]
+          del revPos[curInd]
+          groups[gs][curPiece] = curInd
 
-        nextInd = None
-        for i in range(4):
-          potNextInd = (curInd[0] + nY[i], curInd[1] + nX[i])
-          if potNextInd in revPos:
-            if curPiece[0] + nY[i] == revPos[potNextInd][0] and curPiece[1] + nX[i] == revPos[potNextInd][1]:
-              nextInd = potNextInd
+          nextInd = None
+          for i in range(4):
+            potNextInd = (curInd[0] + nY[i], curInd[1] + nX[i])
+            if potNextInd in revPos:
+              if curPiece[0] + nY[i] == revPos[potNextInd][0] and curPiece[1] + nX[i] == revPos[potNextInd][1]:
+                nextInd = potNextInd
 
-        curInd = nextInd
-      gs += 1
+          curInd = nextInd
+        gs += 1
 
-    assert(sum(map(len,groups.values())) == len(pos))
-    self.vizPos(groups, fl="groups" + str(self.sizeX), multiple = True)
+      #assert(sum(map(len,groups.values())) == len(pos))
+      #self.vizPos(groups, fl="groups" + str(self.sizeX), multiple = True)
 
     return map(len,groups.values()) 
 
@@ -392,7 +398,7 @@ class ImagePage():
 
     return ct
 
-  def calcCorrectEdges(self, positions, ignoreWhites = False): # percent of edges that are correct, only internal
+  def calcCorrectEdges(self, positions, ignoreWhites = False, multPos=False): # percent of edges that are correct, only internal
     totalEdges = (self.sizeX - 1) * self.sizeY + (self.sizeY - 1) * self.sizeX    
     
     if ignoreWhites:
@@ -404,13 +410,45 @@ class ImagePage():
         else:
           totalEdges -= 4
 
-    revPos = dict([(v,k) for (k,v) in positions.items()])
-    correctEdges = 0.0
-    for ((sy,sx),(y,x)) in positions.items():
-      if (y+1,x) in revPos and revPos[(y+1,x)] == (sy+1,sx):
-        correctEdges += 1
-      if (y,x+1) in revPos and revPos[(y,x+1)] == (sy,sx+1):
-        correctEdges += 1
+    if multPos:
+      correctEdges = 0.0
+      corGroupEdges = []
+      noSeenPieces = 0.0
+      noPieces = len(self.states) - 1 # -1 for blank piece
+      for pos in positions.values():
+        cgEdges = 0.0
+        gEdges = 0.0
+        gSeenPieces = 0.0
+        revPos = dict([(v,k) for (k,v) in pos.items()])
+        for ((sy,sx),(y,x)) in pos.items():
+          noSeenPieces += 1
+          gSeenPieces += 1
+          if (y+1,x) in revPos:
+            gEdges += 1
+            if revPos[(y+1,x)] == (sy+1,sx):
+              correctEdges += 1
+              cgEdges += 1
+          if (y,x+1) in revPos:
+            gEdges += 1
+            if revPos[(y,x+1)] == (sy,sx+1):
+              correctEdges += 1
+              cgEdges += 1
+        
+        corGroupEdges.append((cgEdges / gEdges, gEdges, gSeenPieces))
+        
+      oneGroups = noPieces - noSeenPieces
+      noGroups = oneGroups + len(corGroupEdges)
+            
+      return correctEdges / totalEdges, oneGroups, noGroups / noPieces, corGroupEdges
+    
+    else:
+      revPos = dict([(v,k) for (k,v) in positions.items()])
+      correctEdges = 0.0
+      for ((sy,sx),(y,x)) in positions.items():
+        if (y+1,x) in revPos and revPos[(y+1,x)] == (sy+1,sx):
+          correctEdges += 1
+        if (y,x+1) in revPos and revPos[(y,x+1)] == (sy,sx+1):
+          correctEdges += 1
 
     return correctEdges / totalEdges
 
