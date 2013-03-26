@@ -1,0 +1,29 @@
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}
+\contentsline {section}{\numberline {1.1}Importance}{6}{section.1.1}
+\contentsline {section}{\numberline {1.2}Paper Shredders}{8}{section.1.2}
+\contentsline {chapter}{\numberline {2}Literature Review}{9}{chapter.2}
+\contentsline {chapter}{\numberline {3}Probabilistic Score}{11}{chapter.3}
+\contentsline {section}{\numberline {3.1}Motivation}{11}{section.3.1}
+\contentsline {section}{\numberline {3.2}Description}{12}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Edge likelihood}{12}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Normalization}{13}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Learning}{14}{subsection.3.2.3}
+\contentsline {section}{\numberline {3.3}Evaluation}{15}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Comparison with Gaussian cost functions}{15}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Validity of predicted probabilities}{17}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Robustness}{17}{subsection.3.3.3}
+\contentsline {section}{\numberline {3.4}Drawbacks}{18}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Uniformity assumption}{19}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Lack of symmetry}{19}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Ignoring non-edge information}{20}{subsection.3.4.3}
+\contentsline {chapter}{\numberline {4}Heuristic Search}{21}{chapter.4}
+\contentsline {section}{\numberline {4.1}Motivation}{21}{section.4.1}
+\contentsline {section}{\numberline {4.2}Description}{22}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Analysis of "ReconstructShreds"}{23}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Kruskal based heuristic}{24}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Evaluating the heuristics}{26}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}Cascading}{27}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Making all shreds movable}{28}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Adding a post-processing step}{29}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}Evaluating the error-correcting methods}{30}{subsection.4.3.3}
+\contentsline {chapter}{Bibliography}{31}{chapter*.32}

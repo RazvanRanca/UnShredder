@@ -1,4 +1,5 @@
 \chapter{Probabilistic Score}
+\label{chap4}
 This paper proposes a departure from the previous cost function definitions, looking instead at using a probabilistic model to directly estimate the likelihood of two edges matching.
 \section{Motivation}
 A pervasive problem with the cost functions discussed above is that their design is ad hoc and relies on hand-picked values based on the authors' empirical observations. For instance, in \cite{P1} the authors have to decide on the size of the Gaussian window they employ, on the weights to assign to the pixels that fall within that window and on a suitable value for their threshold function. \todo{Explain these cost methods in the lit. review} In \cite{P2} the authors not only face all of the above problems, but also have to decide on a threshold value for their row comparison and on another threshold regarding the minimum amount of black pixels that an edge must have in order for it's matches to be considered relevant. 

@@ -1,0 +1,69 @@
+\relax 
+\citation{P10}
+\citation{P10}
+\citation{P11}
+\citation{P12}
+\citation{P11}
+\citation{P13}
+\citation{P14}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces A shredded document belonging to the CIA. This was reconstructed by a team of carpet weavers during the 1979 Iran hostage crisis. The reconstructed documents were eventually released by the Iranian government in a series of books \cite  {P10}\relax }}{5}{figure.caption.2}}
+\@writefile{brf}{\backcite{P10}{{5}{1.1}{figure.caption.2}}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:iranDoc}{{1.1}{5}{A shredded document belonging to the CIA. This was reconstructed by a team of carpet weavers during the 1979 Iran hostage crisis. The reconstructed documents were eventually released by the Iranian government in a series of books \cite {P10}\relax \relax }{figure.caption.2}{}}
+\citation{P15}
+\citation{P16}
+\citation{P15}
+\citation{P15}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Importance}{6}{section.1.1}}
+\@writefile{brf}{\backcite{P11}{{6}{1.1}{section.1.1}}}
+\@writefile{brf}{\backcite{P12}{{6}{1.1}{section.1.1}}}
+\@writefile{brf}{\backcite{P11, P13}{{6}{1.1}{section.1.1}}}
+\@writefile{brf}{\backcite{P14}{{6}{1.1}{section.1.1}}}
+\@writefile{brf}{\backcite{P15}{{6}{1.1}{section.1.1}}}
+\@writefile{brf}{\backcite{P16}{{6}{1.1}{section.1.1}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces A fraction of the 16,000 bags containing the shredded STASI archives.\relax }}{6}{figure.caption.3}}
+\newlabel{fig:stasi}{{1.2}{6}{A fraction of the 16,000 bags containing the shredded STASI archives.\relax \relax }{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces Two of the DARPA Challenge documents \cite  {P15}\relax }}{7}{figure.caption.4}}
+\@writefile{brf}{\backcite{P15}{{7}{1.3}{figure.caption.4}}}
+\newlabel{fig:darpa}{{1.3}{7}{Two of the DARPA Challenge documents \cite {P15}\relax \relax }{figure.caption.4}{}}
+\citation{P16}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Paper Shredders}{8}{section.1.2}}
+\@writefile{brf}{\backcite{P16}{{8}{1.2}{section.1.2}}}
+\@setckpt{chap1}{
+\setcounter{page}{9}
+\setcounter{equation}{0}
+\setcounter{enumi}{0}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{3}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{1}
+\setcounter{section}{2}
+\setcounter{subsection}{0}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{3}
+\setcounter{table}{0}
+\setcounter{ContinuedFloat}{0}
+\setcounter{@todonotes@numberoftodonotes}{0}
+\setcounter{Item}{0}
+\setcounter{Hfootnote}{3}
+\setcounter{subfigure}{2}
+\setcounter{subtable}{0}
+\setcounter{ALG@line}{0}
+\setcounter{ALG@rem}{0}
+\setcounter{ALG@nested}{0}
+\setcounter{ALG@Lnr}{2}
+\setcounter{ALG@blocknr}{10}
+\setcounter{ALG@storecount}{0}
+\setcounter{ALG@tmpcounter}{0}
+\setcounter{float@type}{8}
+\setcounter{algorithm}{0}
+\setcounter{section@level}{1}
+}

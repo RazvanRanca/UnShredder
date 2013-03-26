@@ -1,0 +1,1120 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  26 MAR 2013 18:05
+entering extended mode
+ %&-line parsing enabled.
+**skeleton
+(./skeleton.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
+erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
+ french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
+us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
+tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
+turkish, ukenglish, ukrainian, loaded.
+(/usr/share/texmf/tex/latex/informatics/infthesis/infthesis.cls
+Document Class: infthesis 2011/02/02 v3.5 School of Informatics Thesis Class
+(/usr/share/texmf/tex/latex/geometry/geometry.sty
+Package: geometry 2002/07/08 v3.2 Page Geometry
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+\Gm@cnth=\count79
+\Gm@cntv=\count80
+\c@Gm@tempcnt=\count81
+\Gm@bindingoffset=\dimen102
+\Gm@wd@mp=\dimen103
+\Gm@odd@mp=\dimen104
+\Gm@even@mp=\dimen105
+\Gm@dimlist=\toks15
+
+(/usr/share/texmf/tex/xelatex/xetexconfig/geometry.cfg))
+(/usr/share/texmf/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/usr/share/texmf/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count82
+))
+(/usr/share/texmf/tex/latex/tools/xspace.sty
+Package: xspace 2006/05/08 v1.12 Space after command names (DPC,MH)
+)
+(/usr/share/texmf/tex/latex/common/logos/eushield.sty
+Package: eushield 2006/08/28\ v1.1\ Commands for including the EU shield graphi
+c
+
+(/usr/share/texmf/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2006/02/20 v1.4 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in pdf mode detected.
+))
+(/usr/share/texmf/tex/latex/base/report.cls
+Document Class: report 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size12.clo
+File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count83
+\c@chapter=\count84
+\c@section=\count85
+\c@subsection=\count86
+\c@subsubsection=\count87
+\c@paragraph=\count88
+\c@subparagraph=\count89
+\c@figure=\count90
+\c@table=\count91
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen106
+)
+(/usr/share/texmf/tex/latex/pslatex/pslatex.sty
+Package: pslatex 1996/07/24 v1.2 pslatex emulation (DPC)
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 65.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/ptmcm/m/n on input line 65.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ptmcm/m/n on input line 65.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 66.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/ptmcm/m/it on input line 66.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/ptmcm/m/it on input line 66.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 67.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/pzccm/m/n on input line 67.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/pzccm/m/n on input line 67.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 68.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/psycm/m/n on input line 68.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/psycm/m/n on input line 68.
+\symbold=\mathgroup4
+\symitalic=\mathgroup5
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 74.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 74.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 74.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 75.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/ptm/m/it on input line 75.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/ptm/m/it on input line 75.
+)
+(/usr/share/texmf/tex/latex/sectsty/sectsty.sty
+Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
+les
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/caption.sty
+Package: caption 2013/02/16 v3.3-67 Customizing captions (AR)
+
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/caption3.sty
+Package: caption3 2013/02/03 v1.5-62 caption3 kernel (AR)
+\captionmargin=\dimen107
+\captionmargin@=\dimen108
+\captionwidth=\dimen109
+\caption@tempdima=\dimen110
+\caption@indent=\dimen111
+\caption@parindent=\dimen112
+\caption@hangindent=\dimen113
+)
+\c@ContinuedFloat=\count92
+))
+(/usr/share/texmf/tex/latex/ltxmisc/parskip.sty
+Package: parskip 2001/04/09 non-zero parskip adjustments
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/todonotes.sty
+Package: todonotes 2012/07/25 .dtx Todonotes source and documentation.
+Package: todonotes 2012/07/25
+
+(/usr/share/texmf/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2006/11/18 v2.5f package option processing (HA)
+
+(/usr/share/texmf/tex/latex/xkeyval/xkeyval.tex
+\XKV@toks=\toks16
+\XKV@depth=\count93
+File: xkeyval.tex 2006/11/18 v2.5f key=value parser (HA)
+))
+(/usr/share/texmf/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/usr/share/texmf/tex/latex/config/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/frontendlayer/tikz.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/basiclayer/pgf.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/utilities/pgfrcs.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfutil-common
+.tex
+\pgfutil@everybye=\toks17
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfutil-latex.
+def)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfrcs.code.te
+x
+Package: pgfrcs 2008/02/20 v2.00 (rcs-revision 1.21)
+))
+Package: pgf 2008/01/15 v2.00 (rcs-revision 1.12)
+ (/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/basiclayer/pgfcore.sty (/
+usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+\Gin@req@height=\dimen114
+\Gin@req@width=\dimen115
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/systemlayer/pgfsys.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsys.code.
+tex
+Package: pgfsys 2008/02/07 v2.00 (rcs-revision 1.31)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfkeys.code.t
+ex
+\pgfkeys@pathtoks=\toks18
+\pgfkeys@temptoks=\toks19
+)
+\pgf@x=\dimen116
+\pgf@y=\dimen117
+\pgf@xa=\dimen118
+\pgf@ya=\dimen119
+\pgf@xb=\dimen120
+\pgf@yb=\dimen121
+\pgf@xc=\dimen122
+\pgf@yc=\dimen123
+\c@pgf@counta=\count94
+\c@pgf@countb=\count95
+\c@pgf@countc=\count96
+\c@pgf@countd=\count97
+ (/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2008/01/13  (rcs-revision 1.6)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 885.
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsys-pdfte
+x.def
+File: pgfsys-pdftex.def 2007/12/20  (rcs-revision 1.20)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsys-commo
+n-pdf.def
+File: pgfsys-common-pdf.def 2007/12/17  (rcs-revision 1.8)
+)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsyssoftpa
+th.code.tex
+File: pgfsyssoftpath.code.tex 2008/01/23  (rcs-revision 1.6)
+\pgfsyssoftpath@smallbuffer@items=\count98
+\pgfsyssoftpath@bigbuffer@items=\count99
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsysprotoc
+ol.code.tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcore.code.
+tex
+Package: pgfcore 2008/01/15 v2.00 (rcs-revision 1.6)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmath.code.tex
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathcalc.code.te
+x
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathutil.code.te
+x
+\pgfmath@box=\box26
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathparser.code.
+tex
+\pgfmath@stack=\toks20
+\c@pgfmath@parsecounta=\count100
+\c@pgfmath@parsecountb=\count101
+\c@pgfmath@parsecountc=\count102
+\pgfmath@parsex=\dimen124
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathoperations.c
+ode.tex
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathtrig.code.te
+x)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathrnd.code.tex
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathbase.code.te
+x)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepoints
+.code.tex
+File: pgfcorepoints.code.tex 2008/02/03  (rcs-revision 1.13)
+\pgf@picminx=\dimen125
+\pgf@picmaxx=\dimen126
+\pgf@picminy=\dimen127
+\pgf@picmaxy=\dimen128
+\pgf@pathminx=\dimen129
+\pgf@pathmaxx=\dimen130
+\pgf@pathminy=\dimen131
+\pgf@pathmaxy=\dimen132
+\pgf@xx=\dimen133
+\pgf@xy=\dimen134
+\pgf@yx=\dimen135
+\pgf@yy=\dimen136
+\pgf@zx=\dimen137
+\pgf@zy=\dimen138
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepathco
+nstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2008/02/13  (rcs-revision 1.14)
+\pgf@path@lastx=\dimen139
+\pgf@path@lasty=\dimen140
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepathus
+age.code.tex
+File: pgfcorepathusage.code.tex 2008/01/23  (rcs-revision 1.11)
+\pgf@shorten@end@additional=\dimen141
+\pgf@shorten@start@additional=\dimen142
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorescopes
+.code.tex
+File: pgfcorescopes.code.tex 2008/01/15  (rcs-revision 1.26)
+\pgfpic=\box27
+\pgf@hbox=\box28
+\pgf@layerbox@main=\box29
+\pgf@picture@serial@count=\count103
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoregraphi
+cstate.code.tex
+File: pgfcoregraphicstate.code.tex 2007/12/12  (rcs-revision 1.8)
+\pgflinewidth=\dimen143
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoretransf
+ormations.code.tex
+File: pgfcoretransformations.code.tex 2008/02/04  (rcs-revision 1.10)
+\pgf@pt@x=\dimen144
+\pgf@pt@y=\dimen145
+\pgf@pt@temp=\dimen146
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorequick.
+code.tex
+File: pgfcorequick.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoreobject
+s.code.tex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepathpr
+ocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2008/01/23  (rcs-revision 1.7)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorearrows
+.code.tex
+File: pgfcorearrows.code.tex 2007/06/07  (rcs-revision 1.8)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoreshade.
+code.tex
+File: pgfcoreshade.code.tex 2007/12/10  (rcs-revision 1.9)
+\pgf@max=\dimen147
+\pgf@sys@shading@range@num=\count104
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoreimage.
+code.tex
+File: pgfcoreimage.code.tex 2008/01/15  (rcs-revision 1.1)
+\pgfexternal@startupbox=\box30
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorelayers
+.code.tex
+File: pgfcorelayers.code.tex 2008/01/15  (rcs-revision 1.1)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoretransp
+arency.code.tex
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepatter
+ns.code.tex
+File: pgfcorepatterns.code.tex 2008/01/15  (rcs-revision 1.1)
+)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/modules/pgfmoduleshapes.
+code.tex
+File: pgfmoduleshapes.code.tex 2008/02/13  (rcs-revision 1.4)
+\pgfnodeparttextbox=\box31
+\toks@savedmacro=\toks21
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/modules/pgfmoduleplot.co
+de.tex
+File: pgfmoduleplot.code.tex 2008/01/15  (rcs-revision 1.1)
+\pgf@plotwrite=\write3
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/compatibility/pgfcomp-vers
+ion-0-65.sty
+Package: pgfcomp-version-0-65 2007/07/03 v2.00 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen148
+\pgf@nodesepend=\dimen149
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/compatibility/pgfcomp-vers
+ion-1-18.sty
+Package: pgfcomp-version-1-18 2007/07/23 v2.00 (rcs-revision 1.1)
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/utilities/pgffor.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgffor.code.te
+x
+Package: pgffor 2007/11/07 v2.00 (rcs-revision 1.8)
+\pgffor@iter=\dimen150
+\pgffor@skip=\dimen151
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/frontendlayer/tikz/tikz.
+code.tex
+Package: tikz 2008/02/13 v2.00 (rcs-revision 1.27)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/libraries/pgflibraryplot
+handlers.code.tex
+File: pgflibraryplothandlers.code.tex 2007/03/09 v2.00 (rcs-revision 1.9)
+\pgf@plot@mark@count=\count105
+\pgfplotmarksize=\dimen152
+)
+\tikz@lastx=\dimen153
+\tikz@lasty=\dimen154
+\tikz@lastxsaved=\dimen155
+\tikz@lastysaved=\dimen156
+\tikzleveldistance=\dimen157
+\tikzsiblingdistance=\dimen158
+\tikz@figbox=\box32
+\tikz@tempbox=\box33
+\tikztreelevel=\count106
+\tikznumberofchildren=\count107
+\tikznumberofcurrentchild=\count108
+\tikz@fig@count=\count109
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/modules/pgfmodulematrix.
+code.tex
+File: pgfmodulematrix.code.tex 2008/01/15  (rcs-revision 1.1)
+\pgfmatrixcurrentrow=\count110
+\pgfmatrixcurrentcolumn=\count111
+\pgf@matrix@numberofcolumns=\count112
+)
+\tikz@expandcount=\count113
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/frontendlayer/tikz/libra
+ries/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2008/01/09 v2.00 (rcs-revision 1.1)
+)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/frontendlayer/tikz/libra
+ries/tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2008/02/12 v2.00 (rcs-revision 1.5)
+)
+(/usr/share/texmf/tex/latex/tools/calc.sty
+Package: calc 2005/08/06 v4.2 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count114
+\calc@Bcount=\count115
+\calc@Adimen=\dimen159
+\calc@Bdimen=\dimen160
+\calc@Askip=\skip43
+\calc@Bskip=\skip44
+LaTeX Info: Redefining \setlength on input line 75.
+LaTeX Info: Redefining \addtolength on input line 76.
+\calc@Ccount=\count116
+\calc@Cskip=\skip45
+)
+\c@@todonotes@numberoftodonotes=\count117
+)
+(/usr/share/texmf/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2007/02/07 v6.75r Hypertext links for LaTeX
+\@linkdim=\dimen161
+\Hy@linkcounter=\count118
+\Hy@pagecounter=\count119
+
+(/usr/share/texmf/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2007/02/07 v6.75r Hyperref: PDFDocEncoding definition (HO)
+)
+(/usr/share/texmf/tex/latex/config/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+(/usr/share/texmf/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2006/08/22 v2.4 Connects package keyval with LaTeX options (
+HO)
+)
+Package hyperref Info: Hyper figures OFF on input line 2288.
+Package hyperref Info: Link nesting OFF on input line 2293.
+Package hyperref Info: Hyper index ON on input line 2296.
+Package hyperref Info: Plain pages OFF on input line 2303.
+Package hyperref Info: Backreferencing ON on input line 2306.
+
+Implicit mode ON; LaTeX internals redefined
+Package hyperref Info: Bookmarks ON on input line 2444.
+(/usr/share/texmf/tex/latex/hyperref/backref.sty
+Package: backref 2006/10/06 v1.27 Bibliographical back referencing
+)
+(/usr/share/texmf/tex/latex/html/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
+)
+LaTeX Info: Redefining \url on input line 2599.
+\Fld@menulength=\count120
+\Field@Width=\dimen162
+\Fld@charsize=\dimen163
+\Choice@toks=\toks22
+\Field@toks=\toks23
+Package hyperref Info: Hyper figures OFF on input line 3102.
+Package hyperref Info: Link nesting OFF on input line 3107.
+Package hyperref Info: Hyper index ON on input line 3110.
+Package hyperref Info: backreferencing ON on input line 3115.
+Package hyperref Info: Link coloring OFF on input line 3122.
+\Hy@abspage=\count121
+\c@Item=\count122
+\c@Hfootnote=\count123
+)
+*hyperref using default driver hpdftex*
+(/usr/share/texmf/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
+\Fld@listcount=\count124
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+\c@subfigure=\count125
+\c@subtable=\count126
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/algpseudocode.sty
+Package: algpseudocode 
+
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count127
+\c@ALG@rem=\count128
+\c@ALG@nested=\count129
+\ALG@tlm=\skip46
+\ALG@thistlm=\skip47
+\c@ALG@Lnr=\count130
+\c@ALG@blocknr=\count131
+\c@ALG@storecount=\count132
+\c@ALG@tmpcounter=\count133
+\ALG@tmplength=\skip48
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/share/texmf/tex/latex/algorithms/algorithm.sty
+Package: algorithm 
+
+Document Style `algorithm' - floating environment
+(/usr/share/texmf/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count134
+\float@exts=\toks24
+\float@box=\box34
+\@float@everytoks=\toks25
+\@floatcapt=\box35
+)
+\@float@every@algorithm=\toks26
+\c@algorithm=\count135
+) (./skeleton.aux (./chap1.aux)
+(./chap2.aux) (./chap3.aux
+
+LaTeX Warning: Label `tab:costScoreComp' multiply defined.
+
+) (./chap4.aux))
+\openout1 = `skeleton.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/pzccm/m/n on input line 13.
+LaTeX Font Info:    Try loading font information for OMS+pzccm on input line 13
+.
+ (/usr/share/texmf/tex/latex/psnfss/omspzccm.fd
+File: omspzccm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/pzccm.
+)
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+-------------------- Geometry parameters
+paper: a4paper
+landscape: --
+twocolumn: --
+twoside: true
+asymmetric: --
+h-parts: 113.81102pt, 412.56497pt, 71.13188pt
+v-parts: 56.9055pt, 674.33032pt, 113.81102pt
+hmarginratio: --
+vmarginratio: --
+lines: --
+heightrounded: --
+bindingoffset: 0.0pt
+truedimen: --
+includehead: --
+includefoot: --
+includemp: --
+driver: pdftex
+-------------------- Page layout dimensions and switches
+\paperwidth  597.50787pt
+\paperheight 845.04684pt
+\textwidth  412.56497pt
+\textheight 674.33032pt
+\oddsidemargin  41.54103pt
+\evensidemargin -1.1381pt
+\topmargin  -52.36449pt
+\headheight 12.0pt
+\headsep    25.0pt
+\footskip   30.0pt
+\marginparwidth 56.9055pt
+\marginparsep   10.0pt
+\columnsep  10.0pt
+\skip\footins  10.8pt plus 4.0pt minus 2.0pt
+\hoffset 0.0pt
+\voffset 0.0pt
+\mag 1000
+\@twosidetrue \@mparswitchtrue 
+(1in=72.27pt, 1cm=28.45pt)
+-----------------------
+
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count136
+\scratchdimen=\dimen164
+\scratchbox=\box36
+\nofMPsegments=\count137
+\nofMParguments=\count138
+\MPscratchCnt=\count139
+\MPscratchDim=\dimen165
+\MPnumerator=\count140
+\everyMPtoPDFconversion=\toks27
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package hyperref Info: Link coloring OFF on input line 13.
+ (/usr/share/texmf/tex/latex/hyperref/nameref.sty
+Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
+
+(/usr/share/texmf/tex/latex/oberdiek/refcount.sty
+Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
+)
+\c@section@level=\count141
+)
+LaTeX Info: Redefining \ref on input line 13.
+LaTeX Info: Redefining \pageref on input line 13.
+ (./skeleton.out)
+(./skeleton.out)
+\@outlinefile=\write4
+\openout4 = `skeleton.out'.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 25.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 25.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 18.66588pt on input line 25.
+LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
+(Font)              scaled to size 10.79993pt on input line 25.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 25.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 10.79993pt on input line 25.
+ [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+[2
+
+]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24.88> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 29.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <24.88> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 29.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 22.39185pt on input line 29.
+ (./skeleton.toc
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1.
+LaTeX Font Info:    Try loading font information for OT1+ptmcm on input line 2.
+
+ (/usr/share/texmf/tex/latex/psnfss/ot1ptmcm.fd
+File: ot1ptmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ptmcm.
+)
+LaTeX Font Info:    Try loading font information for OML+ptmcm on input line 2.
+
+
+(/usr/share/texmf/tex/latex/psnfss/omlptmcm.fd
+File: omlptmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ptmcm.
+)
+LaTeX Font Info:    Try loading font information for OMX+psycm on input line 2.
+
+
+(/usr/share/texmf/tex/latex/psnfss/omxpsycm.fd
+File: omxpsycm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/psycm.
+)
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 2.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 2.
+)
+\tf@toc=\write5
+\openout5 = `skeleton.toc'.
+
+ [3]
+\openout2 = `chap1.aux'.
+
+ (./chap1.tex [4
+
+
+]
+Chapter 1.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/iran.j
+pg, id=174, 648.4225pt x 860.21375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/i
+ran.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/ir
+an.jpg>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 11.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <17.28> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 11.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 15.55188pt on input line 11.
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--13
+
+ []
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 14.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 14.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 14.
+
+LaTeX Warning: Reference `fig:darpa' on page 5 undefined on input line 14.
+
+[5])
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <12> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 33.
+LaTeX Font Info:    Font shape `OT1/phv/m/sl' will be
+(Font)              scaled to size 10.79993pt on input line 33.
+ [6] [7 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/img
+s/iran.jpg>]
+\openout2 = `chap2.aux'.
+
+ (./chap2.tex [8
+
+
+
+]
+Chapter 2.
+) [9]
+\openout2 = `chap3.aux'.
+
+ (./chap3.tex [10
+
+
+
+]
+Chapter 3.
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
+ine 4.
+
+Underfull \hbox (badness 1087) in paragraph at lines 11--11
+[]\OT1/ptm/m/n/12 Relies on the val-ues the au-thors hand-
+ []
+
+
+Overfull \hbox (24.0pt too wide) in paragraph at lines 9--15
+ [][] 
+ []
+
+
+Overfull \hbox (24.0pt too wide) in paragraph at lines 18--24
+ [][] 
+ []
+
+
+Overfull \hbox (7.39468pt too wide) in paragraph at lines 6--25
+[]\OT1/ptm/m/n/12 This ad-hoc for-mu-la-tion suf-fer from sev-eral im-ped-i-men
+ts which the prob-a-bilis-tic method
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+
+Underfull \vbox (badness 1057) has occurred while \output is active []
+
+ [11]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/contex
+t.png, id=233, 665.48625pt x 362.35374pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/c
+ontext.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/co
+ntext.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 40.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 40.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 12.9599pt on input line 40.
+[12] [13 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/im
+gs/context.png>] [14]
+Underfull \hbox (badness 10000) in paragraph at lines 73--74
+
+ []
+
+[15]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/costCo
+mp.pdf, id=271, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/c
+ostComp.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/co
+stComp.pdf> [16 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/wri
+ting/imgs/costComp.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/
+unshredder/writing/imgs/costComp.pdf): PDF inclusion: Page Group detected which
+ pdfTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/predOb
+sProb.png, id=326, 577.4373pt x 432.8973pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/p
+redObsProb.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/pr
+edObsProb.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/EntOri
+g.png, id=328, 131.49126pt x 29.10875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/E
+ntOrig.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/En
+tOrig.png>
+LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
+(Font)              scaled to size 9.85492pt on input line 137.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/EntNoi
+se.png, id=329, 132.495pt x 29.10875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/E
+ntNoise.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/En
+tNoise.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/EntDow
+n.png, id=330, 89.33376pt x 19.07124pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/E
+ntDown.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/En
+tDown.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/EntSpr
+ead.png, id=331, 137.51375pt x 30.1125pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/E
+ntSpread.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/En
+tSpread.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[17 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/pr
+edObsProb.png (PNG copy)>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/robust
+ness.pdf, id=339, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/r
+obustness.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/ro
+bustness.pdf> [18 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/w
+riting/imgs/EntOrig.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshr
+edder/writing/imgs/EntNoise.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4
+th/unshredder/writing/imgs/EntDown.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Dr
+opbox/4th/unshredder/writing/imgs/EntSpread.png> </afs/inf.ed.ac.uk/user/s09/s0
+954584/Dropbox/4th/unshredder/writing/imgs/robustness.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/
+unshredder/writing/imgs/robustness.pdf): PDF inclusion: Page Group detected whi
+ch pdfTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/tableT
+ext.jpg, id=399, 372.64218pt x 324.46219pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/t
+ableText.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/ta
+bleText.jpg> [19 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/wr
+iting/imgs/tableText.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/conf.p
+ng, id=407, 361.35pt x 222.8325pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/c
+onf.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/co
+nf.png>) [20 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writin
+g/imgs/conf.png>]
+\openout2 = `chap4.aux'.
+
+ (./chap4.tex
+Chapter 4.
+
+Overfull \hbox (20.61919pt too wide) in paragraph at lines 4--5
+\OT1/ptm/m/n/12 dus-trial solvers([[]][]), vari-able neigh-bour-hood search([[]
+, [], []][]),[][][]genetic algorithms([[]][]),ant
+ []
+
+
+Overfull \hbox (18.5072pt too wide) in paragraph at lines 4--5
+\OT1/ptm/m/n/12 colony optimization([[]][]) and re-for-mu-la-tion as an in-te-g
+er lin-ear pro-gram-ming problem([[]][]). 
+ []
+
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/pzccm/m/n' tried instead on input line 8.
+
+Overfull \hbox (16.37024pt too wide) in paragraph at lines 15--16
+\OT1/ptm/m/n/12 heuristic([[]][]), the "Prim based" heuristic([[]][]) and the "
+Re-con-struct-Shreds" heuristic([[]][]).
+ []
+
+
+Overfull \hbox (32.65384pt too wide) in paragraph at lines 15--16
+\OT1/ptm/m/n/12 More de-tails about these tech-niques are avail-able in the lit
+-er-a-ture re-view sec-tion. [][][]Additionally,
+ []
+
+
+Underfull \vbox (badness 5161) has occurred while \output is active []
+
+ [21
+
+
+
+]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kruska
+l1.png, id=435, 256.96pt x 192.72pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/k
+ruskal1.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kr
+uskal1.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kruska
+l2.png, id=436, 361.35pt x 193.72375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/k
+ruskal2.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kr
+uskal2.png>
+Underfull \hbox (badness 2334) in paragraph at lines 30--30
+\OT1/phv/m/n/10.95 which be-longed to nei-ther clus-ter.
+ []
+
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kruska
+l3.png, id=437, 338.26375pt x 194.7275pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/k
+ruskal3.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kr
+uskal3.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kruska
+l4.png, id=438, 275.0275pt x 194.7275pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/k
+ruskal4.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/kr
+uskal4.png> [22 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/wri
+ting/imgs/kruskal1.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshre
+dder/writing/imgs/kruskal2.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4t
+h/unshredder/writing/imgs/kruskal3.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Dr
+opbox/4th/unshredder/writing/imgs/kruskal4.png>]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 54.
+ [23]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 94.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 94.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (16.19995pt too wide) in paragraph at lines 136--137
+\OT1/ptm/m/n/12 lected (for con-ve-nience we as-sume the set of edges $\OML/ptm
+cm/m/it/12 S[]$ \OT1/ptm/m/n/12 has a func-tion $\OML/ptmcm/m/it/12 S[]:neighbo
+urs\OT1/ptmcm/m/n/12 ()$
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[24] [25]
+Underfull \hbox (badness 10000) in paragraph at lines 170--171
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [26]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/cascad
+ing.png, id=482, 577.4373pt x 432.8973pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/c
+ascading.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/ca
+scading.png> [27 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/wr
+iting/imgs/cascading.png (PNG copy)>]
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/cascad
+ingCorrection.pdf, id=491, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/c
+ascadingCorrection.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/ca
+scadingCorrection.pdf>
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+ [28 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/c
+ascadingCorrection.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/
+unshredder/writing/imgs/cascadingCorrection.pdf): PDF inclusion: Page Group det
+ected which pdfTeX can't handle. Ignoring it.
+>]
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/lookah
+ead.png, id=541, 853.1875pt x 652.4375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/l
+ookahead.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/lo
+okahead.png> [29 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/wr
+iting/imgs/lookahead.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 219--220
+
+ []
+
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/errorC
+orrecting.pdf, id=549, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/e
+rrorCorrecting.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/er
+rorCorrecting.pdf>) [30 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshre
+dder/writing/imgs/errorCorrecting.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/
+unshredder/writing/imgs/errorCorrecting.pdf): PDF inclusion: Page Group detecte
+d which pdfTeX can't handle. Ignoring it.
+>] (./skeleton.bbl (./skeleton.brf)
+\tf@brf=\write6
+\openout6 = `skeleton.brf'.
+
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no £ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no £ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no Ã in font ptmr7t!
+Missing character: There is no ¼ in font ptmr7t!
+ [31
+
+
+]
+Underfull \hbox (badness 7012) in paragraph at lines 86--86
+[]\OT1/ptm/m/n/12 US Fed-eral Trade Com-mis-sion web-site.  How to keep your pe
+r-
+ []
+
+
+Underfull \hbox (badness 4913) in paragraph at lines 86--86
+\OT1/ptm/m/n/12 sonal in-for-ma-tion se-cure.  []$\OT1/pcr/m/n/12 http : / / ww
+w . consumer . ftc . gov / articles /
+ []
+
+) [32] (./skeleton.aux (./chap1.aux) (./chap2.aux) (./chap3.aux) (./chap4.aux))
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 12760 strings out of 256216
+ 220910 string characters out of 1917072
+ 273316 words of memory out of 1500000
+ 15593 multiletter control sequences out of 10000+200000
+ 72153 words of font info for 135 fonts, out of 1200000 for 2000
+ 645 hyphenation exceptions out of 8191
+ 54i,12n,78p,1479b,648s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/texmf/fonts/type1/b
+luesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/
+share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/sh
+are/texmf/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1/urw
+/helvetic/uhvr8a.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvro8a.pfb></u
+sr/share/texmf/fonts/type1/urw/symbol/usyr.pfb></usr/share/texmf/fonts/type1/ur
+w/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/sha
+re/texmf/fonts/type1/urw/times/utmri8a.pfb>
+Output written on skeleton.pdf (32 pages, 1302680 bytes).
+PDF statistics:
+ 700 PDF objects out of 1000 (max. 8388607)
+ 111 named destinations out of 1000 (max. 131072)
+ 348 words of extra memory for PDF output out of 10000 (max. 10000000)
+
