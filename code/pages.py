@@ -181,7 +181,7 @@ class ImagePage():
 
     self.states[self.blankPos] = self.blank
     self.blankCount = self.sizeX * 2 + self.sizeY * 2
-    print "blankCount", self.blankCount
+    #print "blankCount", self.blankCount
 
     self.dataPieces[self.blankPos] = list(self.blank.getdata())
     self.rotDataPieces[self.blankPos] = list(self.blank.getdata())
@@ -253,7 +253,7 @@ class ImagePage():
 
   def calcGroups(self, poss): # calculates sizes of correct groups given positions
     try:
-      l = poss.items()
+      l = poss.items()[0][1].items()
     except:
       poss = {1:poss}
       
@@ -285,7 +285,7 @@ class ImagePage():
         gs += 1
 
       #assert(sum(map(len,groups.values())) == len(pos))
-      #self.vizPos(groups, fl="groups" + str(self.sizeX), multiple = True)
+      self.vizPos(groups, fl="groupsPrim" + str(self.sizeX), multiple = True)
 
     return map(len,groups.values()) 
 
@@ -793,7 +793,7 @@ class ImagePage():
     if fl == None:
       fl = "temp"
   
-    red = Image.new("RGB", (self.pWidth,self.pHeight), (210,0,0))
+    red = Image.new("RGB", (self.pWidth,self.pHeight), (235,90,90))
     font = ImageFont.truetype("wendy.ttf", 15)
 
     extraPixels = 10
@@ -827,7 +827,8 @@ class ImagePage():
         if pos[1] > maxX:
           maxX = pos[1]
 
-      back = Image.new("RGB",((maxX - minX + 1)*self.pWidth + extraPixels, (maxY - minY + 1)*self.pHeight + extraPixels) )
+      extra = 1 #3
+      back = Image.new("RGB",((maxX - minX + extra)*self.pWidth + extraPixels, (maxY - minY + extra)*self.pHeight + extraPixels) )
 
       for (node, (curY, curX)) in revPos:
         piece = self.states[node].convert("RGB").copy()
@@ -841,7 +842,7 @@ class ImagePage():
             drawPiece.line([(0,start), (self.pWidth,start)], fill=(255,0,0))
             drawPiece.line([(0,end), (self.pWidth,end)], fill=(255,0,0))
 
-        back.paste(piece, ((curX-minX + 0)*self.pWidth, (curY-minY + 0)*self.pHeight))
+        back.paste(piece, ((curX-minX + extra/2)*self.pWidth, (curY-minY + extra/2)*self.pHeight))
 
       #for (curY, curX) in reds:
       #  back.paste(red, ((curX-minX + 1)*self.pWidth, (curY-minY + 1)*self.pHeight)) 

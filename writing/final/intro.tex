@@ -1,0 +1,127 @@
+\chapter{Introduction}
+\label{chap1}
+Ever since the paper shredder was invented, people have worked on sticking the pieces back together again. Recently, techniques permitting the purely electronic storage and transmittal of sensitive documents have been developed but, because of convenience or for legal reasons, many sensitive documents are still printed and eventually shredded. Traditionally, the cost of reconstructing these documents was considered prohibitive as the work had to be done manually (see Figure \ref{fig:iranDoc}), however with the development of methods that partly automate the process this situation is changing. 
+
+It is currently unclear what level of security the paper shredder still offers.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth, height=9cm]{iran}
+    \caption{A shredded document belonging to the CIA. This was reconstructed by a team of carpet weavers during the 1979 Iran hostage crisis. The reconstructed documents were eventually released by the Iranian government in a series of books \cite{P10}}
+    \label{fig:iranDoc}
+\end{figure}
+
+\section{Importance}
+Techniques such as dumpster diving have long been used to gain access to sensitive information. Skoudis \cite{P11}, for instance, discusses how such techniques, in conjunction with basic social engineering, can completely circumvent the security measures protecting a system. Similar approaches also account for part of the several million identity theft cases identified by the US Federal Trade Commission every year \cite{P12}. In the face of this danger, both Skoudis and the Federal Trade Commission call attention to the shredding of sensitive documents as a good security measure to take. \cite{P11, P13}. However, the development of commercial shredded document reconstruction software \cite{P14} casts doubts on the benefits of shredders and highlights the need for further research in this area.
+ 
+One recent initiative looking at the reconstruction problem was the 2011 DARPA\footnote{Defense Advanced Research Projects Agency} shredding challenge, which offered a \$50,000 prize for the first team to successfully solve a series of  puzzles printed on shredded paper \cite{P15}. The puzzle was solved in 32 days, with the winning team managing to reconstruct a total of 5 documents shredded into more than 10,000 pieces (see Figure \ref{fig:darpa}).
+
+The DARPA Challenge was motivated by the difficulties that troops encounter in war zones, while trying to make sense of the remnants of destroyed documents. Further research in this area could  have a significant impact on a number of related problems in the fields of forensics and investigative science. One of the most notable projects that could benefit from advancements in unshredding technology is the  current effort to recover the shredded archives of the East German secret police. The STASI\footnote{The Ministry for State Security - The official state security service of East Germany} destroyed most of its archives before the 1990 reunification with West Germany. These archives consist of 16,000 bags of shredded documents and, so far, it has taken three dozen people six years to reconstruct 300 of them \cite{P16}. At that rate, it would take 11,520 person-years to finish the task (see Figure \ref{fig:stasi}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth, height=6.5cm]{stasi}
+    \caption{A fraction of the 16,000 bags containing the shredded STASI archives.}
+    \label{fig:stasi}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{darpa1}
+        \caption{One of the easiest documents in the DARPA Challenge. It is perfectly reconstructed.}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{darpa4}
+        \caption{One of the hardest documents in the DARPA Challenge. Even though the reconstruction is far from complete, the competitors were able to extract the information they needed from this partial solution.}
+    \end{subfigure}
+     \caption{Two of the DARPA Challenge documents \cite{P15}}
+    \label{fig:darpa}
+\end{figure}
+
+Outside of forensics, the techniques developed to aid the reconstruction of shredded paper could also be of use to archaeologists. Several approaches to reconstructing ancient artefacts (eg: \cite{P28,P29}) face problems regarding image feature analysis and curve matching methods which are very similar to the problems tackled in shredded document reconstruction.
+
+\section{Paper Shredders}
+Paper shredders come in many different shapes, sizes and price ranges. It is therefore worthwhile to take a closer look at the types of shredders in use and at the security they offer. \\
+There are 3 main categories of shredders:
+\begin{itemize}
+\item {\bf Strip-cut:} The cheapest and least secure variant. The paper is cut in long vertical strips. The width of the strips varies with the model.
+\item {\bf Cross-cut:} The type of shredder typically used when extra security is deemed necessary. The paper is cut both vertically and horizontally into small rectangles. The size of the rectangles again varies with the model.
+\item {\bf Other:} There are several types of industrial or specialist shredders that fall outside of the above categories. These include things such as \emph{Grinders} which consist of a rotating shaft with blades that grinds the paper until it is small enough to fall through a mesh. These types of shredders are rarely used outside of industrial settings, so we shall not consider them further.
+\end{itemize}
+
+The strip and cross-cut shredders can be further classified according to the DIN\footnote{Deutsche Industrial Norm} 32757 standard which is used throughout Europe \cite{P17}. This standard defines 6 common categories of strip or cross-cut shredders based on the level of security they offer, as shown in Table \ref{tab:din}.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lllll}
+    \toprule
+    \multirow{2}{*}{Security Level} & \multicolumn{2}{l}{Strip-Cut} & \multicolumn{2}{l}{Cross-Cut} \\
+    \cmidrule(r){2-3} 
+    \cmidrule(r){4-5}
+    & Shred size & No. shreds/page & Shred size & No. shreds/page \\
+    \midrule
+    Level 1 & 12 mm. & 18 & 11x40 mm. & 152 \\
+    Level 2 & 6 mm. & 35 & 8x40 mm. & 216 \\
+    Level 3 & 2 mm. & 105 & 4x30 mm. & 530 \\
+    Level 4 & N.A. & N.A. & 2x15 mm. & 2100 \\
+    Level 5 & N.A. & N.A. & 0.8x12 mm. & 6575 \\
+    Level 6 & N.A. & N.A. & 0.8x4 mm. & 19725 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Levels of security defined by the DIN 32757 standard}
+  \label{tab:din}
+\end{table}
+
+\clearpage
+In order to get a better intuitive sense of these, Figure \ref{fig:dinOut} shows sample shreds outputted by machines at each level.
+
+\begin{figure}[h]
+        \centering
+        \begin{subfigure}[b]{0.15\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{securitylevel1}
+                \caption{Level 1}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.15\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{securitylevel2}
+                \caption{Level 2}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.15\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{securitylevel3}
+                \caption{Level 3}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.15\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{securitylevel4}
+                \caption{Level 4}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.15\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{securitylevel5}
+                \caption{Level 5}
+        \end{subfigure}
+        ~ 
+        \begin{subfigure}[b]{0.15\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{securitylevel6}
+                \caption{Level 6}
+        \end{subfigure}
+        \caption{The output generated by shredders at the different DIN levels \cite{P17}. }
+        \label{fig:dinOut}
+\end{figure}
+
+As can be seen, the amount of security offered varies drastically. At level 1 the paper could feasibly be reassembled by hand, while at level 6, the noise introduced by the cutting and scanning of the pieces would likely make a full reconstruction impossible.
+
+\section{Roadmap}
+
+In Chapter \ref{chap2} we formally define the problem being analysed, specify any simplifying assumptions that were made and look at the problem's complexity. In Chapter \ref{chap3} we look at previously published related work. In Chapter \ref{chap4} a novel probabilistic score function is proposed and shown to perform well in comparison with the standard cost functions used in literature. In Chapter \ref{chap5} several tractable search heuristics are analysed and a new heuristic is proposed. Chapter \ref{chap6} looks at the pre-processing function and introduces a simple and computationally efficient orientation detection method. Finally, Chapter \ref{chap7} analyses the results of the whole system and discuses possible future work.

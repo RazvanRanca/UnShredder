@@ -20,13 +20,15 @@ def picker(s, page, ignoreWhites = False):
     return kruskal(page, ignoreWhites)
   elif s == "kruskalMulti":
     return kruskalMultiset(page, ignoreWhites)
+  elif s == "recShreds":
+    return recShreds(page, ignoreWhites)
   else:
     raise Exception("Unknown search method: " + s)
 
 # TODO verify this.
 def greedy1D(page): # takes best edges and adjoins them(starting with blankTopLeft), goes to next row on blank right side
   heap = page.heapX
-  sortedQueue =  sorted(filter(lambda (score,(x,y)): x != y, heap))
+  sortedQueue =  sorted(filter(lambda (score,(x,y)): x != y, heap), reverse=True)
   #print sortedQueue
   blankRight = page.blankRight # + page.blankPos
 
@@ -82,7 +84,7 @@ def greedy1D(page): # takes best edges and adjoins them(starting with blankTopLe
 
   #print edges
   heap, _ = page.extractHeap(edges)
-  sortedQueue = filter(lambda (score,(x,y)): x not in heads and y not in tails, sorted(heap))
+  sortedQueue = filter(lambda (score,(x,y)): x not in heads and y not in tails, sorted(heap, reverse=True))
   #print heads, tails
   #print sortedQueue
   while len(sortedQueue) > 0:
@@ -120,6 +122,7 @@ def greedy1D(page): # takes best edges and adjoins them(starting with blankTopLe
     else:
       rez[row].append(edge)
 
+  #print rez
   return rez
 
 def prim(page): # adds best edge to graph already constructed, analog of Prim's agorithm.
@@ -148,7 +151,7 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
     maxY = max([x[0] for x in hY]) if hY != [] else None
 
     bestX = random.choice(filter(lambda x: x[0] == maxX, hX)) if hX != [] else None
-    bestY = [-100000] # random.choice(filter(lambda y: y[0] == maxY, hY)) if hY != [] else None
+    bestY = random.choice(filter(lambda y: y[0] == maxY, hY)) if hY != [] else None
 
 
     #print "=============", bestX, bestY
@@ -248,7 +251,7 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
     #print "X2",nodeX2,'\n'
     #print "Y1",nodeY1,'\n'
     #print "Y2",nodeY2,'\n'
-    
+
     for n in states:
 
       #if lognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])) != flognormalize(dict([(x[0],x[1][0]) for x in nodeX1[n].items()])):
@@ -266,7 +269,7 @@ def prim(page): # adds best edge to graph already constructed, analog of Prim's 
       nodeX2[n] = dict([(k,(cX2[k],nodeX2[n][k][1])) for k in nodeX2[n]])
       nodeY1[n] = dict([(k,(cY1[k],nodeY1[n][k][1])) for k in nodeY1[n]])
       nodeY2[n] = dict([(k,(cY2[k],nodeY2[n][k][1])) for k in nodeY2[n]])
-    
+
 
     for v1 in nodeX1:
       for v2 in nodeX1[v1]:
@@ -468,7 +471,7 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
         #print cur[1], posX, posY
 
     if (frozenset(revGrid.items())) in pastStates:
-      #print countCycle, "============ CYCLE DETECTED =============="
+      print countCycle, "============ CYCLE DETECTED =============="
       bestVal = max([x[0] for x in pastStates.values()])
       bestState = random.choice(filter(lambda x: pastStates[x][0] == bestVal, pastStates.keys()))
       revGrid = dict(bestState)
@@ -484,8 +487,8 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
 
 
     if len(states) <= len(found) + 1:
-      if countWhite == False:
-        print "---", page.calcCorrectEdges(positions)
+      #if countWhite == False:
+      #  print "---", page.calcCorrectEdges(positions)
       countWhite = True
       #print "=========== Post-Processing ============="
 
@@ -532,8 +535,8 @@ def prim1(page): # adds best edge to graph already constructed, analog of Prim's
       for n in states:
         if n != f and (f,n) not in illegal:
 
-          if n in found and not countWhite:
-            continue
+          #if n in found and not countWhite:
+          #  continue
 
           mult = 0
           if n == page.blankPos:
@@ -768,7 +771,7 @@ def kruskal(page, ignoreWhites = False, multPos = False): # constructs and merge
   numForests = 0
   firstOne = True
   certainty = 1
-  minCertainty = 0.9
+  minCertainty = 0.995
 
   while len(hX) > 0 or len(hY) > 0:
     if not firstOne:
@@ -1037,6 +1040,311 @@ def kruskal(page, ignoreWhites = False, multPos = False): # constructs and merge
         hY.append((nodeY[v1][v2][0], (v1,v2)))
         #hY.append((nodeY[v1][v2][0]/nodeY[v1][v2][1], (v1,v2)))
 
+    if not firstOne:
+      #page.vizPos({1:{(0,0):(0,1),(0,1):(0,1)}}, fl="quuu.jpg", multiple = True)
+      page.vizPos(positions, fl="kruskal.jpg", multiple = True)
+      #print page.calcGroups(positions)
+      raw_input("Press any key to continue...")
+
+    firstOne = False
+
+  #print f, positions
+  
+  if len(positions) == 1 and not multPos:
+    f = nodeForest[(0,0)]
+    assert len(set(positions[f].values())) == len(positions[f].values())
+    positions = positions[f]
+  
+  #page.vizPos(positions, fl="kruskal" + str(page.sizeX), multiple = True)
+  #print positions
+  #print accumEdges
+  return positions, accumEdges
+
+def recShreds(page, ignoreWhites = False, multPos = False): # constructs and merges forests of best nodes, analog of Kruskal's algorithm.
+  hX = page.heapX
+  hY = page.heapY
+  states = page.states.keys()
+  found = set()
+  nodeForest = {}
+  posX = 0
+  posY = 0
+  cur = 0
+  positions = {}
+  grid = {}
+  revGrid = {}
+  accumEdges = []
+  numForests = 0
+  firstOne = True
+  certainty = 1
+  minCertainty = 0
+
+  while len(hX) > 0 or len(hY) > 0:
+    if not firstOne:
+      forest = None
+      tp = None
+      #print "---X---", [(math.exp(x[0]),x[1]) for x in sorted(hX, key=lambda x : x[1], reverse = True)]
+      #print "---Y---", [(math.exp(x[0]),x[1]) for x in sorted(hY, key=lambda x : x[1], reverse = True)]
+
+      hX = [(score,(f,s)) for (score,(f,s)) in hX if f != page.blankPos and s != page.blankPos]
+      hY = [(score,(f,s)) for (score,(f,s)) in hY if f != page.blankPos and s != page.blankPos]
+      if len(hX) == 0 and len(hY) == 0:
+        break
+
+      bestX = max(hX) if hX != [] else None
+      bestY = max(hY) if hY != [] else None
+
+      #print "+++++++++++++", bestX, bestY
+      if bestY == None or (bestX != None and bestX[0] > bestY[0]):
+        certainty *= math.exp(bestX[0])
+        cur = bestX[1]
+        accumEdges.append(("x",cur))
+        tp = "x"
+        #hY.append(bestY)
+      else:
+        certainty *= math.exp(bestY[0])
+        cur = bestY[1]
+        accumEdges.append(("y",cur))
+        tp = "y"
+        #hX.append(bestX)
+
+      #print certainty, " ",
+      if certainty < minCertainty:
+        print "Certainty too low, stopping"
+        break
+        
+      if cur[0] in found and cur[1] in found: # merge forests
+        forest = nodeForest[cur[0]]
+        posY, posX = positions[forest][cur[0]]
+        if tp == "x":
+          posX += 1
+        elif tp == "y":
+          posY += 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        oldForest = nodeForest[cur[1]]
+        oldY, oldX = positions[oldForest][cur[1]]
+        dY = oldY - posY
+        dX = oldX - posX
+        #print cur[0], cur[1], forest, oldForest, revGrid, revGrid[oldForest].items()
+        for ((pY, pX),node) in revGrid[oldForest].items():
+          nodeForest[node] = forest
+          grid[forest].add((pY-dY, pX-dX))
+          revGrid[forest][(pY-dY, pX-dX)] = node
+          positions[forest][node] = (pY-dY, pX-dX)
+
+        del grid[oldForest]
+        del revGrid[oldForest]
+        del positions[oldForest]
+        
+      elif cur[0] in found: # add to forest
+        forest = nodeForest[cur[0]]
+        posY, posX = positions[forest][cur[0]]
+
+        if tp == "x":
+          posX += 1
+        elif tp == "y":
+          posY += 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        positions[forest][cur[1]] = (posY, posX)
+        found.add(cur[1])
+        grid[forest].add((posY, posX))
+        revGrid[forest][(posY, posX)] = cur[1]
+        nodeForest[cur[1]] = forest
+
+      elif cur[1] in found: # add to forest
+        forest = nodeForest[cur[1]]
+        posY, posX = positions[forest][cur[1]]
+        if tp == "x":
+          posX -= 1
+        elif tp == "y":
+          posY -= 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        positions[forest][cur[0]] = (posY, posX)
+        found.add(cur[0])
+        grid[forest].add((posY, posX))
+        revGrid[forest][(posY, posX)] = cur[0]
+        nodeForest[cur[0]] = forest
+
+      else: # make new forest
+        posX = 0
+        posY = 0
+        posNX = 0
+        posNY = 0
+        if tp == "x":
+          posNX = 1
+        elif tp == "y":
+          posNY = 1
+        else:
+          raise Exception ("Unrecognized edge type: " + str(tp))
+
+        numForests += 1
+        forest = numForests
+        grid[forest] = set([(posY, posX),(posNY, posNX)])
+        nodeForest[cur[0]] = forest
+        nodeForest[cur[1]] = forest
+        found.add(cur[0])
+        found.add(cur[1])
+        revGrid[forest] = {(posY, posX):cur[0], (posNY, posNX):cur[1]}
+        positions[forest] = {cur[0]:(posY, posX), cur[1]:(posNY, posNX)}
+
+    hX = []
+    hY = []
+    #print accumEdges
+    #print found
+    #print positions
+    #print grid
+    nodeX = {}
+    nodeY = {}
+
+    for n in states:
+      nodeX[n] = {}
+      nodeY[n] = {}
+
+    #print "founD", found
+    for i1 in range(len(states)):
+      n1 = states[i1]
+      if not ignoreWhites or n1 not in page.whites:
+        for i2 in range(len(states)):
+          n2 = states[i2]
+          if i1 != i2 and (not ignoreWhites or n2 not in page.whites):
+            if n1 in found and n2 in found and nodeForest[n1] != nodeForest[n2]: # possible merge
+              f1 = nodeForest[n1]
+              f2 = nodeForest[n2]
+              p1Y, p1X = positions[f1][n1]
+              p2Y, p2X = positions[f2][n2]
+
+              np2Y, np2X = p1Y, p1X + 1
+              dY, dX = p2Y - np2Y, p2X - np2X
+
+              overlap = False
+              infinite = True
+              totalScore = 0
+              totalCount = 0
+              totalInfCount = 0
+              for ((pY, pX),node) in revGrid[f2].items():
+                ny, nx = pY-dY, pX-dX
+                if (ny,nx) in grid[f1]:
+                  overlap = True
+                  break
+                
+                (score, count) = (page.costX[n1, n2],1)
+                if score != cost.inf:
+                  infinite = False
+                  totalScore += score
+                  totalCount += count
+
+              totalCount = 1
+              if not overlap:
+                if infinite:
+                  nodeX[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeX[n1][n2] = (totalScore,totalCount)
+
+              np2Y, np2X = p1Y + 1, p1X
+              dY, dX = p2Y - np2Y, p2X - np2X
+
+              overlap = False
+              infinite = True
+              totalScore = 0
+              totalCount = 0
+              totalInfCount = 0
+              for ((pY, pX),node) in revGrid[f2].items():
+                ny, nx = pY-dY, pX-dX
+                if (ny,nx) in grid[f1]:
+                  overlap = True
+                  break
+                
+                (score, count) = (page.costY[n1, n2],1)
+                if score != cost.inf:
+                  infinite = False
+                  totalScore += score
+                  totalCount += count
+ 
+              totalCount = 1
+              if not overlap:
+                if infinite:
+                  nodeY[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeY[n1][n2] = (totalScore,totalCount)
+
+            if n1 in found and n2 not in found:
+              forest = nodeForest[n1]
+              py,px = positions[forest][n1]
+              if (py, px+1) not in grid[forest]:
+                ay, ax = py, px+1
+                
+                (score, count) = (page.costX[n1, n2],1)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeX[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeX[n1][n2] = (score,count)
+
+              if (py, px-1) not in grid[forest]:
+                ay, ax = py, px-1
+                (score, count) = (page.costX[n2, n1],1)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeX[n2][n1] = (cost.inf, 1)
+                else:
+                  nodeX[n2][n1] = (score,count)
+
+              if (py+1, px) not in grid[forest]:
+                ay, ax = py+1, px
+                (score, count) = (page.costY[n1, n2],1)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeY[n1][n2] = (cost.inf, 1)
+                else:
+                  nodeY[n1][n2] = (score,count)
+
+              if (py-1, px) not in grid[forest]:
+                ay, ax = py-1, px
+                (score, count) = (page.costY[n2, n1],1)
+                if count == 0:
+                  assert score == cost.inf
+                  nodeY[n2][n1] = (cost.inf, 1)
+                else:
+                  nodeY[n2][n1] = (score,count)
+
+            if n1 not in found and n2 not in found: # 2 outside edges
+              nodeX[n1][n2] = (page.costX[(n1,n2)], 1)
+              nodeY[n1][n2] = (page.costY[(n1,n2)], 1)
+
+    #print "X",sorted(nodeX.items()),'\n'
+    #print "Y",sorted(nodeY.items()),'\n'
+    
+    for n in states:
+
+      #if lognormalize(nodeX1[n]) != fastLognormalize(nodeX1[n]):
+      #  print "n", lognormalize(nodeX1[n]) 
+      #  print "f", fastLognormalize(nodeX1[n])
+
+      cX = flognormalize(dict([(x[0],x[1][0]) for x in nodeX[n].items()]))
+      cY = flognormalize(dict([(x[0],x[1][0]) for x in nodeY[n].items()]))
+
+      if not verifyNorm(cX, cY):
+        print "goddammit"
+
+      nodeX[n] = dict([(k,(cX[k],nodeX[n][k][1])) for k in nodeX[n]])
+      nodeY[n] = dict([(k,(cY[k],nodeY[n][k][1])) for k in nodeY[n]])
+    
+    
+    for v1 in nodeX:
+      for v2 in nodeX[v1]:
+        hX.append((nodeX[v1][v2][0], (v1,v2)))
+        #hX.append((nodeX[v1][v2][0]/nodeX[v1][v2][1], (v1,v2)))
+
+    for v1 in nodeY:
+      for v2 in nodeY[v1]:
+        hY.append((nodeY[v1][v2][0], (v1,v2)))
+        #hY.append((nodeY[v1][v2][0]/nodeY[v1][v2][1], (v1,v2)))
+
     #if not firstOne:
       #page.vizPos({1:{(0,0):(0,1),(0,1):(0,1)}}, fl="quuu.jpg", multiple = True)
       #page.vizPos(positions, fl="kruskal.jpg", multiple = True)
@@ -1047,7 +1355,7 @@ def kruskal(page, ignoreWhites = False, multPos = False): # constructs and merge
 
   #print f, positions
   
-  if len(positions) == 1 and multPos:
+  if len(positions) == 1 and not multPos:
     f = nodeForest[(0,0)]
     assert len(set(positions[f].values())) == len(positions[f].values())
     positions = positions[f]

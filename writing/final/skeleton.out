@@ -2,29 +2,50 @@
 \BOOKMARK [1][-]{section.1.1}{Importance}{chapter.1}
 \BOOKMARK [1][-]{section.1.2}{Paper Shredders}{chapter.1}
 \BOOKMARK [1][-]{section.1.3}{Roadmap}{chapter.1}
-\BOOKMARK [0][-]{chapter.2}{Literature Review}{}
-\BOOKMARK [0][-]{chapter.3}{Probabilistic Score}{}
-\BOOKMARK [1][-]{section.3.1}{Motivation}{chapter.3}
-\BOOKMARK [1][-]{section.3.2}{Description}{chapter.3}
-\BOOKMARK [2][-]{subsection.3.2.1}{Edge likelihood}{section.3.2}
-\BOOKMARK [2][-]{subsection.3.2.2}{Normalization}{section.3.2}
-\BOOKMARK [2][-]{subsection.3.2.3}{Learning}{section.3.2}
-\BOOKMARK [1][-]{section.3.3}{Evaluation}{chapter.3}
-\BOOKMARK [2][-]{subsection.3.3.1}{Comparison with Gaussian cost functions}{section.3.3}
-\BOOKMARK [2][-]{subsection.3.3.2}{Validity of predicted probabilities}{section.3.3}
-\BOOKMARK [2][-]{subsection.3.3.3}{Robustness}{section.3.3}
-\BOOKMARK [1][-]{section.3.4}{Drawbacks}{chapter.3}
-\BOOKMARK [2][-]{subsection.3.4.1}{Uniformity assumption}{section.3.4}
-\BOOKMARK [2][-]{subsection.3.4.2}{Lack of symmetry}{section.3.4}
-\BOOKMARK [2][-]{subsection.3.4.3}{Ignoring non-edge information}{section.3.4}
-\BOOKMARK [0][-]{chapter.4}{Heuristic Search}{}
+\BOOKMARK [0][-]{chapter.2}{Problem Definition}{}
+\BOOKMARK [1][-]{section.2.1}{Domain}{chapter.2}
+\BOOKMARK [1][-]{section.2.2}{Assumptions}{chapter.2}
+\BOOKMARK [1][-]{section.2.3}{Formal definition of score and search functions}{chapter.2}
+\BOOKMARK [1][-]{section.2.4}{Complexity}{chapter.2}
+\BOOKMARK [1][-]{section.2.5}{Modularity}{chapter.2}
+\BOOKMARK [0][-]{chapter.3}{Literature Review}{}
+\BOOKMARK [1][-]{section.3.1}{Related Problems}{chapter.3}
+\BOOKMARK [1][-]{section.3.2}{Edge comparison functions}{chapter.3}
+\BOOKMARK [1][-]{section.3.3}{Search functions}{chapter.3}
+\BOOKMARK [1][-]{section.3.4}{Pre-processing the shreds}{chapter.3}
+\BOOKMARK [0][-]{chapter.4}{Probabilistic Score}{}
 \BOOKMARK [1][-]{section.4.1}{Motivation}{chapter.4}
 \BOOKMARK [1][-]{section.4.2}{Description}{chapter.4}
-\BOOKMARK [2][-]{subsection.4.2.1}{Analysis of "ReconstructShreds"}{section.4.2}
-\BOOKMARK [2][-]{subsection.4.2.2}{Kruskal based heuristic}{section.4.2}
-\BOOKMARK [2][-]{subsection.4.2.3}{Evaluating the heuristics}{section.4.2}
-\BOOKMARK [1][-]{section.4.3}{Cascading}{chapter.4}
-\BOOKMARK [2][-]{subsection.4.3.1}{Making all shreds movable}{section.4.3}
-\BOOKMARK [2][-]{subsection.4.3.2}{Adding a post-processing step}{section.4.3}
-\BOOKMARK [2][-]{subsection.4.3.3}{Evaluating the error-correcting methods}{section.4.3}
-\BOOKMARK [0][-]{chapter*.34}{Bibliography}{}
+\BOOKMARK [2][-]{subsection.4.2.1}{Edge likelihood}{section.4.2}
+\BOOKMARK [2][-]{subsection.4.2.2}{Normalization}{section.4.2}
+\BOOKMARK [2][-]{subsection.4.2.3}{Learning}{section.4.2}
+\BOOKMARK [1][-]{section.4.3}{Evaluation}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.3.1}{Comparison with Gaussian cost functions}{section.4.3}
+\BOOKMARK [2][-]{subsection.4.3.2}{Validity of predicted probabilities}{section.4.3}
+\BOOKMARK [2][-]{subsection.4.3.3}{Robustness}{section.4.3}
+\BOOKMARK [1][-]{section.4.4}{Drawbacks}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.4.1}{Uniformity assumption}{section.4.4}
+\BOOKMARK [2][-]{subsection.4.4.2}{Lack of symmetry}{section.4.4}
+\BOOKMARK [2][-]{subsection.4.4.3}{Ignoring non-edge information}{section.4.4}
+\BOOKMARK [1][-]{section.4.5}{Modularity}{chapter.4}
+\BOOKMARK [0][-]{chapter.5}{Heuristic Search}{}
+\BOOKMARK [1][-]{section.5.1}{Motivation}{chapter.5}
+\BOOKMARK [1][-]{section.5.2}{Description}{chapter.5}
+\BOOKMARK [2][-]{subsection.5.2.1}{Analysis of ReconstructShreds}{section.5.2}
+\BOOKMARK [2][-]{subsection.5.2.2}{Kruskal based heuristic}{section.5.2}
+\BOOKMARK [2][-]{subsection.5.2.3}{Evaluating the heuristics}{section.5.2}
+\BOOKMARK [1][-]{section.5.3}{Cascading}{chapter.5}
+\BOOKMARK [2][-]{subsection.5.3.1}{Making all shreds movable}{section.5.3}
+\BOOKMARK [2][-]{subsection.5.3.2}{Adding a post-processing step}{section.5.3}
+\BOOKMARK [2][-]{subsection.5.3.3}{Evaluating the error-correcting methods}{section.5.3}
+\BOOKMARK [1][-]{section.5.4}{Modularity}{chapter.5}
+\BOOKMARK [0][-]{chapter.6}{Pre-Processing}{}
+\BOOKMARK [1][-]{section.6.1}{Motivation}{chapter.6}
+\BOOKMARK [1][-]{section.6.2}{Segmentation and Skew}{chapter.6}
+\BOOKMARK [1][-]{section.6.3}{Up/down orientation detection}{chapter.6}
+\BOOKMARK [1][-]{section.6.4}{Limitations}{chapter.6}
+\BOOKMARK [0][-]{chapter.7}{Conclusions}{}
+\BOOKMARK [1][-]{section.7.1}{Overview}{chapter.7}
+\BOOKMARK [1][-]{section.7.2}{Results}{chapter.7}
+\BOOKMARK [1][-]{section.7.3}{Future Work}{chapter.7}
+\BOOKMARK [0][-]{chapter*.50}{Bibliography}{}

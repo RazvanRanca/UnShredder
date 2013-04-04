@@ -4,6 +4,7 @@ from pybrain.supervised.trainers import BackpropTrainer
 import pages
 import pickle
 import random
+from PIL import Image
 
 def getDataY(a, b, (wa,ha), (wb,hb), rez, rezData):
 
@@ -34,8 +35,8 @@ def getDataX(ra, rb, (wa,ha), (wb,hb), rez, rezData):
 if __name__ == "__main__":
   sx = 10
   sy = 10
-
-  page1 = pages.ImagePage(sx, sy, "SampleDocs/p01.png")
+  im = Image.open("SampleDocs/p01.png").convert("1")
+  page1 = pages.ImagePage(sx, sy, im)
   #page2 = pages.ImagePage(sx, sy, "SampleDocs/text2.jpg")
 
   dX = {}

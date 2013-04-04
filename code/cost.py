@@ -1,33 +1,15 @@
 import random
 import numpy as np
 import pickle
-#from pybrain.tools.shortcuts import buildNetwork
-#from pybrain.datasets import SupervisedDataSet
-#from pybrain.supervised.trainers import BackpropTrainer
+from pybrain.tools.shortcuts import buildNetwork
+from pybrain.datasets import SupervisedDataSet
+from pybrain.supervised.trainers import BackpropTrainer
 import math
 from itertools import groupby, combinations
 
 delta = 0.1
-inf = -1000000 # float("inf")
+inf = 1000000 # float("inf")
 nnD = 0.87
-
-if False:
-  with open("nnPickled10",'r') as f:
-    (netX,netY) = pickle.load(f)
-
-  dnx = {}
-  dny = {}
-
-  for i1 in [0,1]:
-    for i2 in [0,1]:
-      for i3 in [0,1]:
-        for i4 in [0,1]:
-          for i5 in [0,1]:
-            for i6 in [0,1]:
-              n = (i1,i2,i3,i4,i5,i6)
-              dnx[n] = netX.activate(n)
-              dny[n] = netY.activate(n)
-
 
 def picker(s, page, px = None, py = None, prior = None, dt = None):
   if s == "bit":
@@ -47,7 +29,20 @@ def picker(s, page, px = None, py = None, prior = None, dt = None):
   elif s == "blackRowGaus":
     return calcBlackRowGausCost(page)
   elif s == "nn":
-    return calcNNCost(page)
+    with open("nnPickled10",'r') as f:
+      (netX,netY) = pickle.load(f)
+      dnx = {}
+      dny = {}
+      for i1 in [0,1]:
+        for i2 in [0,1]:
+          for i3 in [0,1]:
+            for i4 in [0,1]:
+              for i5 in [0,1]:
+                for i6 in [0,1]:
+                  n = (i1,i2,i3,i4,i5,i6)
+                  dnx[n] = netX.activate(n)
+                  dny[n] = netY.activate(n)
+    return calcNNCost(page, dnx, dny)
   elif s == "percent":
     return calcPercentCost(page, px, py)
   elif s == "prediction":
@@ -638,7 +633,7 @@ def imgPerCostX(ra, rb, (wa,ha),(wb,hb), per, selective = True, blank = None):
   rez = math.fsum(rez)
   return rez
 
-def calcNNCost(page):
+def calcNNCost(page, dnx, dny):
   #for n in [(1, 1,1, 1,1, 1),(0, 0,0, 0,0, 0),(1,0, 1,0, 0,1),(0, 0,0, 0,1,0)]:
   #  print "Y", n, netY.activate(n)
   #  print "X", n, netX.activate(n)

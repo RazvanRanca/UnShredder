@@ -9,18 +9,30 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{amsmath}
 \graphicspath{ {/afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/} }
 \setlength{\marginparwidth}{2cm}
 
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+    \ifcase #1 (Not cited.)%
+    \or        (Cited on page~#2.)%
+    \else      (Cited on pages~#2.)%
+    \fi}
+
 \begin{document}
 
-\title{Reconstructing shredded documents}
+\title{Reconstructing Shredded Documents}
 \author{Razvan Ranca}
 \course{Artificial Intelligence and Computer Science}
 \project{4th Year Project Report}
 \date{\today}
 
-\abstract{
+\abstract{This project looks at the challenges involved in the automatic reconstruction of strip (vertically cut) and cross (both vertically and horizontally cut) shredded documents. The unshredding problem is of interest in the fields of forensics, investigative sciences, and archaeology. \vspace{1em}
+
+All stages of the unshredding pipeline are analysed, starting from scanned images of shreds and ending with reconstructed documents. The current bottlenecks in this pipeline are identified and solutions are proposed. \vspace{1em}
+
+The original contributions of this project include a probabilistic scoring function which outperforms the standard cost functions used in literature, a refinement upon a previously proposed, graph-inspired, search heuristic and a tractable up/down orientation method for strip-cut shreds.
 }
 
 \maketitle
@@ -32,11 +44,15 @@
 
 %\pagenumbering{arabic}
 
-\include{chap1}
-\include{chap2}
-\include{chap3}
-\include{chap4}
+\include{intro}
+\include{probDef}
+\include{litRev}
+\include{score}
+\include{search}
+\include{preproc}
+\include{conc}
 
+\interlinepenalty=10000
 \bibliographystyle{plain}
 \bibliography{mybibfile}
 
