@@ -1,0 +1,45 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: unshredder.aux
+The style file: plain.bst
+Database file #1: unshredder.bib
+You've used 14 entries,
+            2118 wiz_defined-function locations,
+            594 strings with 6276 characters,
+and the built_in function-call counts, 4811 in all, are:
+= -- 500
+> -- 170
+< -- 7
++ -- 73
+- -- 54
+* -- 280
+:= -- 760
+add.period$ -- 47
+call.type$ -- 14
+change.case$ -- 69
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 209
+empty$ -- 412
+format.name$ -- 54
+if$ -- 1060
+int.to.chr$ -- 0
+int.to.str$ -- 14
+missing$ -- 11
+newline$ -- 73
+num.names$ -- 28
+pop$ -- 89
+preamble$ -- 1
+purify$ -- 55
+quote$ -- 0
+skip$ -- 152
+stack$ -- 0
+substring$ -- 313
+swap$ -- 64
+text.length$ -- 7
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 56
+warning$ -- 0
+while$ -- 52
+width$ -- 16
+write$ -- 157

@@ -1,0 +1,104 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Billings \bgroup et al\mbox.\egroup
+  }{2003}]{P11}
+Billings, D.; Burch, N.; Davidson, A.; Holte, R.; Schaeffer, J.; Schauenberg,
+  T.; and Szafron, D.
+\newblock 2003.
+\newblock Approximating game-theoretic optimal strategies for full-scale poker.
+\newblock In {\em International Joint Conference on Artificial Intelligence},
+  volume~18,  661--668.
+
+\bibitem[\protect\citeauthoryear{Billings \bgroup et al\mbox.\egroup
+  }{2006}]{P6}
+Billings, D.; Davidson, A.; Schauenberg, T.; Burch, N.; Bowling, M.; Holte, R.;
+  Schaeffer, J.; and Szafron, D.
+\newblock 2006.
+\newblock Game-tree search with adaptation in stochastic imperfect-information
+  games.
+\newblock In {\em Computers and Games}. Springer.
+\newblock  21--34.
+
+\bibitem[\protect\citeauthoryear{Dahl}{2001}]{P13}
+Dahl, F.
+\newblock 2001.
+\newblock A reinforcement learning algorithm applied to simplified two-player
+  texas hold’em poker.
+\newblock In {\em Machine Learning: ECML 2001}. Springer.
+\newblock  85--96.
+
+\bibitem[\protect\citeauthoryear{Davidson}{2002}]{P7}
+Davidson, A.
+\newblock 2002.
+\newblock Opponent modeling in poker: Learning and acting in a hostile and
+  uncertain environment.
+\newblock Master's thesis, University of Alberta, Canada.
+
+\bibitem[\protect\citeauthoryear{Johanson and Bowling}{2009}]{P5}
+Johanson, M., and Bowling, M.
+\newblock 2009.
+\newblock Data biased robust counter strategies.
+\newblock In {\em Proceedings of the Twelfth International Conference on
+  Artificial Intelligence and Statistics (AISTATS)},  264--271.
+
+\bibitem[\protect\citeauthoryear{Johanson, Zinkevich, and Bowling}{2007}]{P2}
+Johanson, M.; Zinkevich, M.; and Bowling, M.
+\newblock 2007.
+\newblock Computing robust counter-strategies.
+\newblock {\em Advances in neural information processing systems} 20:721--728.
+
+\bibitem[\protect\citeauthoryear{Johanson}{2007}]{P3}
+Johanson, M.
+\newblock 2007.
+\newblock Robust strategies and counter-strategies: Building a champion level
+  computer poker player.
+\newblock In {\em Masters Abstracts International}, volume~46.
+
+\bibitem[\protect\citeauthoryear{Koller and Pfeffer}{1997}]{P12}
+Koller, D., and Pfeffer, A.
+\newblock 1997.
+\newblock Representations and solutions for game-theoretic problems.
+\newblock {\em Artificial Intelligence} 94(1):167--215.
+
+\bibitem[\protect\citeauthoryear{Kullback and Leibler}{1951}]{P14}
+Kullback, S., and Leibler, R.
+\newblock 1951.
+\newblock On information and sufficiency.
+\newblock {\em The Annals of Mathematical Statistics} 22(1):79--86.
+
+\bibitem[\protect\citeauthoryear{Maîtrepierre, Mary, and Munos}{2008}]{P10}
+Maîtrepierre, R.; Mary, J.; and Munos, R.
+\newblock 2008.
+\newblock Adaptive play in texas hold’em poker.
+\newblock In {\em ECAI 2008: 18th European Conference on Artificial
+  Intelligence, July 21-25, 2008, Patras, Greece: Including Prestigious
+  Applications of Intelligent Systems (PAIS 2008): Proceedings}, volume 178,
+  458.
+\newblock IOS Press.
+
+\bibitem[\protect\citeauthoryear{McCurley}{2009}]{P9}
+McCurley, P.
+\newblock 2009.
+\newblock An artificial intelligence agent for texas hold’em poker.
+\newblock Undergraduate dissertation, University of Newcastle Upon Tyne, UK.
+
+\bibitem[\protect\citeauthoryear{Rubin and Watson}{2011}]{P1}
+Rubin, J., and Watson, I.
+\newblock 2011.
+\newblock Computer poker: A review.
+\newblock {\em Artificial Intelligence} 175(5):958--987.
+
+\bibitem[\protect\citeauthoryear{Schauenberg}{2006}]{P8}
+Schauenberg, T.
+\newblock 2006.
+\newblock Opponent modelling and search in poker.
+\newblock Master's thesis, University of Alberta, Canada.
+
+\bibitem[\protect\citeauthoryear{Shi and Littman}{2001}]{P4}
+Shi, J., and Littman, M.
+\newblock 2001.
+\newblock Abstraction methods for game theoretic poker.
+\newblock In {\em Computers and Games}. Springer.
+\newblock  333--345.
+
+\end{thebibliography}

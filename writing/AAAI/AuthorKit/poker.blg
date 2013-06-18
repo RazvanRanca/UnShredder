@@ -1,0 +1,47 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: poker.aux
+The style file: aaai.bst
+Database file #1: poker.bib
+Warning--can't use both volume and number fields in P3
+You've used 14 entries,
+            2568 wiz_defined-function locations,
+            673 strings with 6694 characters,
+and the built_in function-call counts, 6079 in all, are:
+= -- 670
+> -- 217
+< -- 9
++ -- 74
+- -- 72
+* -- 450
+:= -- 967
+add.period$ -- 77
+call.type$ -- 14
+change.case$ -- 92
+chr.to.int$ -- 14
+cite$ -- 15
+duplicate$ -- 251
+empty$ -- 439
+format.name$ -- 95
+if$ -- 1289
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 11
+newline$ -- 91
+num.names$ -- 42
+pop$ -- 83
+preamble$ -- 1
+purify$ -- 106
+quote$ -- 0
+skip$ -- 205
+stack$ -- 0
+substring$ -- 316
+swap$ -- 78
+text.length$ -- 9
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 112
+warning$ -- 1
+while$ -- 52
+width$ -- 19
+write$ -- 207
+(There was 1 warning)

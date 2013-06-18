@@ -820,6 +820,123 @@ def orient2(img, name = ""): # figure out if upside down or not
   else:
     return imgRotate(img, 180) #img.rotate(180, Image.BICUBIC)
 
+def simRBH(f, sx, sy, rand = False): # simulate prim with failure prob f
+  states = []
+  for r in range(sy):
+    for c in range(sx):
+      states.append((r,c))
+
+  edgesX = []
+  edgesY = []
+  grid = {}
+  rgrid = {}
+  avail = set()
+  nr = [0]
+  nc = [1]
+  #nr = [0,0,1,-1]
+  #nc = [1,-1,0,0]
+  whiteLeft = filter(lambda (x,y): y==0, states)
+  whiteRight = filter(lambda (x,y): y==sy-1, states)
+  start = random.choice(whiteLeft)
+  states.remove(start)
+  whiteLeft.remove(start)
+  grid[start] = (0,0)
+  #print "start", start, "on (0, 0)"
+  rgrid[(0,0)] = start
+  cr, cc = (0,0)
+  for i in range(len(nr)):
+    avail.add((cr + nr[i], cc + nc[i]))
+
+  while len(states) > 0:
+    nextState = None
+    if random.random() < f:
+      if rand:
+        next = random.choice(list(avail))
+        nextState = random.choice(states)
+      else:
+        random.shuffle(list(avail))
+        
+        for next in avail:
+          cr, cc = next
+
+          neigh = []
+          for i in range(len(nr)):
+            v = (cr + nr[i], cc + nc[i])
+            if v in rgrid:
+              neigh.append((rgrid[v][0] - nr[i], rgrid[v][1] - nc[i]))
+          
+          nstates = [x for x in states if x not in neigh]
+          if nstates == []:
+            continue
+          nextState = random.choice(nstates)
+          #print nextState, next, neigh
+          break
+
+    else:
+      #print "non-random"
+      #favail = [(r,c) for (r,c) in avail if r >= -start[0] and c >= -start[1] and r < sy-start[0] and c < sx-start[1]]
+      next = random.choice(list(avail))
+      cr, cc = next
+
+      rnr, rnc = (cr, cc -1)
+
+      ar, ac = (cr - rnr, cc - rnc)
+      csr, csc = rgrid[(rnr,rnc)]
+      corState = (csr + ar, csc + ac)
+      if corState in states:      
+        nextState = corState
+        #print "determ", nextState, "on", next
+      else:
+        nextState = random.choice(states)
+        #print "determ", corState, "not avail, so",nextState, "on", next
+
+    avail.remove(next)
+    if nextState == None:
+      nextState = random.choice(states)
+    states.remove(nextState)
+    grid[nextState] = next
+    rgrid[next] = nextState
+
+    for i in range(len(nr)):
+      v = (next[0] + nr[i], next[1] + nc[i])
+      if v not in rgrid:
+        avail.add(v)
+
+    if nextState in whiteLeft:
+      whiteLeft.remove(nextState)
+
+    if nextState in whiteRight:
+      whiteRight.remove(nextState)
+      if len(whiteLeft) > 0:
+        rowStart = random.choice(whiteLeft)
+        whiteLeft.remove(rowStart)
+        states.remove(rowStart)
+        grid[rowStart] = (next[0]+1, 0)
+        rgrid[(next[0]+1, 0)] = rowStart
+        avail = set([(next[0]+1, 1)])
+      elif len(states) > 0:
+        rowStart = random.choice(states)
+        states.remove(rowStart)
+        grid[rowStart] = (next[0]+1, 0)
+        rgrid[(next[0]+1, 0)] = rowStart
+        avail = set([(next[0]+1, 1)])
+
+  edgesX = []
+  edgesY = []
+  #print len(grid)
+  for (state,loc) in grid.items():
+    for i in range(len(nr)):
+      v = (loc[0] + nr[i], loc[1] + nc[i])
+      if v in rgrid:
+        fr = rgrid[min(v,loc)]
+        to = rgrid[max(v,loc)]
+        if nr[i] != 0 and (fr,to) not in edgesY:
+          edgesY.append((fr,to))
+        elif nc[i] != 0 and (fr,to) not in edgesX:
+          edgesX.append((fr,to))
+
+  return edgesX, edgesY
+
 def simPrim(f, sx, sy, rand = False): # simulate prim with failure prob f
   states = []
   for r in range(sy):
@@ -2135,8 +2252,8 @@ if __name__ == "__main__":
       sumYq = 0.0
       sumTq = 0.0
       for i in range(count):
-        #ex2, ey2 = simPrim(f,5,5)
-        ex3, ey3 = simPrim1(f,5,5)
+        ex2, ey2 = simRBH(f,5,5)
+        #ex3, ey3 = simPrim1(f,5,5)
         #print len(ex3), len(ey3)
         #ex4, ey4 = simPrim(f,32,32)
         #print ex1, ey1
@@ -2145,7 +2262,7 @@ if __name__ == "__main__":
         #sumXk += xk
         #sumYk += yk
         #sumTk += tk
-        xp,yp,tp = simError(ex12,ey12,ex3,ey3)
+        xp,yp,tp = simError(ex12,ey12,ex2,ey2)
         sumXp += xp
         sumYp += yp
         sumTp += tp
@@ -2823,6 +2940,7 @@ blankCount 60
 3333333334, 12.0, 13.0), (0.9166666666666666, 12.0, 11.0), (0.0, 1.0, 2.0), (1.0
 , 1.0, 2.0), (0.2, 5.0, 5.0), (0.0, 1.0, 2.0), (1.0, 1.0, 2.0), (0.5, 2.0, 3.0)]
 ) 0 1074.15839453"""
+    
     """
     se9995 = map(lambda x: x[1:].split('['), re.findall('g[0-9. ,\[\]\(\)]*\)\]\)',filter(lambda x: x != '\n', s9995)))
     red9995 = map(lambda x: filter(lambda y : len(y) > 0, re.findall('[0-9.]*',x[0]))[-1], se9995)
@@ -2846,26 +2964,27 @@ blankCount 60
     err95 = [sum([float(per95[i][j]) * float(size95[i][j]) for j in range(len(per95[i]))]) / float(totSize95[i]) for i in range(len(totSize95))]
     print totSize95
     xs = [i*i for i in range(2,16)]
-    plt.plot(xs,err9995, 'g-H')#, linewidth=4, markersize=12)
-    plt.plot(xs, err995, 'r-*')#, linewidth=4, markersize=12)
-    plt.plot(xs, err95, 'b-d')#, linewidth=4, markersize=12)
-    #plt.plot(xs,red9995, 'g-H')#, linewidth=4, markersize=12)
-    #plt.plot(xs, red995, 'r-*')#, linewidth=4, markersize=12)
-    #plt.plot(xs, red95, 'b-d')#, linewidth=4, markersize=12)
+    #plt.plot(xs,err9995, 'g-H', linewidth=3, markersize=12)
+    #plt.plot(xs, err995, 'r-*', linewidth=3, markersize=12)
+    #plt.plot(xs, err95, 'b-d', linewidth=3, markersize=12)
+    plt.plot(xs,red9995, 'g-H', linewidth=3, markersize=12)
+    plt.plot(xs, red995, 'r-*', linewidth=3, markersize=12)
+    plt.plot(xs, red95, 'b-d', linewidth=3, markersize=12)
     
-    plt.xlabel("Number of shreds")#, size=20)
-    #plt.ylabel("Search space reduction")#, size=20)
-    plt.ylabel("Proportion correct edges")#, size=20)
-    #plt.tick_params(axis='both', labelsize=18)
-    #plt.annotate("95%", (xs[12],red95[12]), xytext = (20, 20),  textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    #plt.annotate("99.5%", (xs[11],red995[11]), xytext = (30, 20),  textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    #plt.annotate("99.95%", (xs[8],red9995[8]), xytext = (30, 20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("95%", (xs[11],err95[11]), xytext = (20, -20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("99.5%", (xs[13],err995[13]), xytext = (30, -20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("99.95%", (xs[10],err9995[10]), xytext = (35, -25), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.xlabel("Number of shreds", size=30)
+    plt.ylabel("Search space reduction", size=30)
+    #plt.ylabel("Proportion correct edges")#, size=20)
+    plt.tick_params(axis='both', labelsize=30)
+    plt.annotate("95%", (xs[9],red95[9]), fontsize=25, xytext = (20, -40),  textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("99.5%", (xs[11],red995[11]), fontsize=25, xytext = (60, 30),  textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("99.95%", (xs[8],red9995[8]), fontsize=25, xytext = (30, 20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    #plt.annotate("95%", (xs[11],err95[11]), xytext = (20, -20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("99.5%", (xs[13],err995[13]), xytext = (30, -20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.annotate("99.95%", (xs[10],err9995[10]), xytext = (35, -25), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
 
     a = plt.gca()
     a.set_ylim([0,1.0])
+    plt.subplots_adjust(left=0.19, right=0.94, top=0.94, bottom=0.15)
     plt.show()
     """
     """
@@ -2899,31 +3018,32 @@ blankCount 60
     c7N01 = []
     c7S1 = []
     c7D15 = []
+    minInd = 0
 
     diffN01 = [y/x for (x,y) in zip(g,gN01)]
     diffS1 = [y/x for (x,y) in zip(g,gS1)]
     diffD15 = [y/x for (x,y) in zip(g,gD15)]
-    xs = [i*i for i in range(2,21)]
 
-    minInd = 4
+    xs = [i*i for i in range(2,21)][minInd:]
+
     #plt.plot(xs[minInd:],diffN01[minInd:], 'g-H', xs[minInd:], diffD15[minInd:], 'r-*', xs[minInd:], diffS1[minInd:], 'b-d')
 
     #plt.plot(xs,ceP01, 'g-H', xs, ceP01D15, 'r-*', xs, ceP01N01, 'b-d', xs, ceP01S1, 'm->')
     
-    p1 = [ceP01, ceP01D15, ceP01S1, ceP01N01]
-    p2 = [bg, bgD15, bgS1, bgN01]
-    p1Text = [(70, 15),(70, 15),(70, 15),(50, -35)]
-    p2Text = [(50, -30),(50, -30),(50, -30),(60, 25)]
-    p1Ind = [11,12,11,11]
-    p2Ind = [8,11,8,10]
+    p1 = [ceP01[minInd:], ceP01D15[minInd:], ceP01S1[minInd:], ceP01N01[minInd:]]
+    p2 = [bg[minInd:], bgD15[minInd:], bgS1[minInd:], bgN01[minInd:]]
+    p1Text = [(70, 15),(120, 25),(120, 35),(70, -55)]
+    p2Text = [(40, -30),(120, -50),(90, -60),(80, 45)]
+    p1Ind = [11,4,6,3]
+    p2Ind = [8,3,4,10]
     ind = 0
     
-    plt.plot(xs,p1[ind], 'g-H')#, linewidth=3, markersize=10)
-    plt.plot(xs, p2[ind], 'r-*')#, linewidth=3, markersize=10)
+    plt.plot(xs,p1[ind], 'g-^')#, linewidth=3, markersize=15)
+    plt.plot(xs, p2[ind], 'r-*')#, linewidth=3, markersize=20)
 
-    plt.annotate("ProbScore", (xs[p1Ind[ind]],p1[ind][p1Ind[ind]]), p1Text[ind], fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("GaussCost", (xs[p2Ind[ind]],p2[ind][p2Ind[ind]]), p2Text[ind], fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-
+    plt.annotate("ProbScore", (xs[p1Ind[ind]],p1[ind][p1Ind[ind]]), p1Text[ind], fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=1))
+    plt.annotate("GaussCost", (xs[p2Ind[ind]],p2[ind][p2Ind[ind]]), p2Text[ind], fontsize=20, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=1))
+    
     #plt.annotate("Original Image", (xs[10],ceP01[10]), xytext = (50, 15), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     #plt.annotate("Downsampled", (xs[12],ceP01D15[12]), xytext = (60, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
     #plt.annotate("Flipped pixels", (xs[8],ceP01N01[8]), xytext = (40, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
@@ -2936,9 +3056,13 @@ blankCount 60
     
     plt.xlabel("Number of shreds", size=20)
     plt.ylabel("Proportion correct edges", size=20)
-    plt.tick_params(axis='both', labelsize=18)
+    #plt.xticks([100,200,300,400])
+    #plt.yticks([0.1,0.2,0.3,0.4,0.5])
+    plt.tick_params(axis='both', labelsize=20)
     a = plt.gca()
-    a.set_ylim([0,1.0])
+    a.set_ylim([0,1])
+    #a.set_xlim([100,400])
+    #plt.subplots_adjust(left=0.16, right=0.94, top=0.94, bottom=0.15)
     plt.show()
     """
     
@@ -2963,23 +3087,29 @@ blankCount 60
 
     p2_5 = [1.0, 0.98649999999999993, 0.98750000000000004, 0.96799999999999997, 0.95650000000000002, 0.97399999999999975, 0.93500000000000005, 0.94349999999999978, 0.9474999999999999, 0.92350000000000021, 0.86099999999999999, 0.90049999999999986, 0.87749999999999939, 0.84849999999999981, 0.83550000000000002, 0.79649999999999987, 0.78699999999999992, 0.80899999999999994, 0.76500000000000001, 0.76549999999999996, 0.75050000000000017, 0.77150000000000019, 0.65799999999999992, 0.71050000000000013, 0.67849999999999999, 0.66799999999999982, 0.67100000000000004, 0.60050000000000003, 0.59900000000000009, 0.57500000000000007, 0.49150000000000005, 0.53749999999999998, 0.50199999999999989, 0.5405000000000002, 0.46950000000000003, 0.4375, 0.55099999999999993, 0.39600000000000013, 0.36399999999999999, 0.34400000000000008, 0.40600000000000008, 0.38199999999999995, 0.39949999999999997, 0.35399999999999998, 0.33200000000000007, 0.28350000000000003, 0.26900000000000007, 0.30500000000000005, 0.28750000000000003, 0.25750000000000006, 0.25549999999999995, 0.20599999999999999, 0.20899999999999999, 0.20849999999999999, 0.20899999999999999, 0.20549999999999996, 0.16200000000000001, 0.16300000000000001, 0.16, 0.15600000000000006, 0.14850000000000002, 0.16049999999999998, 0.14050000000000007, 0.12400000000000003, 0.13500000000000001, 0.13700000000000001, 0.12, 0.106, 0.10099999999999998, 0.10850000000000001, 0.098999999999999991, 0.094500000000000028, 0.089999999999999997, 0.083000000000000004, 0.082500000000000004, 0.072000000000000008, 0.07599999999999997, 0.074499999999999969, 0.065499999999999975, 0.060999999999999978, 0.061499999999999985, 0.063499999999999987, 0.041500000000000002, 0.052999999999999999, 0.05050000000000001, 0.045999999999999985, 0.045999999999999999, 0.041499999999999995, 0.029999999999999999, 0.035499999999999997, 0.032500000000000001, 0.026999999999999993, 0.021500000000000005, 0.017500000000000005, 0.013000000000000005, 0.011000000000000003, 0.013000000000000005, 0.0080000000000000019, 0.0060000000000000001, 0.0015000000000000002, 0.0]
 
+    rbh = [0.5, 0.49049999999999999, 0.48099999999999993, 0.46100000000000008, 0.46500000000000002, 0.44600000000000001, 0.43349999999999994, 0.42499999999999993, 0.42199999999999988, 0.41400000000000003, 0.40849999999999986, 0.39349999999999985, 0.39150000000000007, 0.40600000000000003, 0.39449999999999996, 0.38, 0.36899999999999994, 0.36849999999999994, 0.34199999999999997, 0.34450000000000003, 0.33100000000000002, 0.34399999999999992, 0.32450000000000001, 0.33050000000000002, 0.31449999999999995, 0.30649999999999999, 0.3005000000000001, 0.28849999999999998, 0.28600000000000003, 0.28649999999999998, 0.27550000000000002, 0.26349999999999996, 0.27550000000000002, 0.25799999999999995, 0.27000000000000002, 0.23100000000000001, 0.24200000000000008, 0.26149999999999995, 0.24849999999999997, 0.23300000000000004, 0.23999999999999996, 0.23300000000000001, 0.22350000000000006, 0.20449999999999996, 0.20650000000000002, 0.19600000000000006, 0.19950000000000007, 0.21699999999999997, 0.20350000000000004, 0.19149999999999998, 0.18699999999999994, 0.19, 0.18700000000000003, 0.17749999999999999, 0.17399999999999999, 0.16299999999999998, 0.17699999999999996, 0.13449999999999998, 0.1595, 0.14949999999999997, 0.14699999999999996, 0.14649999999999996, 0.14200000000000002, 0.13349999999999998, 0.13000000000000003, 0.10549999999999998, 0.13550000000000001, 0.12049999999999995, 0.13150000000000003, 0.12099999999999998, 0.11949999999999998, 0.11849999999999997, 0.11299999999999998, 0.10949999999999999, 0.10700000000000001, 0.091999999999999971, 0.084500000000000033, 0.085999999999999979, 0.080999999999999975, 0.079500000000000001, 0.076500000000000012, 0.072499999999999995, 0.06649999999999999, 0.078499999999999973, 0.064999999999999988, 0.071000000000000008, 0.06049999999999997, 0.064000000000000015, 0.060999999999999964, 0.0545, 0.057999999999999968, 0.039499999999999987, 0.044999999999999998, 0.041000000000000009, 0.040500000000000001, 0.029500000000000002, 0.034999999999999989, 0.036500000000000012, 0.021500000000000005, 0.021500000000000005, 0.017500000000000005]
 
+
+    """
     u1 = p5
-    u2 = p2_5
-    #u3 = p2_5
+    u2 = b
+    u3 = rbh
 
     ns = np.arange(0.0, 1.001, 0.01)
     
     rns = [1-x for x in ns]
-    plt.plot(ns,u1, 'g-', ns,u2, 'r-', ns, rns, 'm-')#, ns, u3, 'b-')
-    plt.annotate("Prim", (ns[20],u1[20]), xytext = (10, -40), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("No cascading", (ns[60],rns[60]), xytext = (40, 30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Prim_Correction", (ns[25],u2[25]), xytext = (40, -30), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    #plt.annotate("Prim_Corr2 - 10*10", (ns[60],u3[60]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.plot(ns,u1, 'g-', ns,u2, 'r-', ns, rns, 'm-', ns, u3, 'b-', linewidth=3)
+    plt.annotate("Prim", (ns[22],u1[22]), xytext = (65, 5), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("No cascading", (ns[60],rns[60]), xytext = (130, 40), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("Kruskal", (ns[25],u2[25]), xytext = (60, 30), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("RBH", (ns[10],u3[10]), xytext = (30, -50), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
 
-    plt.xlabel("Cost/score function error rate")
-    plt.ylabel("Proportion correct edges")
+    plt.xlabel("Score function error rate", size=35)
+    plt.ylabel("Prop. correct edges", size=35)
+    plt.tick_params(axis='both', labelsize=30)
+    plt.subplots_adjust(left=0.19, right=0.94, top=0.94, bottom=0.15)
     plt.show()
+    """
     """
     ns = np.arange(0.0, 1.001, 0.01)
     
@@ -3172,46 +3302,51 @@ blankCount 60
 19 0.293859649123 184 1310.11
 20 0.242105263158 233 1805.65
 """
-    """
+    
     startPos = 10
-    index = 1
-    offsets = {2:[(15, 20),(15, 15),(70, 30),(30, -20)], 1:[(15, 20),(15, 15),(40, -25),(30, 20)], 3:[(15, -25),(15, 15),(40, -25),(25, 20)]}
-    indices = {2:[5,6,1,6], 1:[5,3,7,2], 3:[15,14,0,12]}
+    index = 2
+    offsets = {2:[(15, 40),(-5, 40),(70, 30),(60, -60)], 1:[(15, 20),(15, 15),(40, -25),(30, 20)], 3:[(25, -65),(70, 30),(40, -25),(25, 20)]}
+    indices = {2:[6,4,1,6], 1:[5,3,7,2], 3:[15,16,0,17]}
     rbhS = [y[index] for y in map(lambda x: x.split(' '), rbh.strip().split('\n'))][startPos:]
     primS = [y[index] for y in map(lambda x: x.split(' '), prim.strip().split('\n'))][startPos:]
     recShredS = [y[index] for y in map(lambda x: x.split(' '), recShred.strip().split('\n'))][startPos:]
     kruskalS = [y[index] for y in map(lambda x: x.split(' '), kruskal.strip().split('\n'))][startPos:]
 
     xs = [i*i for i in range(2, 21)][startPos:]
-    plt.plot(xs,kruskalS, 'r-H',xs, rbhS, 'b-d', xs, primS, 'g-*', xs, recShredS, 'm-+')#, ns, d, 'c-')
-    plt.annotate("RBH", (xs[indices[index][0]],rbhS[indices[index][0]]), xytext = offsets[index][0], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Prim", (xs[indices[index][1]],primS[indices[index][1]]), xytext = offsets[index][1], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("ReconstructShreds", (xs[indices[index][2]], recShredS[indices[index][2]]), xytext = offsets[index][2], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("Kruskal", (xs[indices[index][3]], kruskalS[indices[index][3]]), xytext = offsets[index][3], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.plot(xs,kruskalS, 'r-H',xs, rbhS, 'b-d', xs, primS, 'g-*', linewidth=3, markersize=15)#xs, recShredS, 'm-^', linewidth=2, markersize=12)#, ns, d, 'c-')
+    print (xs[indices[index][0]],rbhS[indices[index][0]])
+    plt.annotate("RBH", (xs[indices[index][0]],rbhS[indices[index][0]]), fontsize=40, xytext = offsets[index][0], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("Prim", (xs[indices[index][1]],primS[indices[index][1]]), fontsize=40, xytext = offsets[index][1], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    #plt.annotate("ReconstructShreds", (xs[indices[index][2]], recShredS[indices[index][2]]), fontsize=40, xytext = offsets[index][2], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("Kruskal", (xs[indices[index][3]], kruskalS[indices[index][3]]), fontsize=40, xytext = offsets[index][3], textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
 
-    #plt.plot(15*15,800,"mh",markersize=12)
-    #plt.annotate("ACO", (15*15, 800), xytext = (20,15), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.plot(15*15,800,"mh",markersize=18)
+    #plt.annotate("ACO", (15*15, 800), xytext = (100,300),fontsize=40, ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.1), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
 
-    #plt.plot(15*15,2500,"rD",markersize=12)
-    #plt.annotate(r"$HV^2$", (15*15, 2500), xytext = (40,0), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.plot(15*15,2500,"r*",markersize=22)
+    #plt.annotate(r"$HV^2$", (15*15, 2500), xytext = (-35,-39),fontsize=35, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.1', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
 
-    #plt.plot(15*15,4000,"rD",markersize=12)
-    #plt.annotate(r"$BV^2$", (15*15, 4000), xytext = (-20,5), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.plot(15*15,4000,"r*",markersize=22)
+    #plt.annotate(r"$BV^2$", (15*15, 4000), xytext = (-30,-8),fontsize=35, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.1', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
 
-    #plt.plot(9*9,62,"mh",markersize=12)
-    #plt.annotate("ACO", (9*9, 62), xytext = (-20,5), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.plot(9*9,62,"mh",markersize=18)
+    #plt.annotate("ACO", (9*9, 62), xytext = (100,300),fontsize=40, ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.1), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
 
-    #plt.plot(12*12,280,"mh",markersize=12)
-    #plt.annotate("ACO", (12*12, 280), xytext = (-20,5), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    #plt.plot(12*12,280,"mh",markersize=18)
+    #plt.annotate("ACO", (12*12, 280), xytext = (100,300),fontsize=40, ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.1), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
 
 
-    plt.xlabel("Number of shreds")
-    plt.ylabel("Proportion correct edges")
+    plt.xlabel("Number of shreds", size=35)
+    plt.ylabel("Number of moves left", size=35)
+    plt.tick_params(axis='both', labelsize=30)
+    #plt.xticks([0,100,200,300,400])
     a = plt.gca()
-    a.set_yscale('log')
+    #a.set_yscale('log')
     a.set_xlim([140,400])
+    a.set_ylim([50,300])
+    plt.subplots_adjust(left=0.19, right=0.94, top=0.94, bottom=0.15)
     plt.show()
-    """
+    
     """
     p = [x[0] for x in [(0.8, 0.0), (0.7749999999999999, 0.0), (0.7598039215686274, 41.270833333333336) , (0.975, 2.45), (0.7711711711711711, 19.470833333333335), (0.6461904761904763, 54.11904761904762), (0.6092032967032969, 92.56473214285714), (0.5316734417344179, 45.14930555555556), (0.6681518151815183, 55.84305555555556), (0.6105067064083457, 55.29090909090909), (0.5205067920585166, 73.20359848484848), (0.4569570135746596, 61.10657051282051), (0.44915490600769725, 57.10302197802198), (0.4560577328276446, 69.84940476190476), (0.5246473735408566, 64.28333333333333), (0.38427991886409757, 77.859375), (0.398109602815484, 60.91053921568628), (0.2955881877806843, 87.99305555555556), (0.3830013781336137, 75.01381578947368)] ]
     q = [x[0] for x in [(0.75, 1.8038133282386566), (0.6375000000000001, 3.3425124410695517), (0.6458333333333333, 3.7734125617064875), (0.825, 3.850164457453277), (0.7438034188034188, 1.3747400868759352), (0.6380772005772007, 3.077451618253361), (0.6554950105042018, 1.8730934144411424), (0.5480492365019806, 2.622829437435161), (0.664290577342048, 2.8995891642396208), (0.5844615384615385, 4.1993985788788875), (0.5716104258178918, 2.581604924076438), (0.47467194438519866, 2.631028637773309), (0.5029462800682958, 2.6249431552190754), (0.49803137443307877, 2.071597279028274), (0.5990971453033893, 1.610507205822009), (0.4543868542575038, 2.234360306630231), (0.447287362649943, 1.7974495531844519), (0.33342581207942107, 2.949557047232156), (0.41095526460619297, 3.9095273918431)] ]
@@ -3320,28 +3455,33 @@ blankCount 60
     print groupP
 
   elif "b" in arg:
-    noRow = [0.47658037242297213, 0.49462497488831275, 0.47456038732868699, 0.4577243257949779, 0.38022948376897703, 0.39844405316105758, 0.33730559887765532, 0.35500473869091898, 0.4049667472915936, 0.37398131139288998, 0.27935091212040064]
+    minInd = 0
+    noRow = [0.47658037242297213, 0.49462497488831275, 0.47456038732868699, 0.4577243257949779, 0.38022948376897703, 0.39844405316105758, 0.33730559887765532, 0.35500473869091898, 0.4049667472915936, 0.37398131139288998, 0.27935091212040064][minInd:]
 
-    row = [max(x) for x in zip([0.48184353031770905, 0.5034886112519491, 0.4819714545223629, 0.45598821468386685, 0.38699586553535881, 0.40893963396913829, 0.34238992427448067, 0.34700094266031156, 0.41984430684254576, 0.38252607601433813, 0.28751009684692286], [0.47073241920659792, 0.50803406579740362, 0.4819714545223629, 0.46560359929925144, 0.37875410729360054, 0.40893963396913829, 0.344473257607814, 0.34516270736619392, 0.43455018919548688, 0.38739937036131666, 0.30571185123288758])]
+    row = [max(x) for x in zip([0.48184353031770905, 0.5034886112519491, 0.4819714545223629, 0.45598821468386685, 0.38699586553535881, 0.40893963396913829, 0.34238992427448067, 0.34700094266031156, 0.41984430684254576, 0.38252607601433813, 0.28751009684692286], [0.47073241920659792, 0.50803406579740362, 0.4819714545223629, 0.46560359929925144, 0.37875410729360054, 0.40893963396913829, 0.344473257607814, 0.34516270736619392, 0.43455018919548688, 0.38739937036131666, 0.30571185123288758])][minInd:]
 
-    xs = [x**2 for x in range(10,len(noRow)+10)]
+    xs = [x**2 for x in range(10,21)][minInd:]
     print len(xs), len(noRow)
-    plt.plot(xs, noRow, 'b-*', xs, row, 'g-d')
-    plt.annotate("ProbScore", (xs[4],noRow[4]), xytext = (10, -20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("ProbScore + RowScore", (xs[8],row[8]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
+    plt.plot(xs, noRow, 'r-^', linewidth=3, markersize=15)
+    plt.plot(xs, row, 'b-*', linewidth=3, markersize=20)
+    plt.annotate("ProbScore", (xs[6],noRow[6]), xytext = (50, -70), fontsize=40, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("ProbScore+RowScore", (xs[8],row[8]), xytext = (103, 82), fontsize=35, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
     #plt.annotate("Prim - RunTime & PostProc", (xs[4],prim2[4]), xytext = (40, 10), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.xlabel("Number of shreds")#,size=20)
-    plt.ylabel("Proportion correct edges")#,size=20)
-    plt.tick_params(axis='both')#, labelsize=18)
+    plt.xlabel("Number of shreds",size=35)
+    plt.ylabel("Prop. correct edges",size=35)
+    plt.xticks([100,150,200,250,300,350,400])
+    plt.yticks([0.3,0.35,0.4,0.45,0.5])
+    plt.tick_params(axis='both', labelsize=30)
+    a = plt.gca()
+    a.set_ylim([0.27,0.52])
+    a.set_xlim([100,400])
+    plt.subplots_adjust(left=0.19, right=0.94, top=0.94, bottom=0.15)
     plt.show()
   elif "c" in arg:
     #orient = {25: [0.024, 0.045999999999999999, 0.049333333333333333, 0.042999999999999997, 0.065600000000000006, 0.062666666666666662, 0.073714285714285718, 0.076499999999999999, 0.076888888888888896, 0.069199999999999998, 0.073090909090909095, 0.046666666666666669, 0.046153846153846156, 0.047142857142857146, 0.049333333333333333, 0.050250000000000003, 0.050823529411764705, 0.052444444444444446, 0.065263157894736842, 0.066799999999999998, 0.068380952380952376, 0.070181818181818179, 0.10243478260869565, 0.10333333333333333, 0.10384, 0.10507692307692308, 0.10355555555555555, 0.104, 0.10524137931034483, 0.10546666666666667], 10: [0.0, 0.0, 0.01, 0.012500000000000001, 0.028000000000000001, 0.026666666666666668, 0.035714285714285712, 0.025000000000000001, 0.032222222222222222, 0.032000000000000001, 0.035454545454545454, 0.02, 0.014615384615384615, 0.014999999999999999, 0.017999999999999999, 0.015625, 0.014705882352941176, 0.016111111111111111, 0.015789473684210527, 0.016, 0.015238095238095238, 0.015909090909090907, 0.017826086956521738, 0.017500000000000002, 0.016799999999999999, 0.016923076923076923, 0.016666666666666666, 0.016428571428571428, 0.016551724137931035, 0.017999999999999999], 20: [0.035000000000000003, 0.042500000000000003, 0.028333333333333332, 0.026249999999999999, 0.050000000000000003, 0.051666666666666666, 0.054285714285714284, 0.073124999999999996, 0.061111111111111109, 0.058999999999999997, 0.05909090909090909, 0.035416666666666666, 0.031153846153846153, 0.030357142857142857, 0.033000000000000002, 0.033125000000000002, 0.033235294117647057, 0.033888888888888892, 0.045263157894736845, 0.045499999999999999, 0.045476190476190476, 0.046818181818181821, 0.06347826086956522, 0.064375000000000002, 0.064600000000000005, 0.065576923076923074, 0.065185185185185179, 0.065892857142857142, 0.066724137931034488, 0.068000000000000005], 5: [0.0, 0.0, 0.0, 0.0050000000000000001, 0.012, 0.013333333333333334, 0.0057142857142857143, 0.01, 0.0066666666666666671, 0.016, 0.0072727272727272727, 0.0066666666666666671, 0.0061538461538461538, 0.0057142857142857143, 0.0093333333333333341, 0.01, 0.0094117647058823521, 0.0088888888888888889, 0.010526315789473684, 0.01, 0.0095238095238095247, 0.0090909090909090905, 0.0086956521739130436, 0.0083333333333333332, 0.0080000000000000002, 0.0076923076923076927, 0.0074074074074074077, 0.0071428571428571426, 0.0075862068965517242, 0.0093333333333333341], 15: [0.02, 0.016666666666666666, 0.037777777777777778, 0.041666666666666664, 0.048000000000000001, 0.058888888888888886, 0.075238095238095243, 0.069166666666666668, 0.06222222222222222, 0.070000000000000007, 0.055757575757575756, 0.037777777777777778, 0.033333333333333333, 0.035714285714285712, 0.038666666666666669, 0.033333333333333333, 0.033333333333333333, 0.033703703703703701, 0.038596491228070177, 0.039, 0.038412698412698412, 0.039393939393939391, 0.054202898550724639, 0.055555555555555552, 0.054933333333333334, 0.055128205128205127, 0.054320987654320987, 0.053095238095238098, 0.053103448275862067, 0.055111111111111111], 70: [0.16714285714285715, 0.15642857142857142, 0.15952380952380951, 0.15392857142857144, 0.15485714285714286, 0.14523809523809525, 0.14163265306122449, 0.14607142857142857, 0.14428571428571429, 0.13642857142857143, 0.13844155844155845, 0.13, 0.13076923076923078, 0.13255102040816327, 0.13104761904761905, 0.13312499999999999, 0.13394957983193279, 0.13293650793650794, 0.16541353383458646, 0.16585714285714287, 0.16646258503401359, 0.16688311688311688, 0.21254658385093167, 0.21261904761904762, 0.21154285714285714, 0.21164835164835163, 0.21111111111111111, 0.21158163265306124, 0.21157635467980296, 0.20871428571428571], 40: [0.1825, 0.14499999999999999, 0.1275, 0.10875, 0.111, 0.10541666666666667, 0.10000000000000001, 0.1065625, 0.097500000000000003, 0.089749999999999996, 0.093181818181818185, 0.073749999999999996, 0.074230769230769225, 0.073392857142857149, 0.074166666666666672, 0.071406250000000004, 0.070294117647058826, 0.071388888888888891, 0.096710526315789469, 0.097125000000000003, 0.096666666666666665, 0.097840909090909089, 0.14586956521739131, 0.14531250000000001, 0.14480000000000001, 0.14538461538461539, 0.14481481481481481, 0.14455357142857142, 0.14491379310344826, 0.14391666666666666], 80: [0.20624999999999999, 0.185, 0.18041666666666667, 0.16125, 0.152, 0.14624999999999999, 0.13660714285714284, 0.13500000000000001, 0.13416666666666666, 0.12862499999999999, 0.12806818181818183, 0.11458333333333333, 0.11336538461538462, 0.11321428571428571, 0.11241666666666666, 0.11874999999999999, 0.11941176470588236, 0.11791666666666667, 0.14348684210526316, 0.14299999999999999, 0.14291666666666666, 0.14335227272727272, 0.18461956521739131, 0.18359375, 0.18354999999999999, 0.18326923076923077, 0.18240740740740741, 0.18272321428571428, 0.18301724137931036, 0.17970833333333333], 50: [0.14000000000000001, 0.122, 0.10933333333333334, 0.098500000000000004, 0.106, 0.095000000000000001, 0.098857142857142852, 0.099000000000000005, 0.10044444444444445, 0.092999999999999999, 0.090363636363636368, 0.074499999999999997, 0.073692307692307696, 0.074714285714285719, 0.075866666666666666, 0.081625000000000003, 0.081529411764705878, 0.083111111111111108, 0.11810526315789474, 0.11890000000000001, 0.11866666666666667, 0.12045454545454545, 0.18226086956521739, 0.18174999999999999, 0.18104000000000001, 0.18092307692307694, 0.17962962962962964, 0.17935714285714285, 0.17965517241379311, 0.17773333333333333], 90: [0.24888888888888888, 0.22555555555555556, 0.2088888888888889, 0.18861111111111112, 0.17577777777777778, 0.1711111111111111, 0.15777777777777777, 0.15916666666666668, 0.15135802469135803, 0.14433333333333334, 0.14484848484848484, 0.13305555555555557, 0.13059829059829059, 0.13007936507936507, 0.12785185185185186, 0.13104166666666667, 0.13098039215686275, 0.12919753086419752, 0.15222222222222223, 0.15183333333333332, 0.15153439153439152, 0.15151515151515152, 0.18386473429951691, 0.18291666666666667, 0.18244444444444444, 0.18269230769230768, 0.18164609053497943, 0.1823015873015873, 0.18195402298850574, 0.17892592592592593], 60: [0.16166666666666665, 0.12583333333333332, 0.12055555555555555, 0.10875, 0.10766666666666666, 0.11333333333333333, 0.10404761904761904, 0.10270833333333333, 0.10277777777777777, 0.098166666666666666, 0.10090909090909091, 0.090416666666666673, 0.090256410256410263, 0.088928571428571426, 0.088666666666666671, 0.096458333333333326, 0.095784313725490192, 0.096018518518518517, 0.12780701754385965, 0.12691666666666668, 0.12619047619047619, 0.12696969696969698, 0.17376811594202898, 0.17347222222222222, 0.17380000000000001, 0.1742948717948718, 0.17314814814814813, 0.17410714285714285, 0.17448275862068965, 0.17194444444444446], 30: [0.11666666666666667, 0.098333333333333328, 0.093333333333333338, 0.088333333333333333, 0.104, 0.10166666666666667, 0.10380952380952381, 0.10208333333333333, 0.10481481481481482, 0.096666666666666665, 0.085757575757575755, 0.066944444444444445, 0.059743589743589745, 0.059999999999999998, 0.061777777777777779, 0.067083333333333328, 0.067843137254901958, 0.067962962962962961, 0.082631578947368417, 0.082000000000000003, 0.082063492063492061, 0.083181818181818176, 0.12028985507246377, 0.12069444444444444, 0.12026666666666666, 0.12051282051282051, 0.12012345679012346, 0.12059523809523809, 0.12103448275862069, 0.12077777777777778]}
     orient = {1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 10: [0.02, 0.023333333333333334, 0.034000000000000002, 0.052857142857142859, 0.06222222222222222, 0.055454545454545458, 0.043846153846153847, 0.043999999999999997, 0.032352941176470591, 0.033157894736842108], 100: [0.23200000000000001, 0.20066666666666666, 0.155, 0.12814285714285714, 0.11144444444444444, 0.093636363636363643, 0.080384615384615388, 0.070599999999999996, 0.05464705882352941, 0.054473684210526313], 50: [0.154, 0.13200000000000001, 0.12759999999999999, 0.11514285714285714, 0.10511111111111111, 0.089272727272727267, 0.07923076923076923, 0.066799999999999998, 0.051294117647058823, 0.051473684210526317]}
 
     unknowns = {1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 10: [0.0, 0.0, 0.002, 0.012857142857142857, 0.012222222222222223, 0.0081818181818181825, 0.015384615384615385, 0.014666666666666666, 0.013529411764705882, 0.015263157894736841], 100: [0.025999999999999999, 0.026333333333333334, 0.032399999999999998, 0.037999999999999999, 0.046555555555555558, 0.055909090909090908, 0.055538461538461537, 0.062333333333333331, 0.067176470588235296, 0.065631578947368416], 50: [0.02, 0.021999999999999999, 0.026800000000000001, 0.032571428571428571, 0.035555555555555556, 0.040909090909090909, 0.036307692307692305, 0.040533333333333331, 0.045294117647058825, 0.045894736842105266]}
-
-
-
 
     for k in orient:
       orient[k] = map(lambda (x,y): 1.0 -(x+y), zip(orient[k],unknowns[k]))
@@ -3352,16 +3492,17 @@ blankCount 60
     o4 = orient[100]
     xs = range(10,201,20)
 
-    plt.plot(xs, o1, 'b-*', xs, o2, 'g-d', xs, o3, 'r-H', xs, o4, 'm-*')
-    plt.annotate("0 Horizontal Cuts", (xs[4],o1[4]), xytext = (80, 20), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("10 Horizontal Cuts", (xs[6],o2[6]), xytext = (60, 15), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("50 Horizontal Cuts", (xs[3],o3[3]), xytext = (60, 15), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.annotate("100 Horizontal Cuts", (xs[7],o4[7]), xytext = (100, -35), textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0'))
-    plt.xlabel("Number of vertical cuts")#, size=20)
-    plt.ylabel("Proportion correct orientations detected")#, size=20)
+    plt.plot(xs, o1, 'b-*', xs, o2, 'g-d', xs, o3, 'r-H', xs, o4, 'm-^', linewidth=3, markersize=15)
+    plt.annotate("0 Horizontal Cuts", (xs[4],o1[4]), xytext = (80, 20), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("10 Horizontal Cuts", (xs[6],o2[6]), xytext = (80, 20), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("50 Horizontal Cuts", (xs[3],o3[3]), xytext = (88, 32), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.annotate("100 Horizontal Cuts", (xs[7],o4[7]), xytext = (100, -60), fontsize=25, textcoords = 'offset points', ha = 'right', va = 'bottom', bbox = dict(boxstyle = 'round,pad=0.2', fc = 'yellow', alpha = 0.3), arrowprops = dict(arrowstyle = '-', connectionstyle = 'arc3,rad=0', lw=2))
+    plt.xlabel("Number of vertical cuts", size=30)
+    plt.ylabel("Prop. correct orientations", size=30)
+    plt.tick_params(axis='both', labelsize=30)
     a = plt.gca()
     a.set_ylim([0.7,1.05])
-    #plt.tick_params(axis='both', labelsize=18)
+    plt.subplots_adjust(left=0.19, right=0.94, top=0.94, bottom=0.15)
     plt.show()
   else:
     print 'Unrecognized argument'

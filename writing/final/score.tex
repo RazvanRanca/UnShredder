@@ -183,7 +183,7 @@ Calculating analogous measures for the cost functions defined in \cite{P1} and \
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{costComp}
+\includegraphics[width=\textwidth]{costComp.pdf}
 \caption{The probabilistic score has better results on medium and large instances than the cost functions presented in \cite{P1} (GaussCost) and \cite{P2} (BlackGaussCost)}
 \label{fig:costComp}
 \end{figure}
@@ -194,7 +194,7 @@ As mentioned in the Motivation, there is another (perhaps more natural) evaluati
 The formula $bucket = \lfloor prob * 10 + 0.5\rfloor$ is used to place the predicted probabilities into one out of a total of 10 buckets. The observed and predicted probabilities are then averaged within each bucket, and the process is repeated for different number of shreds. The resulting graph is Figure \ref{fig:probComp}.
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{predObsProb}
+\includegraphics[width=\textwidth]{predObsProb.pdf}
 \caption{The labels show the number of cross-cut shreds. As the number of shreds increases the relationship between the predicted and observed probability degrades. However the overall shape of the curve is still generally increasing, so a higher predicted probability will usually translate into a higher observed probability and for large predicted probabilities the method is quite accurate}
 \label{fig:probComp}
 \end{figure}
@@ -238,7 +238,7 @@ The score evaluation is run on the original and modified documents, and the resu
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{robustness}
+\includegraphics[width=\textwidth]{robustness.pdf}
 \caption{Degradation of performance between original image and 3 noisy images}
 \label{fig:robustness}
 \end{figure}
@@ -249,7 +249,7 @@ Since the probabilistic scoring function is unique for each document, as it is t
         \centering
         \begin{subfigure}[b]{0.49\textwidth}
                 \centering
-                \includegraphics[width=\textwidth]{origComp.pdf}
+                \includegraphics[width=\textwidth]{origCompBig.pdf}
                 \caption{Original image}
         \end{subfigure}
         ~ 

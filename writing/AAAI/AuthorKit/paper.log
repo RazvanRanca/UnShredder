@@ -1,0 +1,283 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  9 MAY 2013 12:34
+entering extended mode
+ %&-line parsing enabled.
+**paper.tex
+(./paper.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
+erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
+ french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
+us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
+tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
+turkish, ukenglish, ukrainian, loaded.
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size10.clo
+File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (./aaai.sty
+Conference Style for AAAI for LaTeX 2e -- version of 2 February 2013
+\titlebox=\skip43
+) (/usr/share/texmf/tex/latex/psnfss/times.sty
+Package: times 2005/04/12 PSNFSS-v9.2a (SPQR) 
+)
+(/usr/share/texmf/tex/latex/psnfss/helvet.sty
+Package: helvet 2005/04/12 PSNFSS-v9.2a (WaS) 
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+))
+(/usr/share/texmf/tex/latex/psnfss/courier.sty
+Package: courier 2005/04/12 PSNFSS-v9.2a (WaS) 
+)
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/usr/share/texmf/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/algpseudocode.sty
+Package: algpseudocode 
+
+(/usr/share/texmf/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count88
+\c@ALG@rem=\count89
+\c@ALG@nested=\count90
+\ALG@tlm=\skip44
+\ALG@thistlm=\skip45
+\c@ALG@Lnr=\count91
+\c@ALG@blocknr=\count92
+\c@ALG@storecount=\count93
+\c@ALG@tmpcounter=\count94
+\ALG@tmplength=\skip46
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/caption.sty
+Package: caption 2013/02/16 v3.3-67 Customizing captions (AR)
+
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/caption3.sty
+Package: caption3 2013/02/03 v1.5-62 caption3 kernel (AR)
+\captionmargin=\dimen105
+\captionmargin@=\dimen106
+\captionwidth=\dimen107
+\caption@tempdima=\dimen108
+\caption@indent=\dimen109
+\caption@parindent=\dimen110
+\caption@hangindent=\dimen111
+)
+\c@ContinuedFloat=\count95
+)
+\c@subfigure=\count96
+\c@subtable=\count97
+)
+(./paper.aux)
+\openout1 = `paper.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 37.
+ (/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count98
+\scratchdimen=\dimen112
+\scratchbox=\box26
+\nofMPsegments=\count99
+\nofMParguments=\count100
+\MPscratchCnt=\count101
+\MPscratchDim=\dimen113
+\MPnumerator=\count102
+\everyMPtoPDFconversion=\toks15
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 38.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 38.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 38.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 38.
+
+
+! LaTeX Error: Environment adjustwidth undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.40 \begin{adjustwidth}
+                        {10pt}{10pt}
+? q
+OK, entering \batchmode...
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 44.
+
+! LaTeX Error: \begin{document} ended by \end{adjustwidth}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.49 \end{adjustwidth}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 57.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 57.
+ [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+
+
+]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/origCo
+mpBWEnt.jpg, id=8, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/o
+rigCompBWEnt.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/or
+igCompBWEnt.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/downsa
+mpleBWEnt.jpg, id=9, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/d
+ownsampleBWEnt.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/do
+wnsampleBWEnt.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/shuffl
+eBWEnt.jpg, id=10, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/s
+huffleBWEnt.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/sh
+uffleBWEnt.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/rowCom
+pBW.jpg, id=11, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/r
+owCompBW.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/ro
+wCompBW.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/prim7x
+7BW.jpg, id=12, 619.113pt x 154.6578pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/p
+rim7x7BW.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/pr
+im7x7BW.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/prim1x
+49BW.jpg, id=13, 214.8828pt x 269.808pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/p
+rim1x49BW.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/pr
+im1x49BW.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/stoppe
+d7x7BW.jpg, id=14, 230.5413pt x 411.939pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/s
+topped7x7BW.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/st
+opped7x7BW.jpg>
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 148--166
+ [][] 
+ []
+
+ [2 </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/or
+igCompBWEnt.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/wr
+iting/imgs/downsampleBWEnt.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Dropbox/4t
+h/unshredder/writing/imgs/shuffleBWEnt.jpg> </afs/inf.ed.ac.uk/user/s09/s095458
+4/Dropbox/4th/unshredder/writing/imgs/rowCompBW.jpg> </afs/inf.ed.ac.uk/user/s0
+9/s0954584/Dropbox/4th/unshredder/writing/imgs/prim7x7BW.jpg> </afs/inf.ed.ac.u
+k/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/prim1x49BW.jpg> </afs/i
+nf.ed.ac.uk/user/s09/s0954584/Dropbox/4th/unshredder/writing/imgs/stopped7x7BW.
+jpg>] (./paper.bbl
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+) [3
+
+] (./paper.aux) ) 
+Here is how much of TeX's memory you used:
+ 2631 strings out of 256216
+ 41816 string characters out of 1917072
+ 99737 words of memory out of 1500000
+ 5913 multiletter control sequences out of 10000+200000
+ 21103 words of font info for 40 fonts, out of 1200000 for 2000
+ 645 hyphenation exceptions out of 8191
+ 42i,10n,40p,882b,400s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/texm
+f/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cm
+mi7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fo
+nts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8a.
+pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/
+type1/urw/times/utmri8a.pfb>
+Output written on paper.pdf (3 pages, 4234502 bytes).
+PDF statistics:
+ 48 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+

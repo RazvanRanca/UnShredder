@@ -1,0 +1,418 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  7 JUN 2013 15:34
+entering extended mode
+ %&-line parsing enabled.
+**unshredder.tex
+(./unshredder.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
+erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
+ french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
+us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
+tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
+turkish, ukenglish, ukrainian, loaded.
+(./llncs.cls
+Document Class: llncs 2010/04/15 v2.16 
+ LaTeX document class for Lecture Notes in Computer Science
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size10.clo
+File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf/tex/latex/tools/multicol.sty
+Package: multicol 2006/05/18 v1.6g multicolumn formatting (FMi)
+\c@tracingmulticols=\count87
+\mult@box=\box26
+\multicol@leftmargin=\dimen103
+\c@unbalance=\count88
+\c@collectmore=\count89
+\doublecol@number=\count90
+\multicoltolerance=\count91
+\multicolpretolerance=\count92
+\full@width=\dimen104
+\page@free=\dimen105
+\premulticols=\dimen106
+\postmulticols=\dimen107
+\multicolsep=\skip43
+\multicolbaselineskip=\skip44
+\partial@page=\box27
+\last@line=\box28
+\mult@rightbox=\box29
+\mult@grightbox=\box30
+\mult@gfirstbox=\box31
+\mult@firstbox=\box32
+\@tempa=\box33
+\@tempa=\box34
+\@tempa=\box35
+\@tempa=\box36
+\@tempa=\box37
+\@tempa=\box38
+\@tempa=\box39
+\@tempa=\box40
+\@tempa=\box41
+\@tempa=\box42
+\@tempa=\box43
+\@tempa=\box44
+\@tempa=\box45
+\@tempa=\box46
+\@tempa=\box47
+\@tempa=\box48
+\@tempa=\box49
+\c@columnbadness=\count93
+\c@finalcolumnbadness=\count94
+\last@try=\dimen108
+\multicolovershoot=\dimen109
+\multicolundershoot=\dimen110
+\mult@nat@firstbox=\box50
+\colbreak@box=\box51
+)
+(/usr/share/texmf/tex/latex/oberdiek/aliascnt.sty
+Package: aliascnt 2006/09/25 v1.2 Alias counter (HO)
+
+(/usr/share/texmf/tex/latex/carlisle/remreset.sty))
+\c@chapter=\count95
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 361.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 362.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 363.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 364.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 365.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 366.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 367.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 368.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 369.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 370.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 371.
+\tocchpnum=\dimen111
+\tocsecnum=\dimen112
+\tocsectotal=\dimen113
+\tocsubsecnum=\dimen114
+\tocsubsectotal=\dimen115
+\tocsubsubsecnum=\dimen116
+\tocsubsubsectotal=\dimen117
+\tocparanum=\dimen118
+\tocparatotal=\dimen119
+\tocsubparanum=\dimen120
+\@tempcntc=\count96
+\fnindent=\dimen121
+\c@@inst=\count97
+\c@@auth=\count98
+\c@auco=\count99
+\instindent=\dimen122
+\authrun=\box52
+\authorrunning=\toks14
+\tocauthor=\toks15
+\titrun=\box53
+\titlerunning=\toks16
+\toctitle=\toks17
+\c@theorem=\count100
+\c@case=\count101
+\c@conjecture=\count102
+\c@corollary=\count103
+\c@definition=\count104
+\c@example=\count105
+\c@exercise=\count106
+\c@lemma=\count107
+\c@note=\count108
+\c@problem=\count109
+\c@property=\count110
+\c@proposition=\count111
+\c@question=\count112
+\c@solution=\count113
+\c@remark=\count114
+\headlineindent=\dimen123
+)
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks18
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/usr/share/texmf/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count115
+))
+\Gin@req@height=\dimen124
+\Gin@req@width=\dimen125
+) (./algpseudocode.sty
+Package: algpseudocode 
+
+(/usr/share/texmf/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latx/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count116
+\c@ALG@rem=\count117
+\c@ALG@nested=\count118
+\ALG@tlm=\skip45
+\ALG@thistlm=\skip46
+\c@ALG@Lnr=\count119
+\c@ALG@blocknr=\count120
+\c@ALG@storecount=\count121
+\c@ALG@tmpcounter=\count122
+\ALG@tmplength=\skip47
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (./subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+ (./caption.sty
+Package: caption 2013/02/16 v3.3-67 Customizing captions (AR)
+ (./caption3.sty
+Package: caption3 2013/02/03 v1.5-62 caption3 kernel (AR)
+\captionmargin=\dimen126
+\captionmargin@=\dimen127
+\captionwidth=\dimen128
+\caption@tempdima=\dimen129
+\caption@indent=\dimen130
+\caption@parindent=\dimen131
+\caption@hangindent=\dimen132
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+)
+
+Package caption Warning: Unsupported document class (or package) detected,
+(caption)                usage of the caption package is not recommended.
+See the caption package documentation for explanation.
+
+Package caption Info: \@makecaption = \long macro:#1#2->\small \vskip \abovecap
+tionskip \sbox \@tempboxa {{\bfseries #1.} #2}\ifdim \wd \@tempboxa >\hsize {\b
+fseries #1.} #2\par \else \global \@minipagefalse \hb@xt@ \hsize {\hfil \box \@
+tempboxa \hfil }\fi \vskip \belowcaptionskip .
+\c@ContinuedFloat=\count123
+)
+\c@subfigure=\count124
+\c@subtable=\count125
+) (/usr/share/texmf/tex/latex/microtype/microtype.sty
+Package: microtype 2007/01/21 v2.0 Micro-typography with pdfTeX (RS)
+\MT@toks=\toks19
+\MT@count=\count126
+LaTeX Info: Redefining \lsstyle on input line 1370.
+LaTeX Info: Redefining \lslig on input line 1370.
+LaTeX Info: Redefining \textls on input line 1371.
+\MT@lskern=\dimen133
+Package microtype Info: Loading configuration file microtype.cfg.
+
+(/usr/share/texmf/tex/latex/microtype/microtype.cfg
+File: microtype.cfg 2007/01/14 v2.0 microtype main configuration file (RS)
+)) (./unshredder.aux)
+\openout1 = `unshredder.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count127
+\scratchdimen=\dimen134
+\scratchbox=\box54
+\nofMPsegments=\count128
+\nofMParguments=\count129
+\MPscratchCnt=\count130
+\MPscratchDim=\dimen135
+\MPnumerator=\count131
+\everyMPtoPDFconversion=\toks20
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: Incompatible package detected (regarding \@caption).
+(caption)             \@caption = \long macro:#1[#2]#3->\par \addcontentsline {
+\csname ext@#1\endcsname }{#1}{\protect \numberline {\csname the#1\endcsname }{
+\ignorespaces #2}}\begingroup \@parboxrestore \@makecaption {\csname fnum@#1\en
+dcsname }{\ignorespaces #3}\par \endgroup .
+
+
+Package caption Warning: Forced redefinition of \caption since the
+(caption)                unsupported(!) package option `compatibility=false'
+(caption)                was given.
+See the caption package documentation for explanation.
+
+Package caption Info: End \AtBeginDocument code.
+Package microtype Info: Generating PDF output.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+(microtype)             stretch: 20, shrink: 20, step: 4, non-selected.
+Package microtype Info: Using default expansion set `basictext'.
+Package microtype Info: No tracking.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+(/usr/share/texmf/tex/latex/microtype/mt-cmr.cfg
+File: mt-cmr.cfg 2005/11/07 v1.9 microtype config. file: Computer Modern Roman 
+(RS)
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 38.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 38.
+ [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+<imgs/origCompEnt300.jpg, id=16, 216.81pt x 162.6075pt>
+File: imgs/origCompEnt300.jpg Graphic file (type jpg)
+
+<use imgs/origCompEnt300.jpg>
+<imgs/downsampleCompEnt300.jpg, id=17, 216.81pt x 162.6075pt>
+File: imgs/downsampleCompEnt300.jpg Graphic file (type jpg)
+
+<use imgs/downsampleCompEnt300.jpg>
+<imgs/shuffleCompEnt300.jpg, id=18, 216.81pt x 162.6075pt>
+File: imgs/shuffleCompEnt300.jpg Graphic file (type jpg)
+
+<use imgs/shuffleCompEnt300.jpg>
+<imgs/rowComp.pdf, id=19, 578.16pt x 433.62pt>
+File: imgs/rowComp.pdf Graphic file (type pdf)
+ <use imgs/rowComp.pdf> [3 <./imgs/origCompEnt300.jpg> <./imgs/downsampleCompEn
+t300.jpg> <./imgs/shuffleCompEnt300.jpg> <./imgs/rowComp.pdf
+
+pdfTeX warning: pdflatex (file ./imgs/rowComp.pdf): PDF inclusion: Page Group d
+etected which pdfTeX can't handle. Ignoring it.
+>]
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ú in font cmr9!
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ù in font cmr9!
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ú in font cmr9!
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ù in font cmr9!
+ <imgs/searchComp.pdf, id=64, 578.16pt x 433.62pt>
+File: imgs/searchComp.pdf Graphic file (type pdf)
+ <use imgs/searchComp.pdf>
+<imgs/searchTimeComp.pdf, id=65, 578.16pt x 433.62pt>
+File: imgs/searchTimeComp.pdf Graphic file (type pdf)
+
+<use imgs/searchTimeComp.pdf> [4 <./imgs/searchComp.pdf
+
+pdfTeX warning: pdflatex (file ./imgs/searchComp.pdf): PDF inclusion: Page Grou
+p detected which pdfTeX can't handle. Ignoring it.
+> <./imgs/searchTimeComp.pdf
+
+pdfTeX warning: pdflatex (file ./imgs/searchTimeComp.pdf): PDF inclusion: Page 
+Group detected which pdfTeX can't handle. Ignoring it.
+>] <imgs/searchRed.pdf, id=164, 578.16pt x 433.62pt>
+File: imgs/searchRed.pdf Graphic file (type pdf)
+ <use imgs/searchRed.pdf>
+<imgs/cascadingComp.pdf, id=165, 578.16pt x 433.62pt>
+File: imgs/cascadingComp.pdf Graphic file (type pdf)
+
+<use imgs/cascadingComp.pdf>
+<imgs/prim7x7_300.jpg, id=166, 232.16737pt x 57.99667pt>
+File: imgs/prim7x7_300.jpg Graphic file (type jpg)
+
+<use imgs/prim7x7_300.jpg>
+<imgs/prim1x49_300.jpg, id=167, 80.58105pt x 101.178pt>
+File: imgs/prim1x49_300.jpg Graphic file (type jpg)
+
+<use imgs/prim1x49_300.jpg>
+<imgs/stopped7x7_300.jpg, id=168, 86.45299pt x 154.47713pt>
+File: imgs/stopped7x7_300.jpg Graphic file (type jpg)
+
+<use imgs/stopped7x7_300.jpg>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[5 <./imgs/searchRed.pdf
+
+pdfTeX warning: pdflatex (file ./imgs/searchRed.pdf): PDF inclusion: Page Group
+ detected which pdfTeX can't handle. Ignoring it.
+> <./imgs/cascadingComp.pdf
+
+pdfTeX warning: pdflatex (file ./imgs/cascadingComp.pdf): PDF inclusion: Page G
+roup detected which pdfTeX can't handle. Ignoring it.
+>] [6 <./imgs/prim7x7_300.jpg> <./imgs/prim1x49_300.jpg> <./imgs/stopped7x7_300
+.jpg>] <imgs/innerOuterRows300.jpg, id=251, 7.88948pt x 1.74652pt>
+File: imgs/innerOuterRows300.jpg Graphic file (type jpg)
+
+<use imgs/innerOuterRows300.jpg>
+<imgs/EntRow300.jpg, id=252, 7.88948pt x 1.74652pt>
+File: imgs/EntRow300.jpg Graphic file (type jpg)
+ <use imgs/EntRow300.jpg>
+<imgs/rowOrient.pdf, id=253, 578.16pt x 433.62pt>
+File: imgs/rowOrient.pdf Graphic file (type pdf)
+ <use imgs/rowOrient.pdf>
+[7 <./imgs/innerOuterRows300.jpg> <./imgs/EntRow300.jpg> <./imgs/rowOrient.pdf
+
+pdfTeX warning: pdflatex (file ./imgs/rowOrient.pdf): PDF inclusion: Page Group
+ detected which pdfTeX can't handle. Ignoring it.
+>] (./unshredder.bbl
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ì in font cmr9!
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ì in font cmr9!
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ì in font cmr9!
+Missing character: There is no ‚ in font cmr9!
+Missing character: There is no Ä in font cmr9!
+Missing character: There is no ì in font cmr9!
+) [8] (./unshredder.aux) ) 
+Here is how much of TeX's memory you used:
+ 4260 strings out of 256216
+ 65978 string characters out of 1917072
+ 152253 words of memory out of 1500000
+ 7460 multiletter control sequences out of 10000+200000
+ 10727 words of font info for 63 fonts, out of 1200000 for 2000
+ 645 hyphenation exceptions out of 8191
+ 42i,9n,40p,1023b,469s stack positions out of 5000i,500n,6000p,200000b,15000s
+</usr/share/texmf/fonts/type1/bluesky/cm/cmbx10.pfb><
+/usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf/fonts/type
+1/bluesky/cm/cmbx9.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmcsc10.pfb></u
+sr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/
+bluesky/cm/cmmi7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi9.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/blues
+ky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/te
+xmf/fonts/type1/bluesky/cm/cmr9.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cm
+sy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/share/texmf/
+fonts/type1/bluesky/cm/cmti9.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt9
+.pfb>
+Output written on unshredder.pdf (8 pages, 2387622 bytes).
+PDF statistics:
+ 349 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 16967 words of extra memory for PDF output out of 17280 (max. 10000000)
+

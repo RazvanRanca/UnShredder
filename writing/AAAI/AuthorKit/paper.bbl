@@ -1,0 +1,100 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Aradhye}{2005}]{P12}
+Aradhye, H.
+\newblock 2005.
+\newblock A generic method for determining up/down orientation of text in roman
+  and non-roman scripts.
+\newblock {\em Pattern Recognition} 38(11):2114--2131.
+
+\bibitem[\protect\citeauthoryear{Biesinger}{2012}]{P7}
+Biesinger, B.
+\newblock 2012.
+\newblock Enhancing an evolutionary algorithm with a solution archive to
+  reconstruct cross cut shredded text documents.
+\newblock Bachelor's thesis, Vienna University of Technology, Austria.
+
+\bibitem[\protect\citeauthoryear{Butler, Chakraborty, and
+  Ramakrishan}{2012}]{P10}
+Butler, P.; Chakraborty, P.; and Ramakrishan, N.
+\newblock 2012.
+\newblock The deshredder: A visual analytic approach to reconstructing shredded
+  documents.
+\newblock In {\em Visual Analytics Science and Technology (VAST), 2012 IEEE
+  Conference on},  113--122.
+\newblock IEEE.
+
+\bibitem[\protect\citeauthoryear{Caprari}{2000}]{P11}
+Caprari, R.
+\newblock 2000.
+\newblock Algorithm for text page up/down orientation determination.
+\newblock {\em Pattern Recognition Letters} 21(4):311--317.
+
+\bibitem[\protect\citeauthoryear{Heingartner}{2003}]{P6}
+Heingartner, D.
+\newblock 2003.
+\newblock Back together again.
+\newblock {\em New York Times}.
+
+\bibitem[\protect\citeauthoryear{Kruskal}{1956}]{P13}
+Kruskal, J.
+\newblock 1956.
+\newblock On the shortest spanning subtree of a graph and the traveling
+  salesman problem.
+\newblock {\em Proceedings of the American Mathematical Society} 7(1):48--50.
+
+\bibitem[\protect\citeauthoryear{Perl \bgroup et al\mbox.\egroup }{2011}]{P8}
+Perl, J.; Diem, M.; Kleber, F.; and Sablatnig, R.
+\newblock 2011.
+\newblock Strip shredded document reconstruction using optical character
+  recognition.
+\newblock In {\em Imaging for Crime Detection and Prevention 2011 (ICDP 2011),
+  4th International Conference on},  1--6.
+\newblock IET.
+
+\bibitem[\protect\citeauthoryear{Prandtstetter and Raidl}{2008}]{P1}
+Prandtstetter, M., and Raidl, G.
+\newblock 2008.
+\newblock Combining forces to reconstruct strip shredded text documents.
+\newblock In {\em Hybrid Metaheuristics}. Springer.
+\newblock  175--189.
+
+\bibitem[\protect\citeauthoryear{Prandtstetter and Raidl}{2009}]{P3}
+Prandtstetter, M., and Raidl, G.
+\newblock 2009.
+\newblock Meta-heuristics for reconstructing cross cut shredded text documents.
+\newblock In {\em Proceedings of the 11th Annual Conference on Genetic and
+  Evolutionary Computation},  349--356.
+\newblock ACM.
+
+\bibitem[\protect\citeauthoryear{Prandtstetter}{2009}]{P2}
+Prandtstetter, M.
+\newblock 2009.
+\newblock Two approaches for computing lower bounds on the reconstruction of
+  strip shredded text documents.
+\newblock Technical Report TR–186–1–09–01, Technishe Universitat Wien,
+  Institut fur Computergraphik und Algorithmen.
+
+\bibitem[\protect\citeauthoryear{Schauer, Prandtstetter, and Raidl}{2010}]{P4}
+Schauer, C.; Prandtstetter, M.; and Raidl, G.
+\newblock 2010.
+\newblock A memetic algorithm for reconstructing cross-cut shredded text
+  documents.
+\newblock In {\em Hybrid Metaheuristics}. Springer.
+\newblock  103--117.
+
+\bibitem[\protect\citeauthoryear{Skeoch}{2006}]{P9}
+Skeoch, A.
+\newblock 2006.
+\newblock An investigation into automated shredded document reconstruction
+  using heuristic search algorithms.
+\newblock Ph.D. thesis, University of Bath, UK.
+
+\bibitem[\protect\citeauthoryear{Sleit, Massad, and Musaddaq}{2011}]{P5}
+Sleit, A.; Massad, Y.; and Musaddaq, M.
+\newblock 2011.
+\newblock An alternative clustering approach for reconstructing cross cut
+  shredded text documents.
+\newblock {\em Telecommunication Systems}  1--11.
+
+\end{thebibliography}

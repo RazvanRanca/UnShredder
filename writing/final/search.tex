@@ -1,3 +1,4 @@
+\addtocontents{toc}{\newpage}
 \chapter{Heuristic Search}
 \label{chap5}
 \section{Motivation}
@@ -176,25 +177,25 @@ We turn to evaluating the strengths and weaknesses of the algorithms discussed a
 Firstly, we look at the performance offered by the various search functions. This is accomplished by running all the heuristics on the same input document, using the same cost function and then comparing the number of correct edges observed in the output (see Figure \ref{fig:searchScore}). 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{searchScores}
+  \includegraphics[width=\textwidth]{searchScores.pdf}
   \caption{The proportion of correct edges found by each search heuristic as the number of shreds increases.}
   \label{fig:searchScore}
 \end{figure}
 These results show that the Row Building Heuristic performs significantly worse than the others, but the performance of the top 3 heuristics is somewhat hard to compare. 
 
-In order to try to improve upon this, a new evaluation method is proposed. This method tries to evaluate how hard it would be for a human to understand what is printed on the returned document. We therefore look at the number of moves a human would have to make to obtain the correct solution from a solution received from one of the heuristic. This assumes that the human can spot all areas of the document that are correctly reconstructed, extracts these areas and places them correctly relative to one another. Using this new evaluation method, we get Figure \ref{fig:searchGroups}, which shows that Kruskal is usually the best performing heuristic, even if not by a large margin.
+In order to try to improve upon this, a new evaluation method is proposed. This method tries to evaluate how hard it would be for a human to understand what is printed on the returned document. We therefore look at the number of moves a human would have to make to obtain the correct solution from a solution received from one of the heuristics. This assumes that the human can spot all areas of the document that are correctly reconstructed, extracts these areas and places them correctly relative to one another. Using this new evaluation method, we get Figure \ref{fig:searchGroups}, which shows that Kruskal is usually the best performing heuristic, even if not by a large margin.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{searchGroups}
-  \caption{The proportion of correct edges found by each search heuristic as the number of shreds increases.}
+  \includegraphics[width=\textwidth]{searchGroups.pdf}
+  \caption{The number of moves left to perform to reach a correct solution, after running the search heuristics.}
   \label{fig:searchGroups}
 \end{figure}
 
 Secondly, we analyse the scalability of the algorithms. In real world scenarios an unshredder would potentially have to work with thousands, or even tens of thousands of pieces, which makes scalability an important factor to consider. For comparison purposes, the runtime of several more complex search functions are also shown in Figure \ref{fig:searchTime}. 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{searchTime}
+  \includegraphics[width=\textwidth]{searchTime.pdf}
   \caption{Runtime comparison for 3 of the heuristics and several previously reported methods taken from \cite{P2,P5,P7}. ``ACO" is Ant Colony Optimization and ``$HV^2$" and ``$BV^2$" are two different genetic algorithms. }
   \label{fig:searchTime}
 \end{figure}
@@ -224,7 +225,7 @@ The simplest approach is to consider pieces that have already been placed as mov
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{cascadingCorrection}
+  \includegraphics[width=\textwidth]{cascadingCorrection.pdf}
   \caption{Allowing already placed pieces to move ameliorates the cascading problem. Results are on 5x5 instances.}
   \label{fig:cascCorr}
 \end{figure}
@@ -260,7 +261,7 @@ The performance hit shown above limits the size of the lookahead that can be use
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{errorCorrecting}
+  \includegraphics[width=\textwidth]{errorCorrecting.pdf}
   \caption{Comparison between the basic Prim algorithm and the enhanced versions either with just the post-processing step or with both the run-time corrections and the post-processing. The run-time corrections are not very consistent when using a small lookahead}
   \label{fig:errorCorrecting}
 \end{figure}

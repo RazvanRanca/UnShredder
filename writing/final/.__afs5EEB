@@ -1,0 +1,120 @@
+\relax 
+\citation{P1}
+\citation{P1}
+\citation{P5}
+\citation{P7}
+\citation{P7}
+\citation{P19}
+\citation{P5}
+\citation{P19}
+\citation{P6}
+\citation{P2}
+\citation{P5}
+\citation{P5}
+\citation{P2}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Heuristic Search}{37}{chapter.5}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{chap5}{{5}{37}{Heuristic Search\relax }{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Motivation}{37}{section.5.1}}
+\@writefile{brf}{\backcite{P1}{{37}{5.1}{section.5.1}}}
+\@writefile{brf}{\backcite{P1,P5,P7}{{37}{5.1}{section.5.1}}}
+\@writefile{brf}{\backcite{P7,P19}{{37}{5.1}{section.5.1}}}
+\@writefile{brf}{\backcite{P5,P19}{{37}{5.1}{section.5.1}}}
+\@writefile{brf}{\backcite{P6}{{37}{5.1}{section.5.1}}}
+\@writefile{brf}{\backcite{P2}{{37}{5.1}{section.5.1}}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Description}{38}{section.5.2}}
+\newlabel{chap5Desc}{{5.2}{38}{Description\relax }{section.5.2}{}}
+\@writefile{brf}{\backcite{P5}{{38}{5.2}{section.5.2}}}
+\@writefile{brf}{\backcite{P5}{{38}{5.2}{section.5.2}}}
+\@writefile{brf}{\backcite{P2}{{38}{5.2}{section.5.2}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Four steps from the middle of a ReconstructShreds search are shown. The clusters are called A, B, C and D, the green pieces highlight the changes that occur in every step and the red pieces show the positions that are considered for the insertion of new shreds.\relax }}{38}{figure.caption.27}}
+\newlabel{fig:kruskal}{{5.1}{38}{Four steps from the middle of a ReconstructShreds search are shown. The clusters are called A, B, C and D, the green pieces highlight the changes that occur in every step and the red pieces show the positions that are considered for the insertion of new shreds.\relax \relax }{figure.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Analysis of ReconstructShreds}{39}{subsection.5.2.1}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces The ReconstructShreds heuristic\relax }}{39}{algorithm.1}}
+\newlabel{alg:RS}{{1}{39}{The ReconstructShreds heuristic\relax \relax }{algorithm.1}{}}
+\citation{P9}
+\citation{P2}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Here two potential matches for the red slot are shown. The first match is a single white piece, while the second match is a group of 3 shreds that perfectly aligns with our target shreds. Since ReconstructShreds will only look at one edge, both matches will have an identical score, namely that assigned to all white on white matches. ReconstructShreds cannot take advantage of the extra information gained since the second white shred was merged with additional shreds.\relax }}{40}{figure.caption.28}}
+\newlabel{fig:rsp}{{5.2}{40}{Here two potential matches for the red slot are shown. The first match is a single white piece, while the second match is a group of 3 shreds that perfectly aligns with our target shreds. Since ReconstructShreds will only look at one edge, both matches will have an identical score, namely that assigned to all white on white matches. ReconstructShreds cannot take advantage of the extra information gained since the second white shred was merged with additional shreds.\relax \relax }{figure.caption.28}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Kruskal based heuristic}{41}{subsection.5.2.2}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces The Kruskal based heuristic\relax }}{41}{algorithm.2}}
+\newlabel{alg:kruskal}{{2}{41}{The Kruskal based heuristic\relax \relax }{algorithm.2}{}}
+\@writefile{brf}{\backcite{P9}{{41}{2}{Hfootnote.9}}}
+\@writefile{brf}{\backcite{P2}{{41}{2}{Hfootnote.9}}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces The getProb helper function\relax }}{42}{algorithm.3}}
+\newlabel{alg:getProb}{{3}{42}{The getProb helper function\relax \relax }{algorithm.3}{}}
+\citation{P2}
+\citation{P5}
+\citation{P7}
+\citation{P2}
+\citation{P5}
+\citation{P7}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}Evaluating the heuristics}{43}{subsection.5.2.3}}
+\newlabel{chap5Eval}{{5.2.3}{43}{Evaluating the heuristics\relax }{subsection.5.2.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces The proportion of correct edges found by each search heuristic as the number of shreds increases.\relax }}{43}{figure.caption.29}}
+\newlabel{fig:searchScore}{{5.3}{43}{The proportion of correct edges found by each search heuristic as the number of shreds increases.\relax \relax }{figure.caption.29}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces The proportion of correct edges found by each search heuristic as the number of shreds increases.\relax }}{44}{figure.caption.30}}
+\newlabel{fig:searchGroups}{{5.4}{44}{The proportion of correct edges found by each search heuristic as the number of shreds increases.\relax \relax }{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Cascading}{44}{section.5.3}}
+\newlabel{chap5Casc}{{5.3}{44}{Cascading\relax }{section.5.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Runtime comparison for 3 of the heuristics and several previously reported methods taken from \cite  {P2,P5,P7}. ``ACO" is Ant Colony Optimization and ``$HV^2$" and ``$BV^2$" are two different genetic algorithms. \relax }}{45}{figure.caption.31}}
+\@writefile{brf}{\backcite{P2,P5,P7}{{45}{5.5}{figure.caption.31}}}
+\newlabel{fig:searchTime}{{5.5}{45}{Runtime comparison for 3 of the heuristics and several previously reported methods taken from \cite {P2,P5,P7}. ``ACO" is Ant Colony Optimization and ``$HV^2$" and ``$BV^2$" are two different genetic algorithms. \relax \relax }{figure.caption.31}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces The effect the error in cost/score has on the final error of the method for both search heuristics on 5*5 shreds and for Prim on 30*30 shreds \relax }}{46}{figure.caption.32}}
+\newlabel{fig:cascading}{{5.6}{46}{The effect the error in cost/score has on the final error of the method for both search heuristics on 5*5 shreds and for Prim on 30*30 shreds \relax \relax }{figure.caption.32}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Making all shreds movable}{46}{subsection.5.3.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Allowing already placed pieces to move ameliorates the cascading problem. Results are on 5x5 instances.\relax }}{47}{figure.caption.33}}
+\newlabel{fig:cascCorr}{{5.7}{47}{Allowing already placed pieces to move ameliorates the cascading problem. Results are on 5x5 instances.\relax \relax }{figure.caption.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Adding a post-processing step}{47}{subsection.5.3.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces In order to move from solution 1 to solution 2 the greedy search would have to pass through solution 3. However, solutions 1 and 3 both have the same number of external edges and so the same score. In this case the transition to the correct result will only be made if the search can see at least 3 moves ahead.\relax }}{48}{figure.caption.34}}
+\newlabel{fig:lookahead}{{5.8}{48}{In order to move from solution 1 to solution 2 the greedy search would have to pass through solution 3. However, solutions 1 and 3 both have the same number of external edges and so the same score. In this case the transition to the correct result will only be made if the search can see at least 3 moves ahead.\relax \relax }{figure.caption.34}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Evaluating the error-correcting methods}{48}{subsection.5.3.3}}
+\citation{P2}
+\citation{P7}
+\citation{P34}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.9}{\ignorespaces Comparison between the basic Prim algorithm and the enhanced versions either with just the post-processing step or with both the run-time corrections and the post-processing. In the case of ``Prim - Runtime \& PostProc", the last 3 data points weren't generated as their run took longer than 20 minutes and was thus stopped.\relax }}{49}{figure.caption.35}}
+\newlabel{fig:corrScal}{{5.9}{49}{Comparison between the basic Prim algorithm and the enhanced versions either with just the post-processing step or with both the run-time corrections and the post-processing. In the case of ``Prim - Runtime \& PostProc", the last 3 data points weren't generated as their run took longer than 20 minutes and was thus stopped.\relax \relax }{figure.caption.35}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Modularity}{49}{section.5.4}}
+\newlabel{chap5Mod}{{5.4}{49}{Modularity\relax }{section.5.4}{}}
+\@writefile{brf}{\backcite{P2,P7,P34}{{49}{5.4}{section.5.4}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.10}{\ignorespaces Comparison between the basic Prim algorithm and the enhanced versions either with just the post-processing step or with both the run-time corrections and the post-processing. The run-time corrections are not very consistent when using a small lookahead\relax }}{50}{figure.caption.36}}
+\newlabel{fig:errorCorrecting}{{5.10}{50}{Comparison between the basic Prim algorithm and the enhanced versions either with just the post-processing step or with both the run-time corrections and the post-processing. The run-time corrections are not very consistent when using a small lookahead\relax \relax }{figure.caption.36}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.11}{\ignorespaces Trade-off between reduction in search space and errors incurred by 3 different stopping conditions.\relax }}{51}{figure.caption.37}}
+\newlabel{fig:stopCond}{{5.11}{51}{Trade-off between reduction in search space and errors incurred by 3 different stopping conditions.\relax \relax }{figure.caption.37}{}}
+\@setckpt{search}{
+\setcounter{page}{52}
+\setcounter{equation}{0}
+\setcounter{enumi}{0}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{5}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{5}
+\setcounter{section}{4}
+\setcounter{subsection}{0}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{11}
+\setcounter{table}{0}
+\setcounter{ContinuedFloat}{0}
+\setcounter{@todonotes@numberoftodonotes}{0}
+\setcounter{Item}{0}
+\setcounter{Hfootnote}{12}
+\setcounter{subfigure}{2}
+\setcounter{subtable}{0}
+\setcounter{ALG@line}{16}
+\setcounter{ALG@rem}{0}
+\setcounter{ALG@nested}{0}
+\setcounter{ALG@Lnr}{2}
+\setcounter{ALG@blocknr}{10}
+\setcounter{ALG@storecount}{0}
+\setcounter{ALG@tmpcounter}{0}
+\setcounter{float@type}{8}
+\setcounter{algorithm}{3}
+\setcounter{parentequation}{0}
+\setcounter{section@level}{1}
+}
