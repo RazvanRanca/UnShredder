@@ -1,0 +1,1823 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.9.11)  4 AUG 2013 12:40
+entering extended mode
+ %&-line parsing enabled.
+**skeleton
+(./skeleton.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
+erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
+ french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
+us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
+tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
+turkish, ukenglish, ukrainian, loaded.
+(/usr/share/texmf/tex/latex/informatics/infthesis/infthesis.cls
+Document Class: infthesis 2011/02/02 v3.5 School of Informatics Thesis Class
+(/usr/share/texmf/tex/latex/geometry/geometry.sty
+Package: geometry 2002/07/08 v3.2 Page Geometry
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+\Gm@cnth=\count79
+\Gm@cntv=\count80
+\c@Gm@tempcnt=\count81
+\Gm@bindingoffset=\dimen102
+\Gm@wd@mp=\dimen103
+\Gm@odd@mp=\dimen104
+\Gm@even@mp=\dimen105
+\Gm@dimlist=\toks15
+
+(/usr/share/texmf/tex/xelatex/xetexconfig/geometry.cfg))
+(/usr/share/texmf/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/usr/share/texmf/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count82
+))
+(/usr/share/texmf/tex/latex/tools/xspace.sty
+Package: xspace 2006/05/08 v1.12 Space after command names (DPC,MH)
+)
+(/usr/share/texmf/tex/latex/common/logos/eushield.sty
+Package: eushield 2006/08/28\ v1.1\ Commands for including the EU shield graphi
+c
+
+(/usr/share/texmf/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2006/02/20 v1.4 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in pdf mode detected.
+))
+(/usr/share/texmf/tex/latex/base/report.cls
+Document Class: report 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size12.clo
+File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count83
+\c@chapter=\count84
+\c@section=\count85
+\c@subsection=\count86
+\c@subsubsection=\count87
+\c@paragraph=\count88
+\c@subparagraph=\count89
+\c@figure=\count90
+\c@table=\count91
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen106
+)
+(/usr/share/texmf/tex/latex/pslatex/pslatex.sty
+Package: pslatex 1996/07/24 v1.2 pslatex emulation (DPC)
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 65.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/ptmcm/m/n on input line 65.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ptmcm/m/n on input line 65.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 66.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/ptmcm/m/it on input line 66.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/ptmcm/m/it on input line 66.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 67.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/pzccm/m/n on input line 67.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/pzccm/m/n on input line 67.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 68.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/psycm/m/n on input line 68.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/psycm/m/n on input line 68.
+\symbold=\mathgroup4
+\symitalic=\mathgroup5
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 74.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 74.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 74.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 75.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/ptm/m/it on input line 75.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/ptm/m/it on input line 75.
+)
+(/usr/share/texmf/tex/latex/sectsty/sectsty.sty
+Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
+les
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/caption.sty
+Package: caption 2013/02/16 v3.3-67 Customizing captions (AR)
+
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/caption3.sty
+Package: caption3 2013/02/03 v1.5-62 caption3 kernel (AR)
+\captionmargin=\dimen107
+\captionmargin@=\dimen108
+\captionwidth=\dimen109
+\caption@tempdima=\dimen110
+\caption@indent=\dimen111
+\caption@parindent=\dimen112
+\caption@hangindent=\dimen113
+)
+\c@ContinuedFloat=\count92
+))
+(/usr/share/texmf/tex/latex/ltxmisc/parskip.sty
+Package: parskip 2001/04/09 non-zero parskip adjustments
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/todonotes.sty
+Package: todonotes 2012/07/25 .dtx Todonotes source and documentation.
+Package: todonotes 2012/07/25
+
+(/usr/share/texmf/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2006/11/18 v2.5f package option processing (HA)
+
+(/usr/share/texmf/tex/latex/xkeyval/xkeyval.tex
+\XKV@toks=\toks16
+\XKV@depth=\count93
+File: xkeyval.tex 2006/11/18 v2.5f key=value parser (HA)
+))
+(/usr/share/texmf/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/usr/share/texmf/tex/latex/config/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/frontendlayer/tikz.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/basiclayer/pgf.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/utilities/pgfrcs.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfutil-common
+.tex
+\pgfutil@everybye=\toks17
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfutil-latex.
+def)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfrcs.code.te
+x
+Package: pgfrcs 2008/02/20 v2.00 (rcs-revision 1.21)
+))
+Package: pgf 2008/01/15 v2.00 (rcs-revision 1.12)
+ (/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/basiclayer/pgfcore.sty (/
+usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+\Gin@req@height=\dimen114
+\Gin@req@width=\dimen115
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/systemlayer/pgfsys.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsys.code.
+tex
+Package: pgfsys 2008/02/07 v2.00 (rcs-revision 1.31)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgfkeys.code.t
+ex
+\pgfkeys@pathtoks=\toks18
+\pgfkeys@temptoks=\toks19
+)
+\pgf@x=\dimen116
+\pgf@y=\dimen117
+\pgf@xa=\dimen118
+\pgf@ya=\dimen119
+\pgf@xb=\dimen120
+\pgf@yb=\dimen121
+\pgf@xc=\dimen122
+\pgf@yc=\dimen123
+\c@pgf@counta=\count94
+\c@pgf@countb=\count95
+\c@pgf@countc=\count96
+\c@pgf@countd=\count97
+ (/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2008/01/13  (rcs-revision 1.6)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 885.
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsys-pdfte
+x.def
+File: pgfsys-pdftex.def 2007/12/20  (rcs-revision 1.20)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsys-commo
+n-pdf.def
+File: pgfsys-common-pdf.def 2007/12/17  (rcs-revision 1.8)
+)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsyssoftpa
+th.code.tex
+File: pgfsyssoftpath.code.tex 2008/01/23  (rcs-revision 1.6)
+\pgfsyssoftpath@smallbuffer@items=\count98
+\pgfsyssoftpath@bigbuffer@items=\count99
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/systemlayer/pgfsysprotoc
+ol.code.tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcore.code.
+tex
+Package: pgfcore 2008/01/15 v2.00 (rcs-revision 1.6)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmath.code.tex
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathcalc.code.te
+x
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathutil.code.te
+x
+\pgfmath@box=\box26
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathparser.code.
+tex
+\pgfmath@stack=\toks20
+\c@pgfmath@parsecounta=\count100
+\c@pgfmath@parsecountb=\count101
+\c@pgfmath@parsecountc=\count102
+\pgfmath@parsex=\dimen124
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathoperations.c
+ode.tex
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathtrig.code.te
+x)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathrnd.code.tex
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/math/pgfmathbase.code.te
+x)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepoints
+.code.tex
+File: pgfcorepoints.code.tex 2008/02/03  (rcs-revision 1.13)
+\pgf@picminx=\dimen125
+\pgf@picmaxx=\dimen126
+\pgf@picminy=\dimen127
+\pgf@picmaxy=\dimen128
+\pgf@pathminx=\dimen129
+\pgf@pathmaxx=\dimen130
+\pgf@pathminy=\dimen131
+\pgf@pathmaxy=\dimen132
+\pgf@xx=\dimen133
+\pgf@xy=\dimen134
+\pgf@yx=\dimen135
+\pgf@yy=\dimen136
+\pgf@zx=\dimen137
+\pgf@zy=\dimen138
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepathco
+nstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2008/02/13  (rcs-revision 1.14)
+\pgf@path@lastx=\dimen139
+\pgf@path@lasty=\dimen140
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepathus
+age.code.tex
+File: pgfcorepathusage.code.tex 2008/01/23  (rcs-revision 1.11)
+\pgf@shorten@end@additional=\dimen141
+\pgf@shorten@start@additional=\dimen142
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorescopes
+.code.tex
+File: pgfcorescopes.code.tex 2008/01/15  (rcs-revision 1.26)
+\pgfpic=\box27
+\pgf@hbox=\box28
+\pgf@layerbox@main=\box29
+\pgf@picture@serial@count=\count103
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoregraphi
+cstate.code.tex
+File: pgfcoregraphicstate.code.tex 2007/12/12  (rcs-revision 1.8)
+\pgflinewidth=\dimen143
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoretransf
+ormations.code.tex
+File: pgfcoretransformations.code.tex 2008/02/04  (rcs-revision 1.10)
+\pgf@pt@x=\dimen144
+\pgf@pt@y=\dimen145
+\pgf@pt@temp=\dimen146
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorequick.
+code.tex
+File: pgfcorequick.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoreobject
+s.code.tex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepathpr
+ocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2008/01/23  (rcs-revision 1.7)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorearrows
+.code.tex
+File: pgfcorearrows.code.tex 2007/06/07  (rcs-revision 1.8)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoreshade.
+code.tex
+File: pgfcoreshade.code.tex 2007/12/10  (rcs-revision 1.9)
+\pgf@max=\dimen147
+\pgf@sys@shading@range@num=\count104
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoreimage.
+code.tex
+File: pgfcoreimage.code.tex 2008/01/15  (rcs-revision 1.1)
+\pgfexternal@startupbox=\box30
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorelayers
+.code.tex
+File: pgfcorelayers.code.tex 2008/01/15  (rcs-revision 1.1)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcoretransp
+arency.code.tex
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/basiclayer/pgfcorepatter
+ns.code.tex
+File: pgfcorepatterns.code.tex 2008/01/15  (rcs-revision 1.1)
+)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/modules/pgfmoduleshapes.
+code.tex
+File: pgfmoduleshapes.code.tex 2008/02/13  (rcs-revision 1.4)
+\pgfnodeparttextbox=\box31
+\toks@savedmacro=\toks21
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/modules/pgfmoduleplot.co
+de.tex
+File: pgfmoduleplot.code.tex 2008/01/15  (rcs-revision 1.1)
+\pgf@plotwrite=\write3
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/compatibility/pgfcomp-vers
+ion-0-65.sty
+Package: pgfcomp-version-0-65 2007/07/03 v2.00 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen148
+\pgf@nodesepend=\dimen149
+)
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/compatibility/pgfcomp-vers
+ion-1-18.sty
+Package: pgfcomp-version-1-18 2007/07/23 v2.00 (rcs-revision 1.1)
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/latex/pgf/utilities/pgffor.sty
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/utilities/pgffor.code.te
+x
+Package: pgffor 2007/11/07 v2.00 (rcs-revision 1.8)
+\pgffor@iter=\dimen150
+\pgffor@skip=\dimen151
+))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/frontendlayer/tikz/tikz.
+code.tex
+Package: tikz 2008/02/13 v2.00 (rcs-revision 1.27)
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/libraries/pgflibraryplot
+handlers.code.tex
+File: pgflibraryplothandlers.code.tex 2007/03/09 v2.00 (rcs-revision 1.9)
+\pgf@plot@mark@count=\count105
+\pgfplotmarksize=\dimen152
+)
+\tikz@lastx=\dimen153
+\tikz@lasty=\dimen154
+\tikz@lastxsaved=\dimen155
+\tikz@lastysaved=\dimen156
+\tikzleveldistance=\dimen157
+\tikzsiblingdistance=\dimen158
+\tikz@figbox=\box32
+\tikz@tempbox=\box33
+\tikztreelevel=\count106
+\tikznumberofchildren=\count107
+\tikznumberofcurrentchild=\count108
+\tikz@fig@count=\count109
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/modules/pgfmodulematrix.
+code.tex
+File: pgfmodulematrix.code.tex 2008/01/15  (rcs-revision 1.1)
+\pgfmatrixcurrentrow=\count110
+\pgfmatrixcurrentcolumn=\count111
+\pgf@matrix@numberofcolumns=\count112
+)
+\tikz@expandcount=\count113
+
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/frontendlayer/tikz/libra
+ries/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2008/01/09 v2.00 (rcs-revision 1.1)
+)))
+(/usr/local/share/texmf/tex/latex/pgf-2.00/generic/pgf/frontendlayer/tikz/libra
+ries/tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2008/02/12 v2.00 (rcs-revision 1.5)
+)
+(/usr/share/texmf/tex/latex/tools/calc.sty
+Package: calc 2005/08/06 v4.2 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count114
+\calc@Bcount=\count115
+\calc@Adimen=\dimen159
+\calc@Bdimen=\dimen160
+\calc@Askip=\skip43
+\calc@Bskip=\skip44
+LaTeX Info: Redefining \setlength on input line 75.
+LaTeX Info: Redefining \addtolength on input line 76.
+\calc@Ccount=\count116
+\calc@Cskip=\skip45
+)
+\c@@todonotes@numberoftodonotes=\count117
+)
+(/usr/share/texmf/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2007/02/07 v6.75r Hypertext links for LaTeX
+\@linkdim=\dimen161
+\Hy@linkcounter=\count118
+\Hy@pagecounter=\count119
+
+(/usr/share/texmf/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2007/02/07 v6.75r Hyperref: PDFDocEncoding definition (HO)
+)
+(/usr/share/texmf/tex/latex/config/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+(/usr/share/texmf/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2006/08/22 v2.4 Connects package keyval with LaTeX options (
+HO)
+)
+Package hyperref Info: Hyper figures OFF on input line 2288.
+Package hyperref Info: Link nesting OFF on input line 2293.
+Package hyperref Info: Hyper index ON on input line 2296.
+Package hyperref Info: Plain pages OFF on input line 2303.
+Package hyperref Info: Backreferencing ON on input line 2306.
+
+Implicit mode ON; LaTeX internals redefined
+Package hyperref Info: Bookmarks ON on input line 2444.
+(/usr/share/texmf/tex/latex/hyperref/backref.sty
+Package: backref 2006/10/06 v1.27 Bibliographical back referencing
+)
+(/usr/share/texmf/tex/latex/html/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
+)
+LaTeX Info: Redefining \url on input line 2599.
+\Fld@menulength=\count120
+\Field@Width=\dimen162
+\Fld@charsize=\dimen163
+\Choice@toks=\toks22
+\Field@toks=\toks23
+Package hyperref Info: Hyper figures OFF on input line 3102.
+Package hyperref Info: Link nesting OFF on input line 3107.
+Package hyperref Info: Hyper index ON on input line 3110.
+Package hyperref Info: backreferencing ON on input line 3115.
+Package hyperref Info: Link coloring OFF on input line 3122.
+\Hy@abspage=\count121
+\c@Item=\count122
+\c@Hfootnote=\count123
+)
+*hyperref using default driver hpdftex*
+(/usr/share/texmf/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
+\Fld@listcount=\count124
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+\c@subfigure=\count125
+\c@subtable=\count126
+)
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/algpseudocode.sty
+Package: algpseudocode 
+
+(/afs/inf.ed.ac.uk/user/s09/s0954584/texmf/tex/latex/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count127
+\c@ALG@rem=\count128
+\c@ALG@nested=\count129
+\ALG@tlm=\skip46
+\ALG@thistlm=\skip47
+\c@ALG@Lnr=\count130
+\c@ALG@blocknr=\count131
+\c@ALG@storecount=\count132
+\c@ALG@tmpcounter=\count133
+\ALG@tmplength=\skip48
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/share/texmf/tex/latex/algorithms/algorithm.sty
+Package: algorithm 
+
+Document Style `algorithm' - floating environment
+(/usr/share/texmf/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count134
+\float@exts=\toks24
+\float@box=\box34
+\@float@everytoks=\toks25
+\@floatcapt=\box35
+)
+\@float@every@algorithm=\toks26
+\c@algorithm=\count135
+)
+(/usr/share/texmf/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2005/03/16 v1.6180 publication quality tables
+\heavyrulewidth=\dimen164
+\lightrulewidth=\dimen165
+\cmidrulewidth=\dimen166
+\belowrulesep=\dimen167
+\belowbottomsep=\dimen168
+\aboverulesep=\dimen169
+\abovetopsep=\dimen170
+\cmidrulesep=\dimen171
+\cmidrulekern=\dimen172
+\defaultaddspace=\dimen173
+\@cmidla=\count136
+\@cmidlb=\count137
+\@aboverulesep=\dimen174
+\@belowrulesep=\dimen175
+\@thisruleclass=\count138
+\@lastruleclass=\count139
+\@thisrulewidth=\dimen176
+)
+(/usr/share/texmf/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen177
+)
+(/usr/share/texmf/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip49
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texmf/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks27
+\ex@=\dimen178
+))
+(/usr/share/texmf/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen179
+)
+(/usr/share/texmf/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count140
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count141
+\leftroot@=\count142
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count143
+\DOTSCASE@=\count144
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box36
+\strutbox@=\box37
+\big@size=\dimen180
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count145
+\c@MaxMatrixCols=\count146
+\dotsspace@=\muskip10
+\c@parentequation=\count147
+\dspbrk@lvl=\count148
+\tag@help=\toks28
+\row@=\count149
+\column@=\count150
+\maxfields@=\count151
+\andhelp@=\toks29
+\eqnshift@=\dimen181
+\alignsep@=\dimen182
+\tagshift@=\dimen183
+\tagwidth@=\dimen184
+\totwidth@=\dimen185
+\lineht@=\dimen186
+\@envbody=\toks30
+\multlinegap=\skip50
+\multlinetaggap=\skip51
+\mathdisplay@stack=\toks31
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+) (./skeleton.aux (./intro.aux)
+(./probDef.aux) (./litRev.aux) (./score.aux
+
+LaTeX Warning: Label `tab:costScoreComp' multiply defined.
+
+) (./search.aux) (./preproc.aux) (./conc.aux))
+\openout1 = `skeleton.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/pzccm/m/n on input line 23.
+LaTeX Font Info:    Try loading font information for OMS+pzccm on input line 23
+.
+
+(/usr/share/texmf/tex/latex/psnfss/omspzccm.fd
+File: omspzccm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/pzccm.
+)
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+-------------------- Geometry parameters
+paper: a4paper
+landscape: --
+twocolumn: --
+twoside: true
+asymmetric: --
+h-parts: 113.81102pt, 412.56497pt, 71.13188pt
+v-parts: 56.9055pt, 674.33032pt, 113.81102pt
+hmarginratio: --
+vmarginratio: --
+lines: --
+heightrounded: --
+bindingoffset: 0.0pt
+truedimen: --
+includehead: --
+includefoot: --
+includemp: --
+driver: pdftex
+-------------------- Page layout dimensions and switches
+\paperwidth  597.50787pt
+\paperheight 845.04684pt
+\textwidth  412.56497pt
+\textheight 674.33032pt
+\oddsidemargin  41.54103pt
+\evensidemargin -1.1381pt
+\topmargin  -52.36449pt
+\headheight 12.0pt
+\headsep    25.0pt
+\footskip   30.0pt
+\marginparwidth 56.9055pt
+\marginparsep   10.0pt
+\columnsep  10.0pt
+\skip\footins  10.8pt plus 4.0pt minus 2.0pt
+\hoffset 0.0pt
+\voffset 0.0pt
+\mag 1000
+\@twosidetrue \@mparswitchtrue 
+(1in=72.27pt, 1cm=28.45pt)
+-----------------------
+
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count152
+\scratchdimen=\dimen187
+\scratchbox=\box38
+\nofMPsegments=\count153
+\nofMParguments=\count154
+\MPscratchCnt=\count155
+\MPscratchDim=\dimen188
+\MPnumerator=\count156
+\everyMPtoPDFconversion=\toks32
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package hyperref Info: Link coloring OFF on input line 23.
+ (/usr/share/texmf/tex/latex/hyperref/nameref.sty
+Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
+
+(/usr/share/texmf/tex/latex/oberdiek/refcount.sty
+Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
+)
+\c@section@level=\count157
+)
+LaTeX Info: Redefining \ref on input line 23.
+LaTeX Info: Redefining \pageref on input line 23.
+ (./skeleton.out)
+(./skeleton.out)
+\@outlinefile=\write4
+\openout4 = `skeleton.out'.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 40.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 40.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 18.66588pt on input line 40.
+LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
+(Font)              scaled to size 10.79993pt on input line 40.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 40.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 10.79993pt on input line 40.
+
+Overfull \hbox (12.06096pt too wide) in paragraph at lines 40--40
+[]\OT1/ptm/m/n/12 All stages of the un-shred-ding pipeline are anal-ysed, start
+-ing from scanned
+ []
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2
+
+]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24.88> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 74.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <24.88> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 74.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 22.39185pt on input line 74.
+ (./skeleton.toc
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1.
+LaTeX Font Info:    Try loading font information for OT1+ptmcm on input line 2.
+
+
+(/usr/share/texmf/tex/latex/psnfss/ot1ptmcm.fd
+File: ot1ptmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ptmcm.
+)
+LaTeX Font Info:    Try loading font information for OML+ptmcm on input line 2.
+
+
+(/usr/share/texmf/tex/latex/psnfss/omlptmcm.fd
+File: omlptmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ptmcm.
+)
+LaTeX Font Info:    Try loading font information for OMX+psycm on input line 2.
+
+
+(/usr/share/texmf/tex/latex/psnfss/omxpsycm.fd
+File: omxpsycm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/psycm.
+)
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 2.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 2.
+ [3])
+\tf@toc=\write5
+\openout5 = `skeleton.toc'.
+
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <12> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 78.
+LaTeX Font Info:    Font shape `OT1/phv/m/sl' will be
+(Font)              scaled to size 10.79993pt on input line 78.
+ [4]
+\openout2 = `intro.aux'.
+
+ (./intro.tex
+Chapter 1.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/iran.jpg, 
+id=290, 648.4225pt x 860.21375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/iran.
+jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/iran.j
+pg>
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 14.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <17.28> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 14.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 15.55188pt on input line 14.
+ [5
+
+
+ </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/iran.jpg>
+]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 17.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 17.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 17.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stasi.jpg,
+ id=310, 469.755pt x 264.23718pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stasi
+.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stasi.
+jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darpa1.png
+, id=311, 1035.87pt x 734.745pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darpa
+1.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darpa1
+.png>
+LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
+(Font)              scaled to size 9.85492pt on input line 33.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darpa4.png
+, id=312, 1086.0575pt x 740.7675pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darpa
+4.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darpa4
+.png> [6 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/s
+tasi.jpg>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darpa1
+.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/darp
+a4.png>]
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/pzccm/m/n' tried instead on input line 51.
+
+[8]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securityle
+vel1.jpg, id=352, 100.375pt x 100.375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/secur
+itylevel1.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securi
+tylevel1.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securityle
+vel2.jpg, id=353, 100.375pt x 100.375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/secur
+itylevel2.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securi
+tylevel2.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securityle
+vel3.jpg, id=354, 100.375pt x 100.375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/secur
+itylevel3.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securi
+tylevel3.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securityle
+vel4.jpg, id=355, 100.375pt x 100.375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/secur
+itylevel4.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securi
+tylevel4.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securityle
+vel5.jpg, id=356, 100.375pt x 100.375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/secur
+itylevel5.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securi
+tylevel5.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securityle
+vel6.jpg, id=357, 100.375pt x 100.375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/secur
+itylevel6.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securi
+tylevel6.jpg>) [9
+
+ </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/securityl
+evel1.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs
+/securitylevel2.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/wr
+iting/imgs/securitylevel3.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnS
+hredder/writing/imgs/securitylevel4.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/D
+esktop/UnShredder/writing/imgs/securitylevel5.jpg> </afs/inf.ed.ac.uk/user/s09/
+s0954584/Desktop/UnShredder/writing/imgs/securitylevel6.jpg>]
+\openout2 = `probDef.aux'.
+
+
+(./probDef.tex [10
+
+
+
+]
+Chapter 2.
+[11]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip3.j
+pg, id=387, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip3.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p3.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip1.j
+pg, id=388, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip1.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p1.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip9.j
+pg, id=389, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip9.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p9.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip0.j
+pg, id=390, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip0.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p0.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip7.j
+pg, id=391, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip7.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p7.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip5.j
+pg, id=392, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip5.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p5.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip6.j
+pg, id=393, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip6.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p6.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip4.j
+pg, id=394, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip4.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p4.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip8.j
+pg, id=395, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip8.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p8.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wip2.j
+pg, id=396, 89.33376pt x 1113.15875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip2.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/wi
+p2.jpg>
+Underfull \vbox (badness 5878) has occurred while \output is active []
+
+ [12 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/wip/w
+ip3.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/w
+ip/wip1.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/im
+gs/wip/wip9.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writin
+g/imgs/wip/wip0.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/wr
+iting/imgs/wip/wip7.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredde
+r/writing/imgs/wip/wip5.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShr
+edder/writing/imgs/wip/wip6.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/U
+nShredder/writing/imgs/wip/wip4.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Deskt
+op/UnShredder/writing/imgs/wip/wip8.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/D
+esktop/UnShredder/writing/imgs/wip/wip2.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/conf.png, 
+id=403, 361.35pt x 222.8325pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/conf.
+png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/conf.p
+ng> [13 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/co
+nf.png>]
+
+Package amsmath Warning: Foreign command \atopwithdelims;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 130.
+
+) [14]
+\openout2 = `litRev.aux'.
+
+ (./litRev.tex
+Chapter 3.
+[15
+
+
+
+]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/deshredder
+.jpg, id=454, 2107.875pt x 1204.5pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/deshr
+edder.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/deshre
+dder.jpg> [16 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/i
+mgs/deshredder.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/gausIdea.j
+pg, id=475, 253.94875pt x 283.0575pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/gausI
+dea.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/gausId
+ea.jpg> [17
+
+ </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/gausIdea.
+jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/white.jpg,
+ id=488, 405.515pt x 53.19875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/white
+.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/white.
+jpg> [18 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/w
+hite.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim1.jpg,
+ id=508, 1387.1825pt x 2005.4925pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim1
+.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim1.
+jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim2.jpg,
+ id=509, 1387.1825pt x 2005.4925pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim2
+.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim2.
+jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim3.jpg,
+ id=510, 1387.1825pt x 2005.4925pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim3
+.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim3.
+jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim4.jpg,
+ id=511, 1387.1825pt x 2005.4925pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim4
+.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim4.
+jpg> [19
+
+] [20 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim
+1.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/pri
+m2.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/pr
+im3.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/p
+rim4.jpg>] [21]) [22]
+\openout2 = `score.aux'.
+
+ (./score.tex
+Chapter 4.
+
+Underfull \hbox (badness 1087) in paragraph at lines 14--14
+[]\OT1/ptm/m/n/12 Relies on the val-ues the au-thors hand-
+ []
+
+
+Overfull \hbox (24.0pt too wide) in paragraph at lines 10--19
+ [][] 
+ []
+
+
+Overfull \hbox (7.39468pt too wide) in paragraph at lines 7--19
+[]\OT1/ptm/m/n/12 This ad-hoc for-mu-la-tion suf-fer from sev-eral im-ped-i-men
+ts which the prob-a-bilis-tic method
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 7--19
+
+ []
+
+
+Overfull \hbox (24.0pt too wide) in paragraph at lines 22--31
+ [][] 
+ []
+
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPres1.
+jpg, id=565, 820.06375pt x 529.98pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normP
+res1.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPr
+es1.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPres2.
+jpg, id=566, 818.05624pt x 513.92pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normP
+res2.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPr
+es2.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPres3.
+jpg, id=567, 826.08624pt x 523.9575pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normP
+res3.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPr
+es3.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPres4.
+jpg, id=568, 827.09pt x 517.935pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normP
+res4.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/normPr
+es4.jpg> [23
+
+
+
+] [24 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/norm
+Pres1.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs
+/normPres2.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing
+/imgs/normPres3.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/wr
+iting/imgs/normPres4.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/context.pn
+g, id=588, 665.48625pt x 362.35374pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/conte
+xt.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/contex
+t.png> [25 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs
+/context.png>]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 78.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 78.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 12.9599pt on input line 78.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sliding1.j
+pg, id=599, 742.775pt x 452.69125pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidi
+ng1.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidin
+g1.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sliding2.j
+pg, id=600, 744.7825pt x 456.70625pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidi
+ng2.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidin
+g2.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sliding3.j
+pg, id=601, 744.7825pt x 455.7025pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidi
+ng3.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidin
+g3.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sliding4.j
+pg, id=602, 748.7975pt x 455.7025pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidi
+ng4.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidin
+g4.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sliding5.j
+pg, id=603, 740.7675pt x 522.95375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidi
+ng5.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidin
+g5.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sliding6.j
+pg, id=604, 742.775pt x 520.94624pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidi
+ng6.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidin
+g6.jpg> [26
+
+ </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sliding1.
+jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/slidi
+ng2.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/s
+liding3.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/im
+gs/sliding4.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writin
+g/imgs/sliding5.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/wr
+iting/imgs/sliding6.jpg>] [27] [28]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/costComp.p
+df, id=629, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/costC
+omp.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/costCo
+mp.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[29]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/predObsPro
+b.pdf, id=641, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/predO
+bsProb.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/predOb
+sProb.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[30 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/costCo
+mp.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/costComp.pdf): PDF inclusion: Page Group detected which pdf
+TeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntOrig.pn
+g, id=713, 131.49126pt x 29.10875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntOr
+ig.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntOri
+g.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntNoise.p
+ng, id=714, 132.495pt x 29.10875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntNo
+ise.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntNoi
+se.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntDown.pn
+g, id=715, 89.33376pt x 19.07124pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntDo
+wn.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntDow
+n.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntSpread.
+png, id=716, 137.51375pt x 30.1125pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntSp
+read.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntSpr
+ead.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/robustness
+.pdf, id=718, 635.07263pt x 504.08327pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/robus
+tness.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/robust
+ness.pdf> [31 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/i
+mgs/predObsProb.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/predObsProb.pdf): PDF inclusion: Page Group detected which 
+pdfTeX can't handle. Ignoring it.
+> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntOrig.
+png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntNo
+ise.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/E
+ntDown.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/img
+s/EntSpread.png>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/origCompBi
+g.pdf, id=768, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/origC
+ompBig.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/origCo
+mpBig.pdf>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/noise.pdf,
+ id=769, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/noise
+.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/noise.
+pdf>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/downsample
+.pdf, id=770, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/downs
+ample.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/downsa
+mple.pdf>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/shuffle.pd
+f, id=771, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/shuff
+le.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/shuffl
+e.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[32 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/robust
+ness.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/robustness.pdf): PDF inclusion: Page Group detected which p
+dfTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/tableText.
+jpg, id=825, 372.64218pt x 324.46219pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/table
+Text.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/tableT
+ext.jpg>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[33 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/origCo
+mpBig.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/origCompBig.pdf): PDF inclusion: Page Group detected which 
+pdfTeX can't handle. Ignoring it.
+> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/noise.pd
+f
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/noise.pdf): PDF inclusion: Page Group detected which pdfTeX
+ can't handle. Ignoring it.
+> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/downsamp
+le.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/downsample.pdf): PDF inclusion: Page Group detected which p
+dfTeX can't handle. Ignoring it.
+> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/shuffle.
+pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/shuffle.pdf): PDF inclusion: Page Group detected which pdfT
+eX can't handle. Ignoring it.
+>] [34 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/tab
+leText.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/conf.jpg, 
+id=997, 361.35pt x 222.8325pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/conf.
+jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/conf.j
+pg> [35 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/co
+nf.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/rowScore.p
+df, id=1006, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/rowSc
+ore.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/rowSco
+re.pdf>) [36 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/im
+gs/rowScore.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/rowScore.pdf): PDF inclusion: Page Group detected which pdf
+TeX can't handle. Ignoring it.
+>]
+\openout2 = `search.aux'.
+
+ (./search.tex
+Chapter 5.
+[37
+
+
+
+]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruskal1.p
+ng, id=1073, 256.96pt x 192.72pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/krusk
+al1.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruska
+l1.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruskal2.p
+ng, id=1074, 361.35pt x 193.72375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/krusk
+al2.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruska
+l2.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruskal3.p
+ng, id=1075, 338.26375pt x 194.7275pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/krusk
+al3.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruska
+l3.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruskal4.p
+ng, id=1076, 275.0275pt x 194.7275pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/krusk
+al4.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/kruska
+l4.png> [38 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/img
+s/kruskal1.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing
+/imgs/kruskal2.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/wri
+ting/imgs/kruskal3.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder
+/writing/imgs/kruskal4.png>]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 55.
+ [39]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/recShredPr
+ob.jpg, id=1095, 507.8975pt x 522.95375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/recSh
+redProb.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/recShr
+edProb.jpg>
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 102.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 102.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [40 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/recSh
+redProb.jpg>] [41]
+Overfull \hbox (16.19995pt too wide) in paragraph at lines 144--145
+\OT1/ptm/m/n/12 lected (for con-ve-nience we as-sume the set of edges $\OML/ptm
+cm/m/it/12 S[]$ \OT1/ptm/m/n/12 has a func-tion $\OML/ptmcm/m/it/12 S[]:neighbo
+urs\OT1/ptmcm/m/n/12 ()$
+ []
+
+[42]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/searchScor
+es.pdf, id=1122, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/searc
+hScores.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/search
+Scores.pdf>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/searchGrou
+ps.pdf, id=1124, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/searc
+hGroups.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/search
+Groups.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/searchTime
+.pdf, id=1126, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/searc
+hTime.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/search
+Time.pdf> [43 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/i
+mgs/searchScores.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/searchScores.pdf): PDF inclusion: Page Group detected which
+ pdfTeX can't handle. Ignoring it.
+>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[44 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/search
+Groups.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/searchGroups.pdf): PDF inclusion: Page Group detected which
+ pdfTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/cascading.
+pdf, id=1236, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/casca
+ding.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/cascad
+ing.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[45 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/search
+Time.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/searchTime.pdf): PDF inclusion: Page Group detected which p
+dfTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/cascadingC
+orrection.pdf, id=1300, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/casca
+dingCorrection.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/cascad
+ingCorrection.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[46 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/cascad
+ing.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/cascading.pdf): PDF inclusion: Page Group detected which pd
+fTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/lookahead.
+png, id=1347, 853.1875pt x 652.4375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/looka
+head.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/lookah
+ead.png> [47 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/im
+gs/cascadingCorrection.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/cascadingCorrection.pdf): PDF inclusion: Page Group detecte
+d which pdfTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/corrRuntim
+e.pdf, id=1388, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/corrR
+untime.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/corrRu
+ntime.pdf> [48 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/
+imgs/lookahead.png>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/errorCorre
+cting.pdf, id=1397, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/error
+Correcting.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/errorC
+orrecting.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[49 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/corrRu
+ntime.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/corrRuntime.pdf): PDF inclusion: Page Group detected which 
+pdfTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopSearch
+.pdf, id=1445, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopS
+earch.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopSe
+arch.pdf>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopErr.pd
+f, id=1446, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopE
+rr.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopEr
+r.pdf>
+
+LaTeX Warning: Float too large for page by 42.48676pt on input line 291.
+
+)
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[50 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/errorC
+orrecting.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/errorCorrecting.pdf): PDF inclusion: Page Group detected wh
+ich pdfTeX can't handle. Ignoring it.
+>] [51 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sto
+pSearch.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/stopSearch.pdf): PDF inclusion: Page Group detected which p
+dfTeX can't handle. Ignoring it.
+> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopErr.
+pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/stopErr.pdf): PDF inclusion: Page Group detected which pdfT
+eX can't handle. Ignoring it.
+>]
+\openout2 = `preproc.aux'.
+
+ (./preproc.tex [52
+
+
+
+]
+Chapter 6.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/scrambled.
+jpg, id=1583, 292.82019pt x 217.89586pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/scram
+bled.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/scramb
+led.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/idealShred
+s.jpg, id=1584, 1513.655pt x 1137.24875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/ideal
+Shreds.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/idealS
+hreds.jpg>
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10.95> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 23.
+LaTeX Font Info:    Font shape `OT1/phv/m/sl' will be
+(Font)              scaled to size 9.85492pt on input line 23.
+
+Underfull \vbox (badness 1383) has occurred while \output is active []
+
+ [53]
+Overfull \vbox (7.33595pt too high) has occurred while \output is active []
+
+
+[54 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/scramb
+led.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/i
+dealShreds.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/skew.jpg, 
+id=1596, 100.375pt x 402.50375pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/skew.
+jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/skew.j
+pg> [55 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/sk
+ew.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/innerOuter
+Rows.png, id=1604, 31.5579pt x 6.9861pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/inner
+OuterRows.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/innerO
+uterRows.png>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntRow.png
+, id=1606, 131.49126pt x 29.10875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntRo
+w.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntRow
+.png> [56 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/
+innerOuterRows.png> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/wri
+ting/imgs/EntRow.png>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/orientatio
+n.pdf, id=1617, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/orien
+tation.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/orient
+ation.pdf> [57 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/
+imgs/orientation.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/orientation.pdf): PDF inclusion: Page Group detected which 
+pdfTeX can't handle. Ignoring it.
+>]
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntOr
+ig.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntOri
+g.png>
+Overfull \hbox (1.1091pt too wide) in paragraph at lines 91--92
+ [][] 
+ []
+
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntRot.png
+, id=1670, 131.49126pt x 29.10875pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntRo
+t.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/EntRot
+.png>
+Overfull \hbox (1.1091pt too wide) in paragraph at lines 98--99
+ [][] 
+ []
+
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/curved.png
+, id=1673, 635.37375pt x 35.13126pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/curve
+d.png Graphic file (type png)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/curved
+.png>) [58 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs
+/EntRot.png (PNG copy)> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder
+/writing/imgs/curved.png>]
+\openout2 = `conc.aux'.
+
+ (./conc.tex
+Chapter 7.
+
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stripVsCC.
+pdf, id=1689, 578.16pt x 433.62pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/strip
+VsCC.pdf Graphic file (type pdf)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stripV
+sCC.pdf>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [59
+
+
+
+]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim1x49.j
+pg, id=1697, 53.7207pt x 67.452pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim1
+x49.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim1x
+49.jpg>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [60 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/strip
+VsCC.pdf
+
+pdfTeX warning: pdflatex (file /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnSh
+redder/writing/imgs/stripVsCC.pdf): PDF inclusion: Page Group detected which pd
+fTeX can't handle. Ignoring it.
+>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim7x7.jp
+g, id=1746, 154.77824pt x 38.66444pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim7
+x7.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim7x
+7.jpg>
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim7x7Gro
+ups.jpg, id=1747, 60.225pt x 101.9007pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim7
+x7Groups.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim7x
+7Groups.jpg> [61 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writin
+g/imgs/prim1x49.jpg> </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/wr
+iting/imgs/prim7x7.jpg>]
+</afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopped7x7
+.jpg, id=1756, 57.63533pt x 102.98476pt>
+File: /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stopp
+ed7x7.jpg Graphic file (type jpg)
+
+<use /afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stoppe
+d7x7.jpg>
+Underfull \vbox (badness 1342) has occurred while \output is active []
+
+ [62 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/prim7
+x7Groups.jpg>]
+Overfull \vbox (28.24825pt too high) has occurred while \output is active []
+
+
+[63 </afs/inf.ed.ac.uk/user/s09/s0954584/Desktop/UnShredder/writing/imgs/stoppe
+d7x7.jpg>]) [64] (./skeleton.bbl (./skeleton.brf)
+\tf@brf=\write6
+\openout6 = `skeleton.brf'.
+
+ [65
+
+
+]
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no £ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no £ in font ptmr7t!
+Missing character: There is no Ì in font ptmr7t!
+Missing character: There is no „ in font ptmr7t!
+ [66]
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+ [67]
+Underfull \hbox (badness 7012) in paragraph at lines 299--299
+[]\OT1/ptm/m/n/12 US Fed-eral Trade Com-mis-sion web-site.  How to keep your pe
+r-
+ []
+
+
+Underfull \hbox (badness 4913) in paragraph at lines 299--299
+\OT1/ptm/m/n/12 sonal in-for-ma-tion se-cure.  []$\OT1/pcr/m/n/12 http : / / ww
+w . consumer . ftc . gov / articles /
+ []
+
+
+Underfull \vbox (badness 2080) has occurred while \output is active []
+
+ [68])
+[69] (./skeleton.aux (./intro.aux) (./probDef.aux) (./litRev.aux) (./score.aux)
+(./search.aux) (./preproc.aux) (./conc.aux))
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 14085 strings out of 256216
+ 251913 string characters out of 1917072
+ 287795 words of memory out of 1500000
+ 16678 multiletter control sequences out of 10000+200000
+ 74895 words of font info for 138 fonts, out of 1200000 for 2000
+ 645 hyphenation exceptions out of 8191
+ 54i,15n,75p,1796b,584s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/texmf/fonts/type1/b
+luesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/
+share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/sh
+are/texmf/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1/urw
+/helvetic/uhvr8a.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvro8a.pfb></u
+sr/share/texmf/fonts/type1/urw/symbol/usyr.pfb></usr/share/texmf/fonts/type1/ur
+w/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/sha
+re/texmf/fonts/type1/urw/times/utmri8a.pfb>
+Output written on skeleton.pdf (69 pages, 10010645 bytes).
+PDF statistics:
+ 2004 PDF objects out of 2073 (max. 8388607)
+ 242 named destinations out of 1000 (max. 131072)
+ 842 words of extra memory for PDF output out of 10000 (max. 10000000)
+
